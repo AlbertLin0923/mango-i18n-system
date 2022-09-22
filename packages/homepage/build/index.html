@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="前端翻译系统导航页" />
+    <title>前端翻译系统导航页</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      .page-container {
+        background-color: rgb(33, 37, 41);
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-origin: padding-box;
+        background-clip: border-box;
+        background-attachment: fixed;
+        background-image: url('./static/images/El Capitan.jpg');
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        color: #fff;
+      }
+
+      .page-header {
+        text-align: center;
+        width: 100%;
+        padding: 15px 0;
+      }
+
+      .page-header-title {
+        font-size: 42px;
+      }
+
+      .page-main {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .nav-item {
+        text-align: center;
+        width: auto;
+        margin-bottom: 15px;
+        background-color: #fff;
+        border-radius: 15px;
+        padding: 15px;
+        color: #000;
+      }
+    </style>
+  </head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root" class="page-container">
+      <header class="page-header">
+        <div class="page-header-title">前端翻译系统导航页</div>
+      </header>
+      <main class="page-main">
+        <section class="nav-item">
+          <p>
+            <span> vue-element-admin 翻译系统</span>
+            <a href=""></a>
+          </p>
+        </section>
+      </main>
+    </div>
+  </body>
+  <script>
+    const page_container = document.querySelector('.page-container')
+    const bg_image_list = ['Sierra.jpg', 'Sierra 2.jpg', 'El Capitan.jpg', 'El Capitan 2.jpg']
+
+    function getRandomIntInclusive(min, max) {
+      min = Math.ceil(min)
+      max = Math.floor(max)
+      return Math.floor(Math.random() * (max - min + 1)) + min
+    }
+
+    const bg_image = bg_image_list[getRandomIntInclusive(0, 3)]
+    page_container.style.backgroundImage = `url('./static/images/${bg_image}')`
+  </script>
+</html>

@@ -1,0 +1,19 @@
+# dependencies
+node_modules
+
+# misc
+.DS_Store
+
+# ide
+/.vscode
+/.idea
+
+# client
+/packages/client/build
+
+# server
+/packages/server/dist
+/packages/server/database
+/packages/server/sourceCode
+/packages/server/contentHash
+/packages/server/logs
