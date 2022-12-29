@@ -60,7 +60,7 @@ const getFilterTableDataFromTableData = (searchOptions: SearchOptionsType, list:
   if (modules?.length > 0) {
     _filter = _filter.filter((it) => {
       const m = it['modules'].split(',')
-      if (m !== ['']) {
+      if (Array.isArray(m) && m[0] !== '') {
         if (m.some((i: any) => modules.includes(i))) {
           return true
         } else {
@@ -275,7 +275,7 @@ const Locale: React.FC<{}> = () => {
   }
 
   return (
-    <div>
+    <div className="page-container">
       <Spin spinning={!dictAlready}>
         <Igroup title={t('筛选栏')}>
           <SearchForm

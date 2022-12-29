@@ -21,7 +21,7 @@ async function boot() {
     const result = content
       .replaceAll("5005", clientPort)
       .replaceAll("5006", serverPort)
-      .replaceAll("vue-element-admin", projectName);
+      .replaceAll("mango-i18n-system", projectName);
 
     await fs.writeFile(_path, result, {
       encoding: "utf8",

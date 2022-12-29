@@ -23,7 +23,7 @@ type DispatchProps = ReturnType<typeof mapDispatch>
 type Props = StateProps & DispatchProps
 
 const SelectLang: React.FC<Props> = ({ appModel: { selectedLanguage }, changeLanguage }) => {
-  const langMenu = (
+  const languageMenu = (
     <Menu
       className={styles.menu}
       selectedKeys={[selectedLanguage]}
@@ -48,8 +48,8 @@ const SelectLang: React.FC<Props> = ({ appModel: { selectedLanguage }, changeLan
     return null
   }
   return (
-    <Dropdown overlay={langMenu} placement="bottomRight" trigger={['click', 'hover']}>
-      <div className={styles['select-lng']}>
+    <Dropdown overlay={languageMenu} placement="bottomRight" trigger={['click', 'hover']}>
+      <div className={styles['select-language-icon']}>
         <TranslationOutlined />
       </div>
     </Dropdown>

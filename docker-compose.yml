@@ -2,7 +2,7 @@ version: "3.8"
 services:
   server:
     build: ./packages/server/
-    container_name: "vue-element-admin-server"
+    container_name: "mango-i18n-system-server"
     environment:
       TZ: Asia/Shanghai
     volumes:
@@ -15,7 +15,7 @@ services:
 
   client:
     build: ./packages/client/
-    container_name: "vue-element-admin-client"
+    container_name: "mango-i18n-system-client"
     depends_on:
       - server
     ports:

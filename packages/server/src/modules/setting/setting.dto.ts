@@ -82,7 +82,7 @@ export class Setting {
 
   @ApiProperty({
     description: '系统名称',
-    example: 'vue-element-admin 翻译系统',
+    example: 'mango-i18n-system 翻译系统',
   })
   @IsOptional()
   @IsString()

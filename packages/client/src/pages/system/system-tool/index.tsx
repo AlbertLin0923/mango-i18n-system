@@ -22,7 +22,7 @@ const SystemTool: React.FC<{}> = () => {
   }
 
   return (
-    <div>
+    <div className="page-container">
       <Card type="inner" className={styles.card}>
         <Popconfirm
           onConfirm={() => handleFinish()}

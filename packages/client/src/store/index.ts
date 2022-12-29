@@ -22,7 +22,7 @@ const store = init<RootModel, FullModel>({
     loadingPlugin(),
     updatedPlugin(),
     persistPlugin(
-      { key: 'mango-i18n-system', storage: storage, whitelist: [] }
+      { key: 'mango-i18n-system', storage: storage }
       // {
       //   appModel: appModelPersistConfig,
       //   userModel: userModelPersistConfig

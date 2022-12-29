@@ -208,7 +208,7 @@ const Record: React.FC<{}> = () => {
   }
 
   return (
-    <div>
+    <div className="page-container">
       {searchOptions.already && (
         <SearchForm searchOptions={searchOptions} onSubmit={handleSearchFormSubmit}></SearchForm>
       )}

@@ -1,6 +1,8 @@
 import { useMemo } from 'react'
 import { connect, Provider } from 'react-redux'
 import { ConfigProvider } from 'antd'
+import { getPersistor } from '@rematch/persist'
+import { PersistGate } from 'redux-persist/lib/integration/react'
 
 import { filterAccessedRouterConfig } from '@/components/Access/Creater'
 
@@ -31,6 +33,8 @@ const mapState = (state: RootState) => ({
 
 type StateProps = ReturnType<typeof mapState>
 type Props = StateProps
+
+const persistor = getPersistor()
 
 const AppRouter = connect(mapState)(
   ({
@@ -79,7 +83,9 @@ const AppRouter = connect(mapState)(
 const App = () => {
   return (
     <Provider store={store}>
-      <AppRouter></AppRouter>
+      <PersistGate persistor={persistor} loading={null}>
+        <AppRouter></AppRouter>
+      </PersistGate>
     </Provider>
   )
 }

@@ -72,48 +72,50 @@ const SystemSetting: React.FC<{}> = () => {
   }
 
   return (
-    <Spin spinning={pageLoading} tip="正在加载配置，请稍候。。。">
-      <Card title="系统展示配置" className={styles.card}>
-        <Form
-          form={systemForm}
-          name="systemForm"
-          labelAlign="left"
-          onFinish={handleSystemFormFinish}
-        >
-          <Form.Item
-            name="systemTitle"
-            label="系统名称"
-            rules={[
-              { required: true },
-              {
-                validator: (_, value) => {
-                  if (value && !String(value).trim()) return Promise.reject(new Error('请输入'))
-                  return Promise.resolve()
-                }
-              }
-            ]}
+    <div className="page-container">
+      <Spin spinning={pageLoading} tip="正在加载配置，请稍候。。。">
+        <Card title="系统展示配置" className={styles.card}>
+          <Form
+            form={systemForm}
+            name="systemForm"
+            labelAlign="left"
+            onFinish={handleSystemFormFinish}
           >
-            <Input allowClear />
-          </Form.Item>
+            <Form.Item
+              name="systemTitle"
+              label="系统名称"
+              rules={[
+                { required: true },
+                {
+                  validator: (_, value) => {
+                    if (value && !String(value).trim()) return Promise.reject(new Error('请输入'))
+                    return Promise.resolve()
+                  }
+                }
+              ]}
+            >
+              <Input allowClear />
+            </Form.Item>
 
-          <Form.Item style={{ textAlign: 'right' }}>
-            <Space>
-              <Button
-                htmlType="button"
-                onClick={() => {
-                  systemForm.resetFields()
-                }}
-              >
-                重置
-              </Button>
-              <Button type="primary" htmlType="submit">
-                确定
-              </Button>
-            </Space>
-          </Form.Item>
-        </Form>
-      </Card>
-    </Spin>
+            <Form.Item style={{ textAlign: 'right' }}>
+              <Space>
+                <Button
+                  htmlType="button"
+                  onClick={() => {
+                    systemForm.resetFields()
+                  }}
+                >
+                  重置
+                </Button>
+                <Button type="primary" htmlType="submit">
+                  确定
+                </Button>
+              </Space>
+            </Form.Item>
+          </Form>
+        </Card>
+      </Spin>
+    </div>
   )
 }
 

@@ -133,7 +133,7 @@ const UserSetting: React.FC<{}> = () => {
     }
   }
 
-  const toggleStatus = async (record: any, val: boolean, event: MouseEvent) => {
+  const toggleStatus = async (record: any, val: boolean) => {
     console.log('record, val', record, val)
 
     return new Promise((resolve, reject) => {
@@ -259,7 +259,7 @@ const UserSetting: React.FC<{}> = () => {
             checkedChildren={t('账户正常')}
             unCheckedChildren={t('账户冻结')}
             checked={record.account_status === 'normal'}
-            onChange={(val, event) => toggleStatus(record, val, event)}
+            onChange={(val) => toggleStatus(record, val)}
           />
         </Space>
       )
@@ -283,7 +283,7 @@ const UserSetting: React.FC<{}> = () => {
   }
 
   return (
-    <div>
+    <div className="page-container">
       {searchOptions.already && (
         <SearchForm searchOptions={searchOptions} onSubmit={handleSearchFormSubmit}>
           <Button type="primary" onClick={() => setAddUserModalConfig(() => ({ visible: true }))}>

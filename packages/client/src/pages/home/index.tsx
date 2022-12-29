@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { RootState } from '@/store/index'
 
 import { useTranslation } from 'react-i18next'
-import styles from './home.module.less'
+import styles from './index.module.less'
 
 const mapState = (state: RootState) => ({
   username: state.userModel.userInfo.username
@@ -33,7 +33,7 @@ const Home: React.FC<Props> = (props) => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className="page-container">
       <p className={styles.welcome}>
         <span>Hi </span>
         <label htmlFor="" className={styles.username}>

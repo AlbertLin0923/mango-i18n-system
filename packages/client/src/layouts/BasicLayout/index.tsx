@@ -101,7 +101,7 @@ const BasicLayout: React.FC<Props> = ({ appModel, userModel }) => {
           collapsible
           collapsed={opened}
         >
-          <div className={styles['app-sider-title']}>{t('金融中台')}</div>
+          <div className={styles['app-sider-title']}>{t('翻译系统')}</div>
           {menuConfig?.length > 0 ? (
             <SideMenu menuConfig={menuConfig} />
           ) : (

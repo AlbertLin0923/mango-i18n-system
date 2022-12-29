@@ -277,10 +277,10 @@ const extractChineseFieldListFromSourceCode = async (
     if (extractor === Extractor.REGEX) {
       execTimer.start('regex');
       readResult = await extractChineseFieldList(
+        Extractor.REGEX,
         resolveDirPathList,
         filterExtNameList,
         sourceCodeContentHashMapPath,
-        Extractor.REGEX,
       );
       execTimer.end('regex');
       readResultMessage = `使用regex读取仓库中文key成功，共读取到${
@@ -289,10 +289,10 @@ const extractChineseFieldListFromSourceCode = async (
     } else {
       execTimer.start('ast');
       readResult = await extractChineseFieldList(
+        Extractor.AST,
         resolveDirPathList,
         filterExtNameList,
         sourceCodeContentHashMapPath,
-        Extractor.AST,
       );
       execTimer.end('ast');
       readResultMessage = `使用ast读取仓库中文key成功，共读取到${
