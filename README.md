@@ -1,8 +1,12 @@
 # mango-i18n-system 自动国际化文案配置系统
 
+
 ## 为什么写这个系统
 
 日常前端 web 项目开发中，由于公司项目需要兼容多国语言，项目的代码文案需要提取、收集、整理出来，供翻译人员进行翻译，添加多国语言，经过校对、审核后，导入到项目代码中，此过程往往非常重复繁琐，存在工作效率低，又容易出错的问题。由此结合一些代码解析工具，针对该工作开发了此系统。通过该系统，无需手工提取、收集、整理、录入国际化文案，只需部署好系统，输入系统 Github/GitLab 地址等配置，即可自动化处理以上流程
+
+`更多说明请参考掘金文章`：[前端国际化自动工具-国际化文案配置系统](https://juejin.cn/post/7202082404353228855)
+
 
 ## 架构
 
@@ -181,18 +185,6 @@ const getFilterStatusMap = (statusMap, type) => {
 
 
 ## 参考资料
-
-[Kiwi-国际化全流程解决方案](https://github.com/alibaba/kiwi)
-
-[聊聊前端国际化文案该如何处理](https://juejin.cn/post/6844903778471280653)
-
-[如何快速解决繁杂的国际化替换](https://juejin.im/post/6844903680777388039)
-
-[字节前端如何基于 AST 做国际化重构？](https://toutiao.io/posts/vcb200u/preview)
-
-[astexplorer](https://astexplorer.net/)
-
-
 
 [Kiwi-国际化全流程解决方案](https://github.com/alibaba/kiwi)
 
