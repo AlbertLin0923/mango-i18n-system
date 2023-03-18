@@ -2,7 +2,6 @@
   "name": "mango-i18n-system-server",
   "version": "0.0.1",
   "private": true,
-  "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "cross-env NODE_ENV=production nest build",
@@ -18,7 +17,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@mango-scripts/i18n-utils": "^1.0.6",
+    "@mango-scripts/i18n-utils": "^1.0.7",
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
     "@nestjs/jwt": "^8.0.0",
