@@ -1,18 +1,17 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DeleteResult } from 'typeorm';
+import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
 
-import { JwtService } from '@nestjs/jwt';
+import { UserEntity } from './user.entity.js'
 
-import { BusinessException } from '../../common/exception/business.exception';
 import {
   filterObjProperties,
   hashPassword,
   createQueryParams,
-} from '../../common/utils';
+} from '../../common/utils/index.js'
+import { BusinessException } from '../../common/exception/business.exception.js'
 
-import { UserEntity, RoleType, AccountStatusType } from './user.entity';
-import {
+import type { RoleType, AccountStatusType } from './user.entity.js'
+import type {
   LoginDTO,
   RegisterDTO,
   RefreshTokenDTO,
@@ -22,21 +21,17 @@ import {
   UpdateMyPasswordDTO,
   UpdateOtherPasswordDTO,
   QueryUserDTO,
-} from './user.dto';
-
-import {
+} from './user.dto.js'
+import type {
   TokenPairVO,
   AccessTokenVO,
   User,
   UserVO,
   UserListVO,
   UserSearchOptionsVO,
-} from './user.vo';
-
-import CONFIG from '../../common/config';
-const jwtSecurity = CONFIG.get('jwtSecurity');
-const passwordSalt = CONFIG.get('passwordSalt');
-const registerKey = CONFIG.get('registerKey');
+} from './user.vo.js'
+import type { JwtService } from '@nestjs/jwt'
+import type { Repository, DeleteResult } from 'typeorm'
 
 @Injectable()
 export class UserService {
@@ -47,40 +42,38 @@ export class UserService {
   ) {}
 
   async login(loginDTO: LoginDTO): Promise<TokenPairVO> {
-    const { username, password } = loginDTO;
-    const hashedPassword = hashPassword(password, passwordSalt);
-    const user = await this.userRepository.findOne({
+    const { username, password } = loginDTO
+    const hashedPassword = hashPassword(password, process.env.PASSWORD_SALT)
+    const user = await this.userRepository.findOneBy({
       username,
       password: hashedPassword,
-    });
+    })
     if (!user) {
-      throw new BusinessException('用户名或者密码错误', 500);
+      throw new BusinessException('用户名或者密码错误', 500)
     }
 
     if (user.account_status === 'freeze') {
-      throw new BusinessException('账户已被冻结，请联系管理员', 403);
+      throw new BusinessException('账户已被冻结，请联系管理员', 403)
     }
     return this.generateTokenPair({
       userId: user.userId,
-    });
+    })
   }
 
   async register(registerDTO: RegisterDTO): Promise<TokenPairVO> {
-    const { username, password, email, key } = registerDTO;
+    const { username, password, email, key } = registerDTO
 
-    console.log('username', username);
-
-    if (key !== registerKey) {
-      throw new BusinessException('注册密钥不正确', 500);
+    if (key !== process.env.REGISTER_KEY) {
+      throw new BusinessException('注册密钥不正确', 500)
     }
 
-    const isHave = await this.userRepository.find({ username });
+    const isHave = await this.userRepository.findBy({ username })
 
     if (isHave.length) {
-      throw new BusinessException('用户名重复', 500);
+      throw new BusinessException('用户名重复', 500)
     }
 
-    const hashedPassword = hashPassword(password, passwordSalt);
+    const hashedPassword = hashPassword(password, process.env.PASSWORD_SALT)
 
     const newUser = await this.userRepository.save(
       Object.assign(new UserEntity(), {
@@ -91,39 +84,39 @@ export class UserService {
         role: 'admin',
         creator: 'from register page',
       }),
-    );
+    )
 
-    console.log('newUser', newUser);
+    console.log('newUser', newUser)
 
     return this.generateTokenPair({
       userId: newUser.userId,
-    });
+    })
   }
 
   async refreshToken(refreshTokenDTO: RefreshTokenDTO): Promise<AccessTokenVO> {
-    const { refreshToken } = refreshTokenDTO;
+    const { refreshToken } = refreshTokenDTO
     try {
       const { userId } = this.jwtService.verify(refreshToken, {
-        secret: jwtSecurity.jwtRefreshSecret,
-      });
+        secret: process.env.JWT_REFRESH_SECRET,
+      })
 
       const accessToken = this.generateAccessToken({
         userId,
-      });
-      return { accessToken };
+      })
+      return { accessToken }
     } catch (e) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException()
     }
   }
 
   async getUser(user): Promise<UserVO> {
-    const _user = await this.userRepository.findOne({ userId: user.userId });
+    const _user = await this.userRepository.findOneBy({ userId: user.userId })
 
-    return this.buildUserVO(_user);
+    return this.buildUserVO(_user)
   }
 
   async getSearchOptions(): Promise<UserSearchOptionsVO> {
-    const roleMap: Array<{ label: string; value: RoleType }> = [
+    const roleMap: { label: string; value: RoleType }[] = [
       {
         label: '普通用户',
         value: 'user',
@@ -132,12 +125,12 @@ export class UserService {
         label: '管理员',
         value: 'admin',
       },
-    ];
+    ]
 
-    const accountStatusMap: Array<{
-      label: string;
-      value: AccountStatusType;
-    }> = [
+    const accountStatusMap: {
+      label: string
+      value: AccountStatusType
+    }[] = [
       {
         label: '账户正常',
         value: 'normal',
@@ -146,9 +139,9 @@ export class UserService {
         label: '账户冻结',
         value: 'freeze',
       },
-    ];
+    ]
 
-    return { roleMap, accountStatusMap };
+    return { roleMap, accountStatusMap }
   }
 
   async getUserList({
@@ -172,9 +165,9 @@ export class UserService {
       },
       'user',
       'create_time',
-    );
+    )
 
-    console.log('sql', sql);
+    console.log('sql', sql)
 
     const data: [UserEntity[], number] = await this.userRepository
       .createQueryBuilder('user')
@@ -182,20 +175,20 @@ export class UserService {
       .orderBy('user.create_time', 'DESC')
       .skip(pageSize * (page - 1))
       .take(pageSize)
-      .getManyAndCount();
+      .getManyAndCount()
 
-    return { list: data[0], total: data[1] };
+    return { list: data[0], total: data[1] }
   }
 
   async addUser(user, addUserDTO: AddUserDTO): Promise<UserVO> {
-    const { username, password, email, role } = addUserDTO;
+    const { username, password, email, role } = addUserDTO
 
-    const isHave = await this.userRepository.find({ username });
+    const isHave = await this.userRepository.findBy({ username })
     if (isHave.length) {
-      throw new BusinessException('用户名重复', 500);
+      throw new BusinessException('用户名重复', 500)
     }
 
-    const hashedPassword = hashPassword(password, passwordSalt);
+    const hashedPassword = hashPassword(password, process.env.PASSWORD_SALT)
 
     const newUser = await this.userRepository.save(
       Object.assign(new UserEntity(), {
@@ -206,123 +199,126 @@ export class UserService {
         role,
         creator: user.username,
       }),
-    );
+    )
 
-    return this.buildUserVO(newUser);
+    return this.buildUserVO(newUser)
   }
 
   async deleteUser(deleteUserDTO: DeleteUserDTO): Promise<DeleteResult> {
-    return await this.userRepository.delete(deleteUserDTO);
+    return await this.userRepository.delete(deleteUserDTO)
   }
 
   async updateUser(user, updateUserDTO: UpdateUserDTO): Promise<UserVO> {
-    const actionUser = await this.userRepository.findOne({
+    const actionUser = await this.userRepository.findOneBy({
       userId: user.userId,
-    });
+    })
 
     if (!(actionUser.role === 'admin')) {
-      throw new BusinessException('该用户无权限进行该操作');
+      throw new BusinessException('该用户无权限进行该操作')
     }
 
-    const toUpdateUser = await this.userRepository.findOne({
+    const toUpdateUser = await this.userRepository.findOneBy({
       userId: updateUserDTO.userId,
-    });
+    })
 
     if (!toUpdateUser) {
-      throw new BusinessException('找不到该用户');
+      throw new BusinessException('找不到该用户')
     }
 
     if (actionUser.userId === updateUserDTO.userId) {
-      throw new BusinessException('用户不能修改本用户信息');
+      throw new BusinessException('用户不能修改本用户信息')
     }
 
-    const updated = Object.assign(toUpdateUser, updateUserDTO);
-    const _user = await this.userRepository.save(updated);
-    return this.buildUserVO(_user);
+    const updated = Object.assign(toUpdateUser, updateUserDTO)
+    const _user = await this.userRepository.save(updated)
+    return this.buildUserVO(_user)
   }
 
   async updateMyPassword(
     user,
     updateMyPasswordDTO: UpdateMyPasswordDTO,
   ): Promise<UserVO> {
-    const { oldPassword, password } = updateMyPasswordDTO;
+    const { oldPassword, password } = updateMyPasswordDTO
 
-    const { userId } = user;
+    const { userId } = user
 
     const toUpdateUser = await this.userRepository
       .createQueryBuilder('user')
       .where('user.userId = :userId', { userId })
       .addSelect('user.password')
-      .getOne();
+      .getOne()
 
     if (!toUpdateUser) {
-      throw new BusinessException('找不到该用户');
+      throw new BusinessException('找不到该用户')
     }
 
-    if (toUpdateUser.password !== hashPassword(oldPassword, passwordSalt)) {
-      throw new BusinessException('原密码错误');
+    if (
+      toUpdateUser.password !==
+      hashPassword(oldPassword, process.env.PASSWORD_SALT)
+    ) {
+      throw new BusinessException('原密码错误')
     }
 
     const updated = Object.assign(toUpdateUser, {
-      password: hashPassword(password, passwordSalt),
-    });
+      password: hashPassword(password, process.env.PASSWORD_SALT),
+    })
 
-    const _user = await this.userRepository.save(updated);
-    return this.buildUserVO(_user);
+    const _user = await this.userRepository.save(updated)
+    return this.buildUserVO(_user)
   }
 
   async updateOtherPassword(
     user,
     updateOtherPasswordDTO: UpdateOtherPasswordDTO,
   ): Promise<UserVO> {
-    const { userId, password } = updateOtherPasswordDTO;
+    const { userId, password } = updateOtherPasswordDTO
 
-    const actionUser = await this.userRepository.findOne({
+    const actionUser = await this.userRepository.findOneBy({
       userId: user.userId,
-    });
+    })
     if (!(actionUser.role === 'admin')) {
-      throw new BusinessException('该用户无权限进行该操作');
+      throw new BusinessException('该用户无权限进行该操作')
     }
 
-    const toUpdateUser = await this.userRepository.findOne({
+    const toUpdateUser = await this.userRepository.findOneBy({
       userId,
-    });
+    })
 
     if (!toUpdateUser) {
-      throw new BusinessException('找不到该用户');
+      throw new BusinessException('找不到该用户')
     }
 
     if (actionUser.userId === userId) {
-      throw new BusinessException('用户不能修改本用户信息');
+      throw new BusinessException('用户不能修改本用户信息')
     }
 
     const updated = Object.assign(toUpdateUser, {
-      password: hashPassword(password, passwordSalt),
-    });
+      password: hashPassword(password, process.env.PASSWORD_SALT),
+    })
 
-    const _user = await this.userRepository.save(updated);
-    return this.buildUserVO(_user);
+    const _user = await this.userRepository.save(updated)
+    return this.buildUserVO(_user)
   }
 
   private generateTokenPair(payload: { userId: string }): TokenPairVO {
     return {
       accessToken: this.generateAccessToken(payload),
       refreshToken: this.generateRefreshToken(payload),
-    };
+    }
   }
 
   private generateAccessToken(payload: { userId: string }): string {
-    return this.jwtService.sign(payload);
+    return this.jwtService.sign(payload)
   }
 
   private generateRefreshToken(payload: { userId: string }): string {
     return this.jwtService.sign(payload, {
-      secret: jwtSecurity.jwtRefreshSecret,
-      expiresIn: jwtSecurity.refreshIn,
-    });
+      secret: process.env.JWT_REFRESH_SECRET,
+      expiresIn: process.env.JWT_REFRESH_IN,
+    })
   }
 
   private buildUserVO(user: UserEntity): UserVO {
-    return { user: filterObjProperties(user, ['password']) as User };
+    return { user: filterObjProperties(user, ['password']) as User }
   }
 }

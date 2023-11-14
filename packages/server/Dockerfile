@@ -13,6 +13,6 @@ COPY . .
 
 RUN pnpm run prebuild && pnpm run build
 
-EXPOSE 11006
+EXPOSE 5006
 
 CMD [ "pnpm", "run", "start:prod" ]

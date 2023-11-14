@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common';
+import { Module } from '@nestjs/common'
+import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { SettingController } from './setting.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { SettingEntity } from './setting.entity';
-import { SettingService } from './setting.service';
+import { SettingController } from './setting.controller.js'
+import { SettingEntity } from './setting.entity.js'
+import { SettingService } from './setting.service.js'
 
 @Module({
   imports: [TypeOrmModule.forFeature([SettingEntity])],

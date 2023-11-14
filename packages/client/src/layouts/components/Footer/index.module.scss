@@ -1,0 +1,22 @@
+.layout-footer {
+  width: 100%;
+  height: 40px;
+  padding: 8px 0;
+  color: #999;
+  font-size: 12px;
+  line-height: 2;
+  text-align: center;
+  border-radius: 6px;
+
+  .info {
+    @include mango-center;
+
+    a {
+      @include mango-normal-link;
+    }
+  }
+
+  .title {
+    text-align: center;
+  }
+}

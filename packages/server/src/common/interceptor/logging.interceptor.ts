@@ -1,28 +1,30 @@
-import {
-  Injectable,
+import { Injectable } from '@nestjs/common'
+import { tap } from 'rxjs/operators'
+
+import { Logger } from '../plugin/log4js.js'
+import { parseDateString } from '../utils/index.js'
+
+import type { Request } from 'express'
+import type { Observable } from 'rxjs'
+import type {
   NestInterceptor,
   ExecutionContext,
   CallHandler,
-} from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { Request } from 'express';
-import { Logger } from '../plugin/log4js';
-import { parseDateString } from '../utils/index';
+} from '@nestjs/common'
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const ctx = context.switchToHttp();
-    const request = ctx.getRequest<Request>();
+    const ctx = context.switchToHttp()
+    const request = ctx.getRequest<Request>()
     // const response = ctx.getResponse<Response>();
 
-    const startTime = new Date().getTime();
+    const startTime = new Date().getTime()
 
     return next.handle().pipe(
       tap((data) => {
         // console.log(data);
-        const endTime = new Date().getTime();
+        const endTime = new Date().getTime()
         const logFormat = `
 ============================================================Start================================================================
 Start Time      : ${parseDateString(startTime)}
@@ -38,11 +40,11 @@ Response Code   : ${data.code}
 Time Consuming  : ${endTime - startTime}ms
 End Time        : ${parseDateString(endTime)}
 =============================================================End==================================================================
-`;
+`
 
-        Logger.log(logFormat);
-        return data;
+        Logger.log(logFormat)
+        return data
       }),
-    );
+    )
   }
 }

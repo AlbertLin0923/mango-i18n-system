@@ -1,0 +1,78 @@
+/* stylelint-disable selector-class-pattern */
+@import 'antd/dist/reset.css';
+
+#root,
+.ant-app {
+  height: 100vh;
+}
+
+ul,
+li {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style: none;
+}
+
+.ant-modal-header {
+  margin-bottom: 20px !important;
+  padding-bottom: 20px !important;
+  border-bottom: 1px solid #eee;
+
+  .ant-modal-title {
+    padding-right: 40px;
+  }
+}
+
+.ant-modal-confirm-content {
+  max-width: 100% !important;
+}
+
+// 滚动条样式
+* {
+  -webkit-overflow-scrolling: touch;
+  -webkit-tap-highlight-color: rgb(0 0 0 / 0%);
+  text-size-adjust: 100%;
+
+  &:hover {
+    &::-webkit-scrollbar-thumb {
+      background-color: #999;
+    }
+  }
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-radius: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+  }
+}
+
+.mango-tip-text {
+  padding: 5px 10px;
+  color: $mango-text-slight-color;
+}
+
+.mango-primary-tips-icon {
+  margin-right: 10px;
+  color: $mango-primary-color;
+}
+
+.mango-tips-text {
+  color: $mango-text-slight-color;
+}
+
+.no-margin-bottom {
+  margin-bottom: 0 !important;
+}

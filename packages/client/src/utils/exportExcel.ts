@@ -1,11 +1,11 @@
 import * as Excel from 'exceljs'
 import * as FileSaver from 'file-saver'
 
-const setSheetStyle = (sheet: any, localeDictWithLabel: Array<string>) => {
+const setSheetStyle = (sheet: any, localeDictWithLabel: string[]) => {
   sheet.columns = localeDictWithLabel.map((i) => {
     return {
       header: i,
-      width: 60
+      width: 60,
     }
   })
 
@@ -15,7 +15,7 @@ const setSheetStyle = (sheet: any, localeDictWithLabel: Array<string>) => {
   row.fill = {
     type: 'pattern',
     pattern: 'solid',
-    fgColor: { argb: '9cbb5e' }
+    fgColor: { argb: '9cbb5e' },
   }
   row.height = 30
   row.eachCell((cell: any) => {
@@ -23,14 +23,14 @@ const setSheetStyle = (sheet: any, localeDictWithLabel: Array<string>) => {
       top: { style: 'thin', color: { argb: '000' } },
       left: { style: 'thin', color: { argb: '000' } },
       bottom: { style: 'thin', color: { argb: '000' } },
-      right: { style: 'thin', color: { argb: '000' } }
+      right: { style: 'thin', color: { argb: '000' } },
     }
   })
 
   row.eachCell((cell: any, rowNumber: any) => {
     sheet.getColumn(rowNumber).alignment = {
       vertical: 'middle',
-      horizontal: 'center'
+      horizontal: 'center',
     }
   })
   sheet.views = [{ state: 'frozen', xSplit: 0, ySplit: 1 }]
@@ -39,7 +39,7 @@ const setSheetStyle = (sheet: any, localeDictWithLabel: Array<string>) => {
 const exportExcel = (
   table: any,
   fileName: string = '翻译文案',
-  localeDictWithLabel: Array<any>
+  localeDictWithLabel: any[],
 ) => {
   const data = table.map((item: any) => {
     return localeDictWithLabel.map((key) => {
@@ -54,7 +54,7 @@ const exportExcel = (
 
   workbook.xlsx.writeBuffer().then((data) => {
     const blob = new Blob([data], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8',
     })
 
     FileSaver.saveAs(blob, fileName)

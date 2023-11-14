@@ -2,50 +2,32 @@
  * request 网络请求工具
  * 更详细的 api 文档: https://github.com/umijs/umi-request
  */
-import { extend, ResponseError } from 'umi-request'
-import { notification, Modal } from 'antd'
+import { extend } from 'umi-request'
 
-import i18n from '@/locales/index'
-import { history } from '@/router/index'
-import store from '@/store/index'
+import i18n from '@/locales'
+import { history } from '@/router'
+import store from '@/store'
+import { modal, notification } from '@/app'
 
-import { ModalInstance } from '@/type/index'
+import type { ResponseError } from 'umi-request'
+
+type ModalInstance = {
+  _handleNoLoginInstance: any
+  _handleLoginOverdueInstance: any
+}
 
 const modalInstance: ModalInstance = {
   _handleNoLoginInstance: null,
-  _handleLoginOverdueInstance: null
+  _handleLoginOverdueInstance: null,
 }
 
-export const handleNoLogin = async () => {
+export const handleLoginOverdue = async () => {
   if (modalInstance._handleNoLoginInstance) {
     return
   } else {
     // to re-login
-    modalInstance._handleNoLoginInstance = Modal.error({
-      title: i18n.t('尚未登录，请登录'),
-      centered: true,
-      closable: false,
-      keyboard: false,
-      okText: i18n.t('去登录'),
-      onOk: () => {
-        modalInstance._handleNoLoginInstance = null
-        store.dispatch.userModel.logout()
-        const redirect = encodeURIComponent(window.location.href)
-        history.replace({
-          pathname: '/login',
-          search: `?redirect=${redirect}`
-        })
-      }
-    })
-  }
-}
-
-export const handleLoginOverdue = async () => {
-  if (modalInstance._handleLoginOverdueInstance) {
-    return
-  } else {
-    // to re-login
-    modalInstance._handleLoginOverdueInstance = Modal.error({
+    modalInstance._handleLoginOverdueInstance = modal.error({
+      zIndex: 9999, // 防止被其他弹窗或者其他元素覆盖，优先级最高
       title: i18n.t('登录失效,请重新登录'),
       centered: true,
       closable: false,
@@ -55,18 +37,17 @@ export const handleLoginOverdue = async () => {
         modalInstance._handleLoginOverdueInstance = null
         store.dispatch.userModel.logout()
         const redirect = encodeURIComponent(window.location.href)
+
         history.replace({
-          pathname: '/login',
-          search: `?redirect=${redirect}`
+          pathname: '/user/login',
+          search: `?redirect=${redirect}`,
         })
-      }
+      },
     })
   }
 }
 
-type CodeMessage = {
-  [key: number]: string
-}
+type CodeMessage = Record<number, string>
 
 const codeMessage: CodeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -83,7 +64,7 @@ const codeMessage: CodeMessage = {
   500: '服务器发生错误，请检查服务器。',
   502: '网关错误。',
   503: '服务不可用，服务器暂时过载或维护。',
-  504: '网关超时。'
+  504: '网关超时。',
 }
 /**
  * 异常处理程序
@@ -97,18 +78,17 @@ const errorHandler = (error: ResponseError) => {
     const { status, url } = response
     if (status === 401) {
       handleLoginOverdue()
-      console.log('handleLoginOverdue')
       return response
     } else {
       notification.error({
         message: `请求错误 ${status}: ${url}`,
-        description: errorText
+        description: errorText,
       })
     }
   } else if (!response) {
     notification.error({
       description: '您的网络发生异常，无法连接服务器',
-      message: '网络异常'
+      message: '网络异常',
     })
   }
 
@@ -122,7 +102,7 @@ const request = extend({
   prefix: '/api',
   errorHandler,
   credentials: 'include', // 默认请求是否带上cookie
-  timeout: 1000 * 60 * 2
+  timeout: 1000 * 60 * 2,
 })
 
 // request拦截器, 改变url 或 options.
@@ -133,9 +113,9 @@ request.interceptors.request.use((url, options) => {
     options: {
       ...options,
       headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    }
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
   }
 })
 
@@ -151,7 +131,7 @@ request.interceptors.response.use(async (response) => {
       console.log('error', msg || errMsg)
       notification.error({
         message: '请求错误',
-        description: `${code}: ${msg || errMsg}`
+        description: `${code}: ${msg || errMsg}`,
       })
     }
     return res

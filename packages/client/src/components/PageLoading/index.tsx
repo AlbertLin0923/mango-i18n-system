@@ -1,16 +1,12 @@
 import { useEffect } from 'react'
 import { Spin } from 'antd'
 import NProgress from 'nprogress'
-import 'nprogress/nprogress.css'
+
+import './index.scss'
 
 NProgress.configure({ showSpinner: false })
 
-type Props = {
-  spinning: boolean | undefined
-}
-
-const PageLoading: React.FC<Props> = ({ spinning }) => {
-  // 增加一个页面加载动画
+const PageLoading: FC<{ spinning: boolean | undefined }> = ({ spinning }) => {
   useEffect(() => {
     NProgress.start()
     return () => {

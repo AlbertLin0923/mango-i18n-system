@@ -7,36 +7,26 @@ import {
   Controller,
   Res,
   UseGuards,
-} from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { DeleteResult } from 'typeorm';
-import { Response } from 'express';
-import { AuthGuard } from '@nestjs/passport';
+} from '@nestjs/common'
+import { FileInterceptor } from '@nestjs/platform-express'
+import { DeleteResult } from 'typeorm'
+import { AuthGuard } from '@nestjs/passport'
 import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
-} from '@nestjs/swagger';
-import xlsx from 'node-xlsx';
+} from '@nestjs/swagger'
+import xlsx from 'node-xlsx'
 
-import { BusinessException } from '../../common/exception/business.exception';
+import { User } from '../../common/decorator/user.js'
+import { BusinessException } from '../../common/exception/business.exception.js'
 
-import { User } from '../../common/decorator/user';
-
-import { LocaleService } from './locale.service';
-import { SettingService } from '../setting/setting.service';
-
-import { AddLocaleDTO, UpdateLocaleDTO, DeleteLocaleDTO } from './locale.dto';
 import {
-  LocaleVO,
   LocaleResponse,
-  LocaleListVO,
   LocaleListResponse,
-  LocaleMapVO,
   LocaleMapResponse,
-} from './locale.vo';
-
+} from './locale.vo.js'
 import {
   isLegalExcelCellValue,
   formatLocaleStr,
@@ -46,12 +36,21 @@ import {
   getFileExtendName,
   getFileNameWithoutExtendName,
   findStubInLocaleList,
-} from './locale.utils';
-
+} from './locale.utils.js'
 import {
   extractChineseFieldListFromSourceCode,
   extractLocaleFromSourceCode,
-} from './locale.tool';
+} from './locale.tool.js'
+
+import type {
+  AddLocaleDTO,
+  UpdateLocaleDTO,
+  DeleteLocaleDTO,
+} from './locale.dto.js'
+import type { LocaleVO, LocaleListVO, LocaleMapVO } from './locale.vo.js'
+import type { LocaleService } from './locale.service.js'
+import type { SettingService } from '../setting/setting.service.js'
+import type { Response } from 'express'
 
 @ApiBearerAuth()
 @ApiTags('locale')
@@ -69,8 +68,8 @@ export class LocaleController {
   })
   @UseGuards(AuthGuard('jwt'))
   @Get('get_dict')
-  async getDict(): Promise<Array<any>> {
-    return await this.settingService.getLocaleDictWithLabel();
+  async getDict(): Promise<any[]> {
+    return await this.settingService.getLocaleDictWithLabel()
   }
 
   @ApiOperation({ summary: '获取全部语言包' })
@@ -82,7 +81,7 @@ export class LocaleController {
   @UseGuards(AuthGuard('jwt'))
   @Get('get_locale_list')
   async getLocaleList(): Promise<LocaleListVO> {
-    return await this.localeService.getLocaleList();
+    return await this.localeService.getLocaleList()
   }
 
   @ApiOperation({ summary: '获取全部语言包' })
@@ -93,11 +92,11 @@ export class LocaleController {
   })
   @Get('get_locale_map')
   async getLocaleMap(): Promise<LocaleMapVO> {
-    const { setting } = await this.settingService.getSetting();
-    const { localeDict } = setting;
-    const { list } = await this.localeService.getLocaleList();
-    const map = transformListToMap(list, localeDict);
-    return { map };
+    const { setting } = await this.settingService.getSetting()
+    const { localeDict } = setting
+    const { list } = await this.localeService.getLocaleList()
+    const map = transformListToMap(list, localeDict)
+    return { map }
   }
 
   @ApiOperation({ summary: '增加语言包条目' })
@@ -112,7 +111,7 @@ export class LocaleController {
     @User() user,
     @Body() addLocaleDTO: AddLocaleDTO,
   ): Promise<LocaleVO> {
-    return await this.localeService.addLocale(user, addLocaleDTO);
+    return await this.localeService.addLocale(user, addLocaleDTO)
   }
 
   @ApiOperation({ summary: '更新语言包条目' })
@@ -127,7 +126,7 @@ export class LocaleController {
     @User() user,
     @Body() updateLocaleDTO: UpdateLocaleDTO,
   ): Promise<LocaleVO> {
-    return await this.localeService.updateLocale(user, updateLocaleDTO);
+    return await this.localeService.updateLocale(user, updateLocaleDTO)
   }
 
   @ApiOperation({ summary: '删除语言包条目' })
@@ -142,7 +141,7 @@ export class LocaleController {
     @User() user,
     @Body() deleteLocaleDTO: DeleteLocaleDTO,
   ): Promise<DeleteResult> {
-    return await this.localeService.deleteLocale(user, deleteLocaleDTO);
+    return await this.localeService.deleteLocale(user, deleteLocaleDTO)
   }
 
   @ApiOperation({ summary: '上传语言包-数据对比和分析' })
@@ -158,29 +157,28 @@ export class LocaleController {
     @UploadedFile() file: Express.Multer.File,
     @Res() res: Response,
   ) {
-    const { setting } = await this.settingService.getSetting();
-    const { localeDict } = setting;
+    const { setting } = await this.settingService.getSetting()
+    const { localeDict } = setting
 
-    const fileExtendName = getFileExtendName(file.originalname);
+    const fileExtendName = getFileExtendName(file.originalname)
     if (fileExtendName === 'xlsx' || fileExtendName === 'xls') {
-      const workSheetsFromBuffer = xlsx.parse(file.buffer)?.[0]?.data;
-      const heads = workSheetsFromBuffer.shift();
+      const workSheetsFromBuffer = xlsx.parse(file.buffer)?.[0]?.data
+      const heads = workSheetsFromBuffer.shift()
 
       if (
         !localeDict.every((item, index) => {
-          return item === heads[index];
+          return item === heads[index]
         })
       ) {
-        throw new BusinessException('excel文件表头格式不正确', 500);
+        throw new BusinessException('excel文件表头格式不正确', 500)
       }
 
-      const excelList = formatExcelData(workSheetsFromBuffer, localeDict);
+      const excelList = formatExcelData(workSheetsFromBuffer, localeDict)
 
+      const result = findStubInLocaleList(excelList, localeDict)
 
-      const result = findStubInLocaleList(excelList, localeDict);
-
-      const { list } = await this.localeService.getLocaleList();
-      const stat = getCompareLocaleStat(list, excelList, localeDict);
+      const { list } = await this.localeService.getLocaleList()
+      const stat = getCompareLocaleStat(list, excelList, localeDict)
 
       return res.json({
         code: 200,
@@ -190,57 +188,57 @@ export class LocaleController {
           result,
         },
         msg: '解析成功',
-      });
+      })
     } else if (fileExtendName === 'json') {
-      const { originalname, mimetype, buffer } = file;
+      const { originalname, mimetype, buffer } = file
       if (mimetype !== 'application/json') {
-        throw new BusinessException('文件格式不正确', 500);
+        throw new BusinessException('文件格式不正确', 500)
       }
 
       const languageCode = localeDict.find((item) => {
-        return item === getFileNameWithoutExtendName(originalname);
-      });
+        return item === getFileNameWithoutExtendName(originalname)
+      })
 
       if (!languageCode) {
         throw new BusinessException(
           `文件名称不正确,正确的文件名如: ${localeDict.join('/')}`,
           500,
-        );
+        )
       }
 
-      const dataString = buffer.toString();
+      const dataString = buffer.toString()
 
-      let dataObject = {};
+      let dataObject = {}
 
       try {
-        dataObject = JSON.parse(dataString);
+        dataObject = JSON.parse(dataString)
       } catch (error) {
-        console.log(error);
-        throw new BusinessException('json文件解析错误', 500);
+        console.log(error)
+        throw new BusinessException('json文件解析错误', 500)
       }
 
-      const datalist = [];
+      const datalist = []
 
       if (languageCode === 'zh-CN') {
         Object.keys(dataObject).forEach((key) => {
           if (isLegalExcelCellValue(key)) {
-            datalist.push({ 'zh-CN': formatLocaleStr(key) });
+            datalist.push({ 'zh-CN': formatLocaleStr(key) })
           }
-        });
+        })
       } else {
         Object.entries(dataObject).forEach(([key, value]) => {
           if (isLegalExcelCellValue(key) && isLegalExcelCellValue(value)) {
             datalist.push({
               'zh-CN': formatLocaleStr(key),
               [languageCode]: formatLocaleStr(value),
-            });
+            })
           }
-        });
+        })
       }
 
-      const { list } = await this.localeService.getLocaleList();
+      const { list } = await this.localeService.getLocaleList()
 
-      const stat = getCompareLocaleStat(list, datalist, localeDict);
+      const stat = getCompareLocaleStat(list, datalist, localeDict)
 
       return res.json({
         code: 200,
@@ -249,9 +247,9 @@ export class LocaleController {
           stat,
         },
         msg: '解析成功',
-      });
+      })
     } else {
-      throw new BusinessException('不支持该类文件类型上传', 500);
+      throw new BusinessException('不支持该类文件类型上传', 500)
     }
   }
 
@@ -269,89 +267,89 @@ export class LocaleController {
     @UploadedFile() file: Express.Multer.File,
     @Res() res: Response,
   ) {
-    const { setting } = await this.settingService.getSetting();
-    const { localeDict } = setting;
+    const { setting } = await this.settingService.getSetting()
+    const { localeDict } = setting
 
-    const fileExtendName = getFileExtendName(file.originalname);
+    const fileExtendName = getFileExtendName(file.originalname)
     if (fileExtendName === 'xlsx' || fileExtendName === 'xls') {
-      const workSheetsFromBuffer = xlsx.parse(file.buffer);
-      const data = workSheetsFromBuffer[0].data;
-      const heads = data.shift();
+      const workSheetsFromBuffer = xlsx.parse(file.buffer)
+      const data = workSheetsFromBuffer[0].data
+      const heads = data.shift()
 
       if (
         !localeDict.every((item, index) => {
-          return item === heads[index];
+          return item === heads[index]
         })
       ) {
-        throw new BusinessException('excel文件表头格式不正确', 500);
+        throw new BusinessException('excel文件表头格式不正确', 500)
       }
 
-      const excelList = formatExcelData(data, localeDict);
+      const excelList = formatExcelData(data, localeDict)
 
-      await this.localeService.updateLocaleList(user, excelList);
+      await this.localeService.updateLocaleList(user, excelList)
 
       return res.json({
         code: 200,
         success: true,
         data: null,
         msg: '上传成功',
-      });
+      })
     } else if (fileExtendName === 'json') {
-      const { originalname, mimetype, buffer } = file;
+      const { originalname, mimetype, buffer } = file
       if (mimetype !== 'application/json') {
-        throw new BusinessException('文件格式不正确', 500);
+        throw new BusinessException('文件格式不正确', 500)
       }
 
       const languageCode = localeDict.find((item) => {
-        return item === getFileNameWithoutExtendName(originalname);
-      });
+        return item === getFileNameWithoutExtendName(originalname)
+      })
 
       if (!languageCode) {
         throw new BusinessException(
           `文件名称不正确,正确的文件名如: ${localeDict.join('/')}`,
           500,
-        );
+        )
       }
 
-      const dataString = buffer.toString();
+      const dataString = buffer.toString()
 
-      let dataObject = {};
+      let dataObject = {}
 
       try {
-        dataObject = JSON.parse(dataString);
+        dataObject = JSON.parse(dataString)
       } catch (error) {
-        console.log(error);
-        throw new BusinessException('json文件解析错误', 500);
+        console.log(error)
+        throw new BusinessException('json文件解析错误', 500)
       }
 
-      const list = [];
+      const list = []
 
       if (languageCode === 'zh-CN') {
         Object.keys(dataObject).forEach((key) => {
           if (isLegalExcelCellValue(key)) {
-            list.push({ 'zh-CN': formatLocaleStr(key) });
+            list.push({ 'zh-CN': formatLocaleStr(key) })
           }
-        });
+        })
       } else {
         Object.entries(dataObject).forEach(([key, value]) => {
           if (isLegalExcelCellValue(key) && isLegalExcelCellValue(value)) {
             list.push({
               'zh-CN': formatLocaleStr(key),
               [languageCode]: formatLocaleStr(value),
-            });
+            })
           }
-        });
+        })
       }
 
-      await this.localeService.updateLocaleList(user, list);
+      await this.localeService.updateLocaleList(user, list)
 
       return res.json({
         code: 200,
         success: true,
         msg: '上传文件成功',
-      });
+      })
     } else {
-      throw new BusinessException('不支持该类文件类型上传', 500);
+      throw new BusinessException('不支持该类文件类型上传', 500)
     }
   }
 
@@ -364,7 +362,7 @@ export class LocaleController {
   @UseGuards(AuthGuard('jwt'))
   @Get('update_key_list_by_load_source_code')
   async updateKeyListByLoadSourceCode(@User() user, @Res() res: Response) {
-    const { setting } = await this.settingService.getSetting();
+    const { setting } = await this.settingService.getSetting()
     const {
       gitRepositoryUrl,
       gitAccessUserName,
@@ -374,7 +372,7 @@ export class LocaleController {
       resolveDirPathList,
       filterExtNameList,
       extractor,
-    } = setting;
+    } = setting
 
     const { success, message, readResult } =
       await extractChineseFieldListFromSourceCode(
@@ -386,17 +384,17 @@ export class LocaleController {
         resolveDirPathList,
         filterExtNameList,
         extractor,
-      );
+      )
 
     if (success) {
-      await this.localeService.updateLocaleList(user, readResult);
+      await this.localeService.updateLocaleList(user, readResult)
       return res.json({
         code: 200,
         success: true,
         message,
-      });
+      })
     } else {
-      throw new BusinessException(`${message?.join(',')}`);
+      throw new BusinessException(`${message?.join(',')}`)
     }
   }
 
@@ -409,7 +407,7 @@ export class LocaleController {
   @UseGuards(AuthGuard('jwt'))
   @Get('update_list_by_load_source_code_locale')
   async updateListByLoadSourceCodeLocale(@User() user, @Res() res: Response) {
-    const { setting } = await this.settingService.getSetting();
+    const { setting } = await this.settingService.getSetting()
     const {
       gitRepositoryUrl,
       gitAccessUserName,
@@ -417,7 +415,7 @@ export class LocaleController {
       projectDirName,
       resolveGitBranchName,
       localeDict,
-    } = setting;
+    } = setting
 
     const execResult = await extractLocaleFromSourceCode(
       gitRepositoryUrl,
@@ -426,31 +424,31 @@ export class LocaleController {
       projectDirName,
       resolveGitBranchName,
       localeDict,
-    );
+    )
 
-    const { success, message, readResult } = execResult;
+    const { success, message, readResult } = execResult
 
     if (success) {
       if (readResult.length) {
         for (let index = 0; index < readResult.length; index++) {
-          const element = readResult[index];
-          const { fileName, locale } = element;
-          const list = [];
+          const element = readResult[index]
+          const { fileName, locale } = element
+          const list = []
           if (fileName === 'zh-CN') {
             Object.keys(locale).map((key) => {
               if (isLegalExcelCellValue(key)) {
-                list.push({ 'zh-CN': key });
+                list.push({ 'zh-CN': key })
               }
-            });
+            })
           } else {
             Object.entries(locale).map(([key, value]) => {
               if (isLegalExcelCellValue(key) && isLegalExcelCellValue(value)) {
-                list.push({ 'zh-CN': key, [fileName]: value });
+                list.push({ 'zh-CN': key, [fileName]: value })
               }
-            });
+            })
           }
 
-          await this.localeService.updateLocaleList(user, list);
+          await this.localeService.updateLocaleList(user, list)
         }
       }
 
@@ -458,9 +456,9 @@ export class LocaleController {
         code: 200,
         success: true,
         message: message,
-      });
+      })
     } else {
-      throw new BusinessException(`${message?.join(',')}`);
+      throw new BusinessException(`${message?.join(',')}`)
     }
   }
 

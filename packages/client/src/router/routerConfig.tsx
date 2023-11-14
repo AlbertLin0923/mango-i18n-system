@@ -1,108 +1,141 @@
 import { lazy } from 'react'
 import { DashboardOutlined, SettingOutlined } from '@ant-design/icons'
-import { RouterConfig } from '@/type'
 
 import BasicLayout from '@/layouts/BasicLayout'
-import BlankLayout from '@/layouts/BlankLayout'
+import UserLayout from '@/layouts/UserLayout'
+import Home from '@/pages/home'
+import Login from '@/pages/user/login'
+import Register from '@/pages/user/register'
 
-const routerConfig: RouterConfig = [
+export type UserAllowedAuthList = (string | number)[]
+
+export type UserRole = string
+
+export type RouterItem = {
+  auth: number | string | undefined
+  role: string | string[] | undefined
+  path: string
+  name: string
+  icon?: ReactNode
+  hideInMenu?: boolean
+  hideInBreadcrumb?: boolean
+  component?: any
+  showInParent?: boolean
+  children?: RouterItem[]
+  showBanner?: boolean
+}
+
+export const constantRouterConfig: RouterItem[] = [
   {
     auth: '',
     role: '',
-    icon: <DashboardOutlined />,
     path: '/',
     name: '首页',
-    component: BasicLayout,
-    children: [
-      {
-        auth: '',
-        role: '',
-        icon: <DashboardOutlined />,
-        path: 'home',
-        name: '首页',
-        showParentMenu: true,
-        component: lazy(() => import('@/pages/home'))
-      }
-    ]
+    hideInMenu: true,
+    component: Home,
   },
   {
     auth: '',
     role: '',
-    icon: <DashboardOutlined />,
-    path: '/locale',
-    name: '语言包',
-    component: BasicLayout,
+    path: '/user',
+    name: '用户',
+    component: UserLayout,
     children: [
       {
         auth: '',
         role: '',
-        icon: <DashboardOutlined />,
-        path: 'list',
-        name: '列表',
-        component: lazy(() => import('@/pages/locale/index'))
-      }
-    ]
+        path: 'login',
+        name: '登录',
+        component: Login,
+      },
+      {
+        auth: '',
+        role: '',
+        path: 'register',
+        name: '注册',
+        component: Register,
+      },
+    ],
   },
-  {
-    auth: '',
-    role: '',
-    icon: <DashboardOutlined />,
-    path: '/record',
-    name: '操作记录',
-    component: BasicLayout,
-    children: [
-      {
-        auth: '',
-        role: '',
-        icon: <DashboardOutlined />,
-        path: 'list',
-        name: '列表',
-        component: lazy(() => import('@/pages/record/index'))
-      }
-    ]
-  },
-  {
-    auth: '',
-    role: ['admin'],
-    icon: <DashboardOutlined />,
-    path: '/system',
-    name: '系统管理',
-    component: BasicLayout,
-    children: [
-      {
-        auth: '',
-        role: '',
-        icon: <SettingOutlined />,
-        path: 'user-setting',
-        name: '人员配置',
-        component: lazy(() => import('@/pages/system/user-setting/index'))
-      },
-      {
-        auth: '',
-        role: '',
-        icon: <SettingOutlined />,
-        path: 'system-setting',
-        name: '界面配置',
-        component: lazy(() => import('@/pages/system/system-setting/index'))
-      },
-      {
-        auth: '',
-        role: '',
-        icon: <SettingOutlined />,
-        path: 'extractor-setting',
-        name: '解析配置',
-        component: lazy(() => import('@/pages/system/extractor-setting/index'))
-      },
-      {
-        auth: '',
-        role: '',
-        icon: <SettingOutlined />,
-        path: 'system-tool',
-        name: '便捷工具',
-        component: lazy(() => import('@/pages/system/system-tool/index'))
-      }
-    ]
-  }
 ]
 
-export default routerConfig
+export const asyncRouterConfig: RouterItem[] = [
+  // {
+  //   auth: '',
+  //   role: '',
+  //   path: '/locale',
+  //   name: '语言包',
+  //   icon: <DashboardOutlined />,
+  //   component: BasicLayout,
+  //   children: [
+  //     {
+  //       auth: '',
+  //       role: '',
+  //       path: '',
+  //       name: '列表',
+  //       hideInMenu: true,
+  //       component: lazy(() => import('@/pages/locale')),
+  //     },
+  //   ],
+  // },
+  // {
+  //   auth: '',
+  //   role: '',
+  //   path: '/record',
+  //   name: '操作记录',
+  //   icon: <DashboardOutlined />,
+  //   component: BasicLayout,
+  //   children: [
+  //     {
+  //       auth: '',
+  //       role: '',
+  //       path: '',
+  //       name: '列表',
+  //       hideInMenu: true,
+  //       component: lazy(() => import('@/pages/record')),
+  //     },
+  //   ],
+  // },
+  // {
+  //   auth: '',
+  //   role: ['admin'],
+  //   icon: <DashboardOutlined />,
+  //   path: '/system',
+  //   name: '系统管理',
+  //   component: BasicLayout,
+  //   children: [
+  //     {
+  //       auth: '',
+  //       role: '',
+  //       icon: <SettingOutlined />,
+  //       path: 'user-setting',
+  //       name: '人员配置',
+  //       component: lazy(() => import('@/pages/system/user-setting/index')),
+  //     },
+  //     {
+  //       auth: '',
+  //       role: '',
+  //       icon: <SettingOutlined />,
+  //       path: 'system-setting',
+  //       name: '界面配置',
+  //       component: lazy(() => import('@/pages/system/system-setting/index')),
+  //     },
+  //     {
+  //       auth: '',
+  //       role: '',
+  //       icon: <SettingOutlined />,
+  //       path: 'extractor-setting',
+  //       name: '解析配置',
+  //       component: lazy(() => import('@/pages/system/extractor-setting/index')),
+  //     },
+  //     {
+  //       auth: '',
+  //       role: '',
+  //       icon: <SettingOutlined />,
+  //       path: 'system-tool',
+  //       name: '便捷工具',
+  //       component: lazy(() => import('@/pages/system/system-tool/index')),
+  //     },
+  //   ],
+  // },
+]

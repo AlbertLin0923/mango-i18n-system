@@ -1,22 +1,22 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
 
-import { Extractor } from '../../common/type/index';
-import { SettingEntity } from './setting.entity';
-import { Setting, UpdateSettingDTO } from './setting.dto';
-import {
-  SettingSearchOptionsVO,
-  SettingVO,
-  UpdateSettingVO,
-} from './setting.vo';
+import { SettingEntity } from './setting.entity.js'
 
+import { Extractor } from '../../common/type/index.js'
 import {
   extractAllDirPathFromSourceCode,
   reActionResource,
-} from '../locale/locale.tool';
+} from '../locale/locale.tool.js'
+import { BusinessException } from '../../common/exception/business.exception.js'
 
-import { BusinessException } from '../../common/exception/business.exception';
+import type {
+  SettingSearchOptionsVO,
+  SettingVO,
+  UpdateSettingVO,
+} from './setting.vo.js'
+import type { Setting, UpdateSettingDTO } from './setting.dto.js'
+import type { Repository } from 'typeorm'
 
 const allLocaleDict = [
   {
@@ -86,8 +86,8 @@ const allLocaleDict = [
   { fileName: 'sv-SE', cnName: '瑞典语', alias: ['sv-SE', 'sv_SE'] },
   { fileName: 'th-TH', cnName: '泰语', alias: ['th-TH', 'th_TH'] },
 ].map((i) => {
-  return { label: `${i.fileName} (${i.cnName})`, value: i.fileName };
-});
+  return { label: `${i.fileName} (${i.cnName})`, value: i.fileName }
+})
 
 @Injectable()
 export class SettingService {
@@ -104,17 +104,17 @@ export class SettingService {
       { label: '.ts', value: '.ts' },
       { label: '.tsx', value: '.tsx' },
       { label: '.svelte', value: '.svelte' },
-    ];
+    ]
 
     const allExtractor = [
       { label: 'regex', value: 'regex' },
       { label: 'ast', value: 'ast' },
-    ];
+    ]
 
-    let allResolveDirPath = [];
-    let message: string[] = [];
+    let allResolveDirPath = []
+    let message: string[] = []
 
-    const settingList = await this.settingRepository.find();
+    const settingList = await this.settingRepository.find()
     const setting: Setting = {
       gitRepositoryUrl: '',
       gitAccessUserName: '',
@@ -126,10 +126,10 @@ export class SettingService {
       extractor: Extractor.AST,
       resolveDirPathList: [],
       systemTitle: '',
-    };
+    }
     settingList.forEach((v) => {
-      setting[v['type']] = v['value'];
-    });
+      setting[v['type']] = v['value']
+    })
 
     if (
       setting.gitRepositoryUrl &&
@@ -144,17 +144,17 @@ export class SettingService {
         setting.gitAccessToken,
         setting.projectDirName,
         setting.resolveGitBranchName,
-      );
+      )
 
-      const { success, message: _message, readResult } = execResult;
+      const { success, message: _message, readResult } = execResult
 
       if (success) {
         allResolveDirPath = readResult.map((i) => {
-          return { label: i, value: i };
-        });
-        message = _message;
+          return { label: i, value: i }
+        })
+        message = _message
       } else {
-        throw new BusinessException(`${message.join(',')}`);
+        throw new BusinessException(`${message.join(',')}`)
       }
     }
 
@@ -166,22 +166,22 @@ export class SettingService {
         allLocaleDict,
       },
       message: message,
-    };
+    }
   }
 
   async getSetting(): Promise<SettingVO> {
-    return this.buildSettingVO();
+    return this.buildSettingVO()
   }
 
   async getPublicSetting(): Promise<SettingVO> {
-    return this.buildSettingVO(true, true);
+    return this.buildSettingVO(true, true)
   }
 
   async updateSetting(
     updateSettingDTO: UpdateSettingDTO,
   ): Promise<UpdateSettingVO> {
-    const settingObj = updateSettingDTO.setting;
-    const o = [];
+    const settingObj = updateSettingDTO.setting
+    const o = []
     Object.entries(settingObj).forEach(([key, value]) => {
       if (
         key === 'filterExtNameList' ||
@@ -191,29 +191,29 @@ export class SettingService {
         o.push({
           type: key,
           value: value.join(','),
-        });
+        })
       } else if (key === 'gitAccessToken') {
         if (!value.startsWith('*****')) {
           o.push({
             type: key,
             value: value,
-          });
+          })
         }
       } else {
         o.push({
           type: key,
           value,
-        });
+        })
       }
-    });
+    })
 
-    let isNeedReActionResourece = false;
+    let isNeedReActionResourece = false
 
     for (let index = 0; index < o.length; index++) {
-      const type = o[index]['type'];
-      const value = o[index]['value'];
-      const toUpdate = await this.settingRepository.findOne({ type });
-      let updated = {};
+      const type = o[index]['type']
+      const value = o[index]['value']
+      const toUpdate = await this.settingRepository.findOneBy({ type })
+      let updated = {}
       if (toUpdate) {
         if (
           [
@@ -225,11 +225,11 @@ export class SettingService {
           ].includes(type) &&
           value !== toUpdate.value
         ) {
-          isNeedReActionResourece = true;
+          isNeedReActionResourece = true
         }
 
-        updated = { ...toUpdate, value };
-        await this.settingRepository.save(updated);
+        updated = { ...toUpdate, value }
+        await this.settingRepository.save(updated)
       } else {
         if (
           [
@@ -240,19 +240,19 @@ export class SettingService {
             'projectDirName',
           ].includes(type)
         ) {
-          isNeedReActionResourece = true;
+          isNeedReActionResourece = true
         }
 
-        updated = { type, value };
+        updated = { type, value }
         await this.settingRepository.save(
           Object.assign(new SettingEntity(), updated),
-        );
+        )
       }
     }
 
-    let message = [];
+    let message = []
 
-    const { setting } = await this.buildSettingVO(false);
+    const { setting } = await this.buildSettingVO(false)
 
     if (isNeedReActionResourece) {
       const result = await reActionResource(
@@ -261,48 +261,48 @@ export class SettingService {
         setting.gitAccessToken,
         setting.projectDirName,
         setting.resolveGitBranchName,
-      );
-      message = result.message;
+      )
+      message = result.message
     }
 
-    setting['gitAccessToken'] = '********************************';
+    setting['gitAccessToken'] = '********************************'
 
-    return { message: message, setting };
+    return { message: message, setting }
   }
 
-  async getLocaleDictWithLabel(): Promise<Array<any>> {
-    const { setting } = await this.buildSettingVO();
-    const { localeDict } = setting;
+  async getLocaleDictWithLabel(): Promise<any[]> {
+    const { setting } = await this.buildSettingVO()
+    const { localeDict } = setting
     return localeDict.map((item) => {
-      const label = allLocaleDict.find((i) => i.value === item)?.label;
-      return { label, value: item };
-    });
+      const label = allLocaleDict.find((i) => i.value === item)?.label
+      return { label, value: item }
+    })
   }
 
   private async buildSettingVO(
     encrypt = true,
     isPublic = false,
   ): Promise<SettingVO> {
-    const settingList = await this.settingRepository.find();
-    const setting = {};
+    const settingList = await this.settingRepository.find()
+    const setting = {}
     settingList.forEach((v) => {
       if (
         v['type'] === 'filterExtNameList' ||
         v['type'] === 'resolveDirPathList' ||
         v['type'] === 'localeDict'
       ) {
-        setting[v['type']] = v['value'].split(',');
+        setting[v['type']] = v['value'].split(',')
       } else {
-        setting[v['type']] = v['value'];
+        setting[v['type']] = v['value']
       }
-    });
+    })
 
     if (isPublic === true) {
-      return { setting: { systemTitle: setting['systemTitle'] } } as SettingVO;
+      return { setting: { systemTitle: setting['systemTitle'] } } as SettingVO
     }
     if (encrypt && setting['gitAccessToken']) {
-      setting['gitAccessToken'] = '********************************';
+      setting['gitAccessToken'] = '********************************'
     }
-    return { setting } as SettingVO;
+    return { setting } as SettingVO
   }
 }

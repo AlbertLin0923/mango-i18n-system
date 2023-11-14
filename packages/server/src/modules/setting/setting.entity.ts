@@ -1,14 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { BaseEntity } from '../../common/entity';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
+
+import { BaseEntity } from '../../common/entity/index.js'
 
 @Entity('setting')
 export class SettingEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id: string
 
   @Column({ default: '' })
-  type: string;
+  type: string
 
   @Column({ default: '' })
-  value: string;
+  value: string
 }

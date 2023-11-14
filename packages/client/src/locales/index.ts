@@ -1,6 +1,7 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import Flags from 'country-flag-icons/react/3x2'
+import { storage } from '@mango-kit/utils'
 
 // 注意，该字典在多个地方使用，请谨慎修改
 export const localeDict = [
@@ -12,7 +13,7 @@ export const localeDict = [
     // permission: 360,
     codeTransferToServer: 0,
     languageIcons: '🇨🇳',
-    countryFlagIcons: Flags.CN
+    countryFlagIcons: Flags.CN,
   },
   {
     fileName: 'en-US',
@@ -22,7 +23,7 @@ export const localeDict = [
     // permission: 361,
     codeTransferToServer: 4,
     languageIcons: '🇺🇸',
-    countryFlagIcons: Flags.US
+    countryFlagIcons: Flags.US,
   },
   {
     fileName: 'id-ID',
@@ -32,7 +33,7 @@ export const localeDict = [
     // permission: 362,
     codeTransferToServer: 1,
     languageIcons: '🇮🇩',
-    countryFlagIcons: Flags.ID
+    countryFlagIcons: Flags.ID,
   },
   {
     fileName: 'vi-VN',
@@ -42,7 +43,7 @@ export const localeDict = [
     // permission: 363,
     codeTransferToServer: '4',
     languageIcons: '🇻🇳',
-    countryFlagIcons: Flags.VN
+    countryFlagIcons: Flags.VN,
   },
   {
     fileName: 'ms-MY',
@@ -52,7 +53,7 @@ export const localeDict = [
     alias: ['ms-MY', 'ms_MY', 'my', 'ms'],
     codeTransferToServer: 2,
     languageIcons: '🇲🇾',
-    countryFlagIcons: Flags.MY
+    countryFlagIcons: Flags.MY,
   },
   {
     fileName: 'es-ES',
@@ -62,7 +63,7 @@ export const localeDict = [
     alias: ['es-ES', 'es_ES'],
     codeTransferToServer: 7,
     languageIcons: '🇪🇸',
-    countryFlagIcons: Flags.ES
+    countryFlagIcons: Flags.ES,
   },
   {
     fileName: 'fr-FR',
@@ -72,7 +73,7 @@ export const localeDict = [
     alias: ['fr-FR', 'fr_FR'],
     codeTransferToServer: 8,
     languageIcons: '🇫🇷',
-    countryFlagIcons: Flags.FR
+    countryFlagIcons: Flags.FR,
   },
   {
     fileName: 'fr-BE',
@@ -82,7 +83,7 @@ export const localeDict = [
     alias: ['fr-BE', 'fr_BE'],
     codeTransferToServer: 10,
     languageIcons: '🇧🇪',
-    countryFlagIcons: Flags.BE
+    countryFlagIcons: Flags.BE,
   },
   {
     fileName: 'it-IT',
@@ -92,7 +93,7 @@ export const localeDict = [
     alias: ['it-IT', 'it_IT'],
     codeTransferToServer: 9,
     languageIcons: '🇮🇹',
-    countryFlagIcons: Flags.IT
+    countryFlagIcons: Flags.IT,
   },
   {
     fileName: 'pl-PL',
@@ -102,7 +103,7 @@ export const localeDict = [
     alias: ['pl-PL', 'pl_PL'],
     codeTransferToServer: 26,
     languageIcons: '🇵🇱',
-    countryFlagIcons: Flags.PL
+    countryFlagIcons: Flags.PL,
   },
   {
     fileName: 'de-DE',
@@ -112,7 +113,7 @@ export const localeDict = [
     alias: ['de-DE', 'de_DE'],
     codeTransferToServer: null,
     languageIcons: '🇩🇪',
-    countryFlagIcons: Flags.DE
+    countryFlagIcons: Flags.DE,
   },
   {
     fileName: 'da-DK',
@@ -122,7 +123,7 @@ export const localeDict = [
     alias: ['da-DK', 'da_DK'],
     codeTransferToServer: null,
     languageIcons: '🇩🇰',
-    countryFlagIcons: Flags.DK
+    countryFlagIcons: Flags.DK,
   },
   {
     fileName: 'nl-NL',
@@ -132,7 +133,7 @@ export const localeDict = [
     alias: ['nl-NL', 'nl_NL'],
     codeTransferToServer: null,
     languageIcons: '🇳🇱',
-    countryFlagIcons: Flags.NL
+    countryFlagIcons: Flags.NL,
   },
   {
     fileName: 'fi-FI',
@@ -142,7 +143,7 @@ export const localeDict = [
     alias: ['fi-FI', 'fi_FI'],
     codeTransferToServer: null,
     languageIcons: '🇫🇮',
-    countryFlagIcons: Flags.FI
+    countryFlagIcons: Flags.FI,
   },
   {
     fileName: 'el-GR',
@@ -152,7 +153,7 @@ export const localeDict = [
     alias: ['el-GR', 'el_GR'],
     codeTransferToServer: null,
     languageIcons: '🇬🇷',
-    countryFlagIcons: Flags.GR
+    countryFlagIcons: Flags.GR,
   },
   {
     fileName: 'hu-HU',
@@ -162,7 +163,7 @@ export const localeDict = [
     alias: ['hu-HU', 'hu_HU'],
     codeTransferToServer: null,
     languageIcons: '🇭🇺',
-    countryFlagIcons: Flags.HU
+    countryFlagIcons: Flags.HU,
   },
   {
     fileName: 'is-IS',
@@ -172,7 +173,7 @@ export const localeDict = [
     alias: ['is-IS', 'is_IS'],
     codeTransferToServer: null,
     languageIcons: '🇮🇸',
-    countryFlagIcons: Flags.IS
+    countryFlagIcons: Flags.IS,
   },
   {
     fileName: 'ja-JP',
@@ -182,7 +183,7 @@ export const localeDict = [
     alias: ['ja-JP', 'ja_JP'],
     codeTransferToServer: null,
     languageIcons: '🇯🇵',
-    countryFlagIcons: Flags.JP
+    countryFlagIcons: Flags.JP,
   },
   {
     fileName: 'ko-KR',
@@ -192,7 +193,7 @@ export const localeDict = [
     alias: ['ko-KR', 'ko_KR'],
     codeTransferToServer: null,
     languageIcons: '🇰🇷',
-    countryFlagIcons: Flags.KR
+    countryFlagIcons: Flags.KR,
   },
   {
     fileName: 'pt-PT',
@@ -202,7 +203,7 @@ export const localeDict = [
     alias: ['pt-PT', 'pt_PT'],
     codeTransferToServer: null,
     languageIcons: '🇵🇹',
-    countryFlagIcons: Flags.PT
+    countryFlagIcons: Flags.PT,
   },
   {
     fileName: 'sv-SE',
@@ -212,7 +213,7 @@ export const localeDict = [
     alias: ['sv-SE', 'sv_SE'],
     codeTransferToServer: null,
     languageIcons: '🇸🇪',
-    countryFlagIcons: Flags.SE
+    countryFlagIcons: Flags.SE,
   },
   {
     fileName: 'th-TH',
@@ -222,8 +223,8 @@ export const localeDict = [
     alias: ['th-TH', 'th_TH'],
     codeTransferToServer: null,
     languageIcons: '🇹🇭',
-    countryFlagIcons: Flags.TH
-  }
+    countryFlagIcons: Flags.TH,
+  },
 ]
 
 const filterLocaleKey = (key: string | null): string => {
@@ -236,8 +237,8 @@ const filterLocaleKey = (key: string | null): string => {
 
 function loadLocale() {
   const locales = require.context('./', true, /[A-Za-z0-9-_,\s]+\.json$/i)
-  let messages: Record<string, any> = {}
-  let result: Record<string, any> = {}
+  const messages: Record<string, any> = {}
+  const result: Record<string, any> = {}
   locales.keys().forEach((key) => {
     const matched = key.match(/([A-Za-z0-9-_]+)\./i)
     if (matched && matched.length > 1) {
@@ -255,7 +256,7 @@ function loadLocale() {
 
 export function getLanguage() {
   // from localStorage
-  const lngFromStorage = filterLocaleKey(window.localStorage.getItem('mango-i18n-system-language'))
+  const lngFromStorage = storage.getItem('LANGUAGE')
   if (lngFromStorage) return lngFromStorage
 
   // from navigator
@@ -272,7 +273,7 @@ i18n
     {
       resources: loadLocale(),
       react: {
-        useSuspense: true
+        useSuspense: true,
       },
       debug: false,
       lng: getLanguage(),
@@ -281,12 +282,12 @@ i18n
       defaultNS: 'common',
       keySeparator: false, // we do not use keys in form messages.welcome
       interpolation: {
-        escapeValue: false // react already safes from xss
-      }
+        escapeValue: false, // react already safes from xss
+      },
     },
     (err, t) => {
       if (err) return console.error(err)
-    }
+    },
   )
 
 export default i18n

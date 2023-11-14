@@ -12,10 +12,6 @@ export type RegisterParamsType = {
   key: string
 }
 
-export type RefreshTokenParamsType = {
-  refreshToken: string
-}
-
 export interface UpdateMyPasswordParamsType {
   oldPassword: string
   password: string
@@ -45,68 +41,60 @@ export interface UpdateUserParamsType {
 export async function login(data: LoginParamsType) {
   return request('/user/login', {
     method: 'post',
-    data
+    data,
   })
 }
 
 export async function register(data: RegisterParamsType) {
   return request('/user/register', {
     method: 'post',
-    data
+    data,
   })
 }
 
-export async function refresh_token(data: RefreshTokenParamsType) {
-  return request('/user/refresh_token/', {
-    method: 'post',
-    data
-  })
-}
-
-// 获取列表页搜索框下拉列表
-export async function getSearchOptions() {
-  return request('/user/get_search_options', {
-    method: 'get'
-  })
-}
-
-export async function getUser() {
+export async function getUserInfo() {
   return request('/user/get_user/', {
-    method: 'get'
+    method: 'get',
   })
 }
 
 export async function getUserList(data: any) {
   return request('/user/get_user_list', {
     method: 'post',
-    data
+    data,
   })
 }
 
 export async function updateMyPassword(data: UpdateMyPasswordParamsType) {
   return request('/user/update_my_password', {
     method: 'post',
-    data
+    data,
   })
 }
 
 export async function updateOtherPassword(data: UpdateOtherPasswordParamsType) {
   return request('/user/update_other_password', {
     method: 'post',
-    data
+    data,
   })
 }
 
 export async function addUser(data: AddUserParamsType) {
   return request('/user/add_user', {
     method: 'post',
-    data
+    data,
   })
 }
 
 export async function updateUser(data: UpdateUserParamsType) {
   return request('/user/update_user', {
     method: 'post',
-    data
+    data,
+  })
+}
+
+export async function getSearchOptions() {
+  return request('/user/get_search_options', {
+    method: 'get',
   })
 }

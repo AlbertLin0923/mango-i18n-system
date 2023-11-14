@@ -1,12 +1,13 @@
-import React from 'react'
 import Icon from '@ant-design/icons'
-import SvgIcon, { SvgIconProps } from '@/components/SvgIcon'
+import { SvgIcon } from '@mango-kit/components'
 
-const AntdSvgIcon: React.FC<SvgIconProps> = (props) => {
+import type { SvgIconProps } from '@mango-kit/components'
+
+const AntdSvgIcon: FC<SvgIconProps> = (props) => {
   return (
     <Icon
       component={() => {
-        return <SvgIcon {...props}></SvgIcon>
+        return <SvgIcon {...props} />
       }}
     />
   )

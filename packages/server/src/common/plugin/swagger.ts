@@ -1,15 +1,16 @@
-import { INestApplication } from '@nestjs/common';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
+
+import type { INestApplication } from '@nestjs/common'
 
 // 配置 Swagger UI
 export function setupSwagger(app: INestApplication) {
   const options = new DocumentBuilder()
-    .setTitle('国际化文案配置系统API')
-    .setDescription('国际化文案配置系统接口列表')
-    .setVersion('0.9')
+    .setTitle('自动国际化文案配置系统API')
+    .setDescription('接口列表')
+    .setVersion('1.0')
     .addBearerAuth()
-    .build();
+    .build()
 
-  const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('/docs', app, document);
+  const document = SwaggerModule.createDocument(app, options)
+  SwaggerModule.setup('/docs', app, document)
 }

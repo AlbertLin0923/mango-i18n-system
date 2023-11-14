@@ -1,5 +1,5 @@
-import { IsNotEmpty, IsString, Length } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsString, Length } from 'class-validator'
+import { ApiProperty } from '@nestjs/swagger'
 
 export class LocaleDTO {
   @ApiProperty({
@@ -8,7 +8,7 @@ export class LocaleDTO {
   })
   @IsString()
   @Length(0, 1000)
-  'zh-CN': string;
+  'zh-CN': string
 
   @ApiProperty({
     description: '所属模块',
@@ -16,7 +16,7 @@ export class LocaleDTO {
   })
   @IsString()
   @Length(0, 10000)
-  'modules': string;
+  'modules': string
 }
 
 export class AddLocaleDTO extends LocaleDTO {}
@@ -30,5 +30,5 @@ export class DeleteLocaleDTO {
   @IsNotEmpty()
   @IsString()
   @Length(0, 1000)
-  readonly 'zh-CN': string;
+  readonly 'zh-CN': string
 }

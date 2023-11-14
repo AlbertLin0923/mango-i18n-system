@@ -1,36 +1,37 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { BaseOkResponse } from '../../common/type';
+import { ApiProperty } from '@nestjs/swagger'
+
+import { BaseOkResponse } from '../../common/type/index.js'
 
 export class Locale {
   @ApiProperty({
     description: 'zh-CN (简体中文)',
     example: '保存',
   })
-  'zh-CN': string;
+  'zh-CN': string
 
   @ApiProperty({
     description: '所属模块',
     example: 'xx系统react版',
   })
-  'modules': string;
+  'modules': string
 
   @ApiProperty({
     description: '创建时间',
     example: 1638512861141,
   })
-  create_time: number;
+  create_time: number
 
   @ApiProperty({
     description: '更新时间',
     example: 1638512861141,
   })
-  update_time: number;
+  update_time: number
 
   @ApiProperty({
     description: '版本',
     example: 10,
   })
-  version: number;
+  version: number
 }
 
 export class LocaleVO {
@@ -38,7 +39,7 @@ export class LocaleVO {
     description: '语言包条目',
     type: Locale,
   })
-  item: Locale;
+  item: Locale
 }
 
 export class LocaleResponse extends BaseOkResponse {
@@ -46,7 +47,7 @@ export class LocaleResponse extends BaseOkResponse {
     description: '返回数据',
     type: LocaleVO,
   })
-  data: LocaleVO;
+  data: LocaleVO
 }
 
 export class LocaleListVO {
@@ -55,7 +56,7 @@ export class LocaleListVO {
     isArray: true,
     type: Locale,
   })
-  list: Locale[];
+  list: Locale[]
 }
 
 export class LocaleListResponse extends BaseOkResponse {
@@ -63,7 +64,7 @@ export class LocaleListResponse extends BaseOkResponse {
     description: '返回数据',
     type: LocaleListVO,
   })
-  data: LocaleListVO;
+  data: LocaleListVO
 }
 
 export class LocaleMapVO {
@@ -71,7 +72,7 @@ export class LocaleMapVO {
     description: '所有语言包',
     example: {},
   })
-  map: Record<string, unknown>;
+  map: Record<string, unknown>
 }
 
 export class LocaleMapResponse extends BaseOkResponse {
@@ -79,5 +80,5 @@ export class LocaleMapResponse extends BaseOkResponse {
     description: '返回数据',
     type: LocaleMapVO,
   })
-  data: LocaleMapVO;
+  data: LocaleMapVO
 }

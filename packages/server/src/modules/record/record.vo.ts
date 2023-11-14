@@ -1,67 +1,69 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { RecordEntity } from './record.entity';
-import { BaseOkResponse } from '../../common/type';
+import { ApiProperty } from '@nestjs/swagger'
+
+import { RecordEntity } from './record.entity.js'
+
+import { BaseOkResponse } from '../../common/type/index.js'
 
 export class Record extends RecordEntity {
   @ApiProperty({
     description: 'id',
     example: '',
   })
-  id: string;
+  id: string
 
   @ApiProperty({
     description: '操作方式',
     example: 'add',
   })
-  operate_way: string;
+  operate_way: string
 
   @ApiProperty({
     description: '操作类型',
     example: 'batch',
   })
-  operate_type: string;
+  operate_type: string
 
   @ApiProperty({
     description: '操作时间',
     example: 1638514395655,
   })
-  create_time: number;
+  create_time: number
 
   @ApiProperty({
     description: '操作的用户的id',
     example: '',
   })
-  operator_id: string;
+  operator_id: string
 
   @ApiProperty({
     description: '操作的用户的名称',
     example: '',
   })
-  operator_name: string;
+  operator_name: string
 
   @ApiProperty({
     description: '操作的用户使用的ip地址',
     example: '',
   })
-  operator_ip_address: string;
+  operator_ip_address: string
 
   @ApiProperty({
     description: '操作的字段',
     example: '',
   })
-  operate_field: string;
+  operate_field: string
 
   @ApiProperty({
     description: '操作前内容',
     example: '',
   })
-  previous_content: string;
+  previous_content: string
 
   @ApiProperty({
     description: '操作后内容',
     example: '',
   })
-  current_content: string;
+  current_content: string
 }
 
 export class RecordVO {
@@ -69,7 +71,7 @@ export class RecordVO {
     description: '语言包条目',
     type: Record,
   })
-  item: Record;
+  item: Record
 }
 
 export class RecordResponse extends BaseOkResponse {
@@ -77,7 +79,7 @@ export class RecordResponse extends BaseOkResponse {
     description: '返回数据',
     type: RecordVO,
   })
-  data: RecordVO;
+  data: RecordVO
 }
 
 export class RecordListVO {
@@ -86,13 +88,13 @@ export class RecordListVO {
     isArray: true,
     type: Record,
   })
-  list: Record[];
+  list: Record[]
 
   @ApiProperty({
     description: '操作记录列表总数量',
     example: 1000,
   })
-  total: number;
+  total: number
 }
 
 export class RecordListResponse extends BaseOkResponse {
@@ -100,7 +102,7 @@ export class RecordListResponse extends BaseOkResponse {
     description: '返回数据',
     type: RecordListVO,
   })
-  data: RecordListVO;
+  data: RecordListVO
 }
 
 export class RecordSearchOptionsVO {
@@ -108,19 +110,19 @@ export class RecordSearchOptionsVO {
     description: '操作方式下拉列表',
     example: '',
   })
-  operateWayMap: Array<{ label: string; value: string }>;
+  operateWayMap: { label: string; value: string }[]
 
   @ApiProperty({
     description: '操作类型下拉列表',
     example: '',
   })
-  operateTypeMap: Array<{ label: string; value: string }>;
+  operateTypeMap: { label: string; value: string }[]
 
   @ApiProperty({
     description: '操作人下拉列表',
     example: '',
   })
-  operatorNameMap: Array<{ label: string; value: string }>;
+  operatorNameMap: { label: string; value: string }[]
 }
 
 export class RecordSearchOptionsResponse extends BaseOkResponse {
@@ -128,5 +130,5 @@ export class RecordSearchOptionsResponse extends BaseOkResponse {
     description: '返回数据',
     type: RecordSearchOptionsVO,
   })
-  data: RecordSearchOptionsVO;
+  data: RecordSearchOptionsVO
 }

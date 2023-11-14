@@ -5,12 +5,13 @@ import {
   Length,
   IsOptional,
   IsInt,
-} from 'class-validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+} from 'class-validator'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 
-import { RoleType, AccountStatusType } from './user.entity';
+import { TablePaginationType } from '../../common/type/index.js'
 
-import { TablePaginationType } from '../../common/type';
+import type { RoleType, AccountStatusType } from './user.entity.js'
+
 export class LoginDTO {
   @ApiProperty({
     description: '用户名',
@@ -19,7 +20,7 @@ export class LoginDTO {
   @IsString()
   @IsNotEmpty()
   @Length(2, 20)
-  readonly username: string;
+  readonly username: string
 
   @ApiProperty({
     description: '密码',
@@ -28,7 +29,7 @@ export class LoginDTO {
   @IsString()
   @IsNotEmpty()
   @Length(6)
-  readonly password: string;
+  readonly password: string
 }
 
 export class RegisterDTO {
@@ -39,7 +40,7 @@ export class RegisterDTO {
   @IsString()
   @IsNotEmpty()
   @Length(2, 20)
-  readonly username: string;
+  readonly username: string
 
   @ApiProperty({
     description: '密码',
@@ -48,7 +49,7 @@ export class RegisterDTO {
   @IsString()
   @IsNotEmpty()
   @Length(6)
-  readonly password: string;
+  readonly password: string
 
   @ApiProperty({
     description: '邮箱',
@@ -57,7 +58,7 @@ export class RegisterDTO {
   @IsString()
   @IsNotEmpty()
   @IsEmail()
-  readonly email: string;
+  readonly email: string
 
   @ApiProperty({
     description: '注册密钥',
@@ -65,7 +66,7 @@ export class RegisterDTO {
   })
   @IsString()
   @IsNotEmpty()
-  readonly key: string;
+  readonly key: string
 }
 
 export class RefreshTokenDTO {
@@ -75,7 +76,7 @@ export class RefreshTokenDTO {
   })
   @IsString()
   @IsNotEmpty()
-  readonly refreshToken: string;
+  readonly refreshToken: string
 }
 
 export class AddUserDTO {
@@ -86,7 +87,7 @@ export class AddUserDTO {
   @IsString()
   @IsNotEmpty()
   @Length(2, 20)
-  username: string;
+  username: string
 
   @ApiProperty({
     description: '密码',
@@ -95,7 +96,7 @@ export class AddUserDTO {
   @IsString()
   @IsNotEmpty()
   @Length(6)
-  password: string;
+  password: string
 
   @ApiProperty({
     description: '邮箱',
@@ -104,7 +105,7 @@ export class AddUserDTO {
   @IsString()
   @IsNotEmpty()
   @IsEmail()
-  email: string;
+  email: string
 
   @ApiProperty({
     description: '角色',
@@ -112,7 +113,7 @@ export class AddUserDTO {
   })
   @IsString()
   @IsNotEmpty()
-  role: RoleType;
+  role: RoleType
 }
 
 export class DeleteUserDTO {
@@ -123,7 +124,7 @@ export class DeleteUserDTO {
   @IsString()
   @IsNotEmpty()
   @Length(2, 20)
-  username: string;
+  username: string
 }
 
 export class UpdateUserDTO {
@@ -133,7 +134,7 @@ export class UpdateUserDTO {
   })
   @IsString()
   @IsNotEmpty()
-  userId: string;
+  userId: string
 
   @ApiProperty({
     description: '用户名',
@@ -141,7 +142,7 @@ export class UpdateUserDTO {
   })
   @IsOptional()
   @IsString()
-  username: string;
+  username: string
 
   @ApiProperty({
     description: '邮箱',
@@ -150,7 +151,7 @@ export class UpdateUserDTO {
   @IsOptional()
   @IsString()
   @IsEmail()
-  email: string;
+  email: string
 
   @ApiProperty({
     description: '角色',
@@ -158,7 +159,7 @@ export class UpdateUserDTO {
   })
   @IsOptional()
   @IsString()
-  role: RoleType;
+  role: RoleType
 
   @ApiProperty({
     description: '账户状态',
@@ -166,7 +167,7 @@ export class UpdateUserDTO {
   })
   @IsOptional()
   @IsString()
-  account_status: AccountStatusType;
+  account_status: AccountStatusType
 }
 
 export class UpdateMyPasswordDTO {
@@ -177,7 +178,7 @@ export class UpdateMyPasswordDTO {
   @IsString()
   @IsNotEmpty()
   @Length(6)
-  oldPassword: string;
+  oldPassword: string
 
   @ApiProperty({
     description: '密码',
@@ -186,7 +187,7 @@ export class UpdateMyPasswordDTO {
   @IsString()
   @IsNotEmpty()
   @Length(6)
-  password: string;
+  password: string
 }
 
 export class UpdateOtherPasswordDTO {
@@ -196,7 +197,7 @@ export class UpdateOtherPasswordDTO {
   })
   @IsString()
   @IsNotEmpty()
-  userId: string;
+  userId: string
 
   @ApiProperty({
     description: '密码',
@@ -205,7 +206,7 @@ export class UpdateOtherPasswordDTO {
   @IsString()
   @IsNotEmpty()
   @Length(6)
-  password: string;
+  password: string
 }
 
 export class QueryUserDTO extends TablePaginationType {
@@ -215,7 +216,7 @@ export class QueryUserDTO extends TablePaginationType {
   })
   @IsOptional()
   @IsString()
-  username?: string;
+  username?: string
 
   @ApiPropertyOptional({
     description: '邮箱',
@@ -223,7 +224,7 @@ export class QueryUserDTO extends TablePaginationType {
   })
   @IsOptional()
   @IsString()
-  email?: string;
+  email?: string
 
   @ApiPropertyOptional({
     description: '角色',
@@ -231,7 +232,7 @@ export class QueryUserDTO extends TablePaginationType {
   })
   @IsOptional()
   @IsString()
-  role?: RoleType;
+  role?: RoleType
 
   @ApiPropertyOptional({
     description: '账号状态',
@@ -239,7 +240,7 @@ export class QueryUserDTO extends TablePaginationType {
   })
   @IsOptional()
   @IsString()
-  account_status?: AccountStatusType;
+  account_status?: AccountStatusType
 
   @ApiPropertyOptional({
     description: '创建时间',
@@ -247,7 +248,7 @@ export class QueryUserDTO extends TablePaginationType {
   })
   @IsOptional()
   @IsInt({ each: true })
-  create_time?: string;
+  create_time?: string
 
   @ApiPropertyOptional({
     description: '创建人',
@@ -255,5 +256,5 @@ export class QueryUserDTO extends TablePaginationType {
   })
   @IsOptional()
   @IsString()
-  creator?: string;
+  creator?: string
 }

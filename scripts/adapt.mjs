@@ -1,3 +1,5 @@
+#!/usr/bin/env zx
+
 cd("../");
 
 async function boot() {
@@ -33,6 +35,8 @@ async function boot() {
   await modify("../docker-compose.yml");
   await modify("../packages/client/nginx/config/server.conf");
   await modify("../packages/client/src/setupProxy.js");
+  await modify('../packages/client/Dockerfile')
+  await modify('../packages/server/Dockerfile')
   await modify("../packages/server/system.config.js");
 }
 

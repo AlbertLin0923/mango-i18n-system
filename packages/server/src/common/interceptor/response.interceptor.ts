@@ -1,14 +1,15 @@
-import {
+import { Injectable } from '@nestjs/common'
+import { map } from 'rxjs/operators'
+
+import type {
   CallHandler,
   ExecutionContext,
-  Injectable,
   NestInterceptor,
-} from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+} from '@nestjs/common'
+import type { Observable } from 'rxjs'
 
 interface Response<T> {
-  data: T;
+  data: T
 }
 
 @Injectable()
@@ -24,8 +25,8 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
           code: 200,
           success: true,
           msg: '请求成功',
-        };
+        }
       }),
-    );
+    )
   }
 }

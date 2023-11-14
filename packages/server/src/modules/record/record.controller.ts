@@ -1,21 +1,17 @@
-import { Get, Post, Body, Controller, UseGuards } from '@nestjs/common';
-
+import { Get, Post, Body, Controller, UseGuards } from '@nestjs/common'
 import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
-} from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
+} from '@nestjs/swagger'
+import { AuthGuard } from '@nestjs/passport'
 
-import { RecordService } from './record.service';
-import { QueryRecordDTO } from './record.dto';
-import {
-  RecordListVO,
-  RecordListResponse,
-  RecordSearchOptionsVO,
-  RecordSearchOptionsResponse,
-} from './record.vo';
+import { RecordListResponse, RecordSearchOptionsResponse } from './record.vo.js'
+
+import type { RecordService } from './record.service.js'
+import type { QueryRecordDTO } from './record.dto.js'
+import type { RecordListVO, RecordSearchOptionsVO } from './record.vo.js'
 
 @ApiBearerAuth()
 @ApiTags('record')
@@ -32,7 +28,7 @@ export class RecordController {
   })
   @Get('get_search_options')
   async getSearchOptions(): Promise<RecordSearchOptionsVO> {
-    return await this.recordService.getSearchOptions();
+    return await this.recordService.getSearchOptions()
   }
 
   @ApiOperation({ summary: '获取操作记录' })
@@ -43,6 +39,6 @@ export class RecordController {
   })
   @Post('get_record_list')
   async getList(@Body() queryRecordDTO: QueryRecordDTO): Promise<RecordListVO> {
-    return await this.recordService.getRecordList(queryRecordDTO);
+    return await this.recordService.getRecordList(queryRecordDTO)
   }
 }

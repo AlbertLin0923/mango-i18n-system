@@ -1,34 +1,27 @@
-import { init, Models, RematchDispatch, RematchRootState } from '@rematch/core'
-import loadingPlugin, { ExtraModelsFromLoading } from '@rematch/loading'
-import updatedPlugin, { ExtraModelsFromUpdated } from '@rematch/updated'
-import persistPlugin from '@rematch/persist'
-import storage from 'redux-persist/lib/storage'
+import { init } from '@rematch/core'
+import loadingPlugin from '@rematch/loading'
+import updatedPlugin from '@rematch/updated'
 
-import appModel, { appModelPersistConfig } from './models/appModel'
-import userModel, { userModelPersistConfig } from './models/userModel'
+import userModel from './models/userModel'
+
+import type { Models, RematchDispatch, RematchRootState } from '@rematch/core'
+import type { ExtraModelsFromLoading } from '@rematch/loading'
+import type { ExtraModelsFromUpdated } from '@rematch/updated'
 
 export interface RootModel extends Models<RootModel> {
   userModel: typeof userModel
-  appModel: typeof appModel
 }
 
-export type FullModel = ExtraModelsFromLoading<RootModel> & ExtraModelsFromUpdated<RootModel>
+export type FullModel = ExtraModelsFromLoading<RootModel> &
+  ExtraModelsFromUpdated<RootModel>
 
-export const models: RootModel = { userModel, appModel }
+export const models: RootModel = {
+  userModel,
+}
 
 const store = init<RootModel, FullModel>({
   models: models,
-  plugins: [
-    loadingPlugin(),
-    updatedPlugin(),
-    persistPlugin(
-      { key: 'mango-i18n-system', storage: storage }
-      // {
-      //   appModel: appModelPersistConfig,
-      //   userModel: userModelPersistConfig
-      // }
-    )
-  ]
+  plugins: [loadingPlugin(), updatedPlugin()],
 })
 
 export type Store = typeof store

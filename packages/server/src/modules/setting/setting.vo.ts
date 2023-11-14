@@ -1,13 +1,15 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { BaseOkResponse } from '../../common/type';
-import { Setting } from './setting.dto';
+import { ApiProperty } from '@nestjs/swagger'
+
+import { Setting } from './setting.dto.js'
+
+import { BaseOkResponse } from '../../common/type/index.js'
 
 export class SettingVO {
   @ApiProperty({
     description: '返回系统的设置数据',
     type: Setting,
   })
-  setting: Setting;
+  setting: Setting
 }
 
 export class SettingResponse extends BaseOkResponse {
@@ -15,7 +17,7 @@ export class SettingResponse extends BaseOkResponse {
     description: '返回数据',
     type: SettingVO,
   })
-  data: SettingVO;
+  data: SettingVO
 }
 
 export class UpdateSettingVO {
@@ -23,13 +25,13 @@ export class UpdateSettingVO {
     description: '操作信息',
     isArray: true,
   })
-  message: string[];
+  message: string[]
 
   @ApiProperty({
     description: '返回系统的设置数据',
     type: Setting,
   })
-  setting: Setting;
+  setting: Setting
 }
 
 export class UpdateSettingResponse extends BaseOkResponse {
@@ -37,7 +39,7 @@ export class UpdateSettingResponse extends BaseOkResponse {
     description: '返回数据',
     type: UpdateSettingVO,
   })
-  data: UpdateSettingVO;
+  data: UpdateSettingVO
 }
 
 export class SettingSearchOptionsVO {
@@ -46,12 +48,12 @@ export class SettingSearchOptionsVO {
     example: '',
   })
   searchOptions: {
-    allFilterExtName: Array<{ label: string; value: string }>;
-    allExtractor: Array<{ label: string; value: string }>;
-    allResolveDirPath: Array<{ label: string; value: string }>;
-    allLocaleDict: Array<{ label: string; value: string }>;
-  };
-  message: string[];
+    allFilterExtName: { label: string; value: string }[]
+    allExtractor: { label: string; value: string }[]
+    allResolveDirPath: { label: string; value: string }[]
+    allLocaleDict: { label: string; value: string }[]
+  }
+  message: string[]
 }
 
 export class SettingSearchOptionsResponse extends BaseOkResponse {
@@ -59,5 +61,5 @@ export class SettingSearchOptionsResponse extends BaseOkResponse {
     description: '返回数据',
     type: SettingSearchOptionsVO,
   })
-  data: SettingSearchOptionsVO;
+  data: SettingSearchOptionsVO
 }

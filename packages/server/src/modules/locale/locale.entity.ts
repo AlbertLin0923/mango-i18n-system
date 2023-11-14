@@ -1,6 +1,6 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn } from 'typeorm'
 
-import { BaseEntity } from '../../common/entity';
+import { BaseEntity } from '../../common/entity/index.js'
 
 @Entity('locale')
 export class LocaleEntity extends BaseEntity {
@@ -8,137 +8,137 @@ export class LocaleEntity extends BaseEntity {
     length: 1000,
     unique: true,
   })
-  'zh-CN': string;
+  'zh-CN': string
 
   @Column({
     length: 1000,
     default: '',
   })
-  'en-US': string;
+  'en-US': string
 
   @Column({
     length: 1000,
     default: '',
   })
-  'id-ID': string;
+  'id-ID': string
 
   @Column({
     length: 1000,
     default: '',
   })
-  'vi-VN': string;
+  'vi-VN': string
 
   @Column({
     length: 1000,
     default: '',
   })
-  'ms-MY': string;
+  'ms-MY': string
 
   @Column({
     length: 1000,
     default: '',
   })
-  'es-ES': string;
+  'es-ES': string
 
   @Column({
     length: 1000,
     default: '',
   })
-  'fr-FR': string;
+  'fr-FR': string
 
   @Column({
     length: 1000,
     default: '',
   })
-  'fr-BE': string;
+  'fr-BE': string
 
   @Column({
     length: 1000,
     default: '',
   })
-  'it-IT': string;
+  'it-IT': string
 
   @Column({
     length: 1000,
     default: '',
   })
-  'pl-PL': string;
+  'pl-PL': string
 
   @Column({
     length: 1000,
     default: '',
   })
-  'de-DE': string;
+  'de-DE': string
 
   @Column({
     length: 1000,
     default: '',
   })
-  'da-DK': string;
+  'da-DK': string
 
   @Column({
     length: 1000,
     default: '',
   })
-  'nl-NL': string;
+  'nl-NL': string
 
   @Column({
     length: 1000,
     default: '',
   })
-  'fi-FI': string;
+  'fi-FI': string
 
   @Column({
     length: 1000,
     default: '',
   })
-  'el-GR': string;
+  'el-GR': string
 
   @Column({
     length: 1000,
     default: '',
   })
-  'hu-HU': string;
+  'hu-HU': string
 
   @Column({
     length: 1000,
     default: '',
   })
-  'is-IS': string;
+  'is-IS': string
 
   @Column({
     length: 1000,
     default: '',
   })
-  'ja-JP': string;
+  'ja-JP': string
 
   @Column({
     length: 1000,
     default: '',
   })
-  'ko-KR': string;
+  'ko-KR': string
 
   @Column({
     length: 1000,
     default: '',
   })
-  'pt-PT': string;
+  'pt-PT': string
 
   @Column({
     length: 1000,
     default: '',
   })
-  'sv-SE': string;
+  'sv-SE': string
 
   @Column({
     length: 1000,
     default: '',
   })
-  'th-TH': string;
+  'th-TH': string
 
   @Column({
     length: 10000,
     default: '',
   })
-  'modules': string;
+  'modules': string
 }

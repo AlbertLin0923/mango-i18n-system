@@ -1,0 +1,13 @@
+.breadcrumb-container {
+  display: flex;
+  align-items: center;
+  padding: 9px 0;
+
+  .go-back-btn {
+    margin-left: 20px;
+    color: $mango-primary-color;
+    cursor: pointer;
+
+    @include mango-primary-link;
+  }
+}

@@ -1,63 +1,62 @@
-import fs from 'fs-extra';
-import path from 'path';
-import execa from 'execa';
-import glob from 'glob-promise';
-import getFolderSize from 'get-folder-size';
+import path from 'path'
 
-import { ExecTimer, logger } from '../../common/utils/index';
-import { Extractor } from '../../common/type/index';
-import { extractChineseFieldList, formatLocaleObj } from './locale.utils';
+import fs from 'fs-extra'
+import { execa } from 'execa'
+import glob from 'glob-promise'
+import getFolderSize from 'get-folder-size'
+
+import { ExecTimer, logger } from '../../common/utils/index.js'
+import { Extractor } from '../../common/type/index.js'
+
+import { extractChineseFieldList, formatLocaleObj } from './locale.utils.js'
 
 export type LocaleItem = {
-  'zh-CN': string;
-  modules: string;
-};
-
-export interface ExecResult {
-  success: boolean;
-  message: Array<string>;
-  readResult: Array<any>;
+  'zh-CN': string
+  modules: string
 }
 
-const sourceCodePath = path.resolve(process.cwd(), './sourceCode');
+export interface ExecResult {
+  success: boolean
+  message: string[]
+  readResult: any[]
+}
+
+const sourceCodePath = path.resolve(process.cwd(), './sourceCode')
 const sourceCodeContentHashMapPath = path.resolve(
   process.cwd(),
   './contentHash/source-code-content-hash-map.json',
-);
+)
 
-const testPath = (
-  jsonPathList: Array<string>,
-  alias: Array<string>,
-): Array<string> => {
+const testPath = (jsonPathList: string[], alias: string[]): string[] => {
   const pathList = alias.map((i) => {
-    return `${i}.json`;
-  });
+    return `${i}.json`
+  })
   return jsonPathList.filter((i) => {
-    const r = pathList.some((p) => i.includes(p));
-    return r;
-  });
-};
+    const r = pathList.some((p) => i.includes(p))
+    return r
+  })
+}
 
-const getFolderSizeAsync = (path: string): Promise<number> => {
+const getFolderSizeAsync = (folderPath: string): Promise<number> => {
   return new Promise((resolve, reject) => {
-    getFolderSize(path, (err, size) => {
+    getFolderSize(folderPath, (err, size) => {
       if (err) {
-        reject(err);
+        reject(err)
       } else {
-        resolve(size);
+        resolve(size)
       }
-    });
-  });
-};
+    })
+  })
+}
 
 const convertStringToJSON = (jsonString) => {
   try {
-    return JSON.parse(jsonString);
+    return JSON.parse(jsonString)
   } catch (error) {
-    console.log(error);
-    return {};
+    console.log(error)
+    return {}
   }
-};
+}
 
 const actionResource = async (
   gitRepositoryUrl: string,
@@ -70,45 +69,42 @@ const actionResource = async (
     success: true,
     message: [],
     readResult: [],
-  };
+  }
 
-  const projectPath = path.resolve(`${sourceCodePath}/${projectDirName}`);
-  const isHttpsHeaderGitRepositoryUrl = gitRepositoryUrl.startsWith(`https:`);
+  const projectPath = path.resolve(`${sourceCodePath}/${projectDirName}`)
+  const isHttpsHeaderGitRepositoryUrl = gitRepositoryUrl.startsWith(`https:`)
   const subGitRepositoryUrl = gitRepositoryUrl.match(
     /(?<=(https|http):\/\/)(.*)/g,
-  )[0];
+  )[0]
 
   const collectLogger = (action: string, result: string) => {
-    const str = logger(action, result);
-    execResult.message.push(str);
-  };
+    const str = logger(action, result)
+    execResult.message.push(str)
+  }
 
   try {
     if (!fs.existsSync(sourceCodePath)) {
-      await fs.ensureDir(sourceCodePath);
-      collectLogger(
-        '创建仓库存储目录',
-        `创建目录成功，路径：${sourceCodePath}`,
-      );
+      await fs.ensureDir(sourceCodePath)
+      collectLogger('创建仓库存储目录', `创建目录成功，路径：${sourceCodePath}`)
     } else {
-      collectLogger('创建仓库存储目录', `目录已存在，路径：${sourceCodePath}`);
+      collectLogger('创建仓库存储目录', `目录已存在，路径：${sourceCodePath}`)
     }
 
     if (!fs.existsSync(projectPath)) {
-      const storeGitAccessTokenResult = await execa.command(
+      const storeGitAccessTokenResult = await execa(
         'git config --global credential.helper store',
         {
           shell: true,
           cwd: sourceCodePath,
         },
-      );
+      )
 
       collectLogger(
         '设置git credential helper store',
         `设置成功： ${storeGitAccessTokenResult.stdout}`,
-      );
+      )
 
-      const cloneResult = await execa.command(
+      const cloneResult = await execa(
         `git clone ${
           isHttpsHeaderGitRepositoryUrl ? 'https' : 'http'
         }://${gitAccessUserName}:${gitAccessToken}@${subGitRepositoryUrl}`,
@@ -116,39 +112,33 @@ const actionResource = async (
           shell: true,
           cwd: sourceCodePath,
         },
-      );
+      )
 
-      collectLogger('克隆仓库', `克隆仓库成功：${cloneResult.stdout}`);
+      collectLogger('克隆仓库', `克隆仓库成功：${cloneResult.stdout}`)
     } else {
-      collectLogger('克隆仓库', `仓库已存在，路径：${projectPath}`);
+      collectLogger('克隆仓库', `仓库已存在，路径：${projectPath}`)
     }
 
-    const checkoutResult = await execa.command(
-      `git checkout ${resolveGitBranchName}`,
-      {
-        shell: true,
-        cwd: projectPath,
-      },
-    );
+    const checkoutResult = await execa(`git checkout ${resolveGitBranchName}`, {
+      shell: true,
+      cwd: projectPath,
+    })
 
-    collectLogger('切换到目标分支', `切换成功：${checkoutResult.stdout}`);
+    collectLogger('切换到目标分支', `切换成功：${checkoutResult.stdout}`)
 
-    const pullResult = await execa.command(
-      `git pull origin ${resolveGitBranchName}`,
-      {
-        shell: true,
-        cwd: projectPath,
-      },
-    );
+    const pullResult = await execa(`git pull origin ${resolveGitBranchName}`, {
+      shell: true,
+      cwd: projectPath,
+    })
 
-    collectLogger('更新目标分支', `更新成功：${pullResult.stdout}`);
+    collectLogger('更新目标分支', `更新成功：${pullResult.stdout}`)
   } catch (error) {
-    execResult.success = false;
-    collectLogger('克隆和更新仓库', `失败：${error.stderr}`);
+    execResult.success = false
+    collectLogger('克隆和更新仓库', `失败：${error.stderr}`)
   }
 
-  return execResult;
-};
+  return execResult
+}
 
 // --------------------------------
 
@@ -163,50 +153,47 @@ export const reActionResource = async (
     success: true,
     message: [],
     readResult: [],
-  };
+  }
 
-  const projectPath = path.resolve(`${sourceCodePath}/${projectDirName}`);
-  const isHttpsHeaderGitRepositoryUrl = gitRepositoryUrl.startsWith(`https:`);
+  const projectPath = path.resolve(`${sourceCodePath}/${projectDirName}`)
+  const isHttpsHeaderGitRepositoryUrl = gitRepositoryUrl.startsWith(`https:`)
   const subGitRepositoryUrl = gitRepositoryUrl.match(
     /(?<=(https|http):\/\/)(.*)/g,
-  )[0];
+  )[0]
 
   const collectLogger = (action: string, result: string) => {
-    const str = logger(action, result);
-    execResult.message.push(str);
-  };
+    const str = logger(action, result)
+    execResult.message.push(str)
+  }
 
   try {
     if (!fs.existsSync(sourceCodePath)) {
-      await fs.ensureDir(sourceCodePath);
-      collectLogger(
-        '创建仓库存储目录',
-        `创建目录成功，路径：${sourceCodePath}`,
-      );
+      await fs.ensureDir(sourceCodePath)
+      collectLogger('创建仓库存储目录', `创建目录成功，路径：${sourceCodePath}`)
     } else {
-      collectLogger('创建仓库存储目录', `目录已存在，路径：${sourceCodePath}`);
+      collectLogger('创建仓库存储目录', `目录已存在，路径：${sourceCodePath}`)
     }
 
     if (fs.existsSync(projectPath)) {
-      await fs.remove(projectPath);
-      collectLogger('删除目标仓库', `删除成功：${projectPath}`);
+      await fs.remove(projectPath)
+      collectLogger('删除目标仓库', `删除成功：${projectPath}`)
     } else {
-      collectLogger('删除目标仓库', `仓库不存在，无需删除`);
+      collectLogger('删除目标仓库', `仓库不存在，无需删除`)
     }
 
-    const storeGitAccessTokenResult = await execa.command(
+    const storeGitAccessTokenResult = await execa(
       'git config --global credential.helper store',
       {
         shell: true,
         cwd: sourceCodePath,
       },
-    );
+    )
     collectLogger(
       '设置git credential helper store',
       `设置成功：${storeGitAccessTokenResult.stdout}`,
-    );
+    )
 
-    const cloneResult = await execa.command(
+    const cloneResult = await execa(
       `git clone ${
         isHttpsHeaderGitRepositoryUrl ? 'https' : 'http'
       }://${gitAccessUserName}:${gitAccessToken}@${subGitRepositoryUrl}`,
@@ -214,33 +201,27 @@ export const reActionResource = async (
         shell: true,
         cwd: sourceCodePath,
       },
-    );
-    collectLogger('克隆仓库', `克隆仓库成功：${cloneResult.stdout}`);
+    )
+    collectLogger('克隆仓库', `克隆仓库成功：${cloneResult.stdout}`)
 
-    const checkoutResult = await execa.command(
-      `git checkout ${resolveGitBranchName}`,
-      {
-        shell: true,
-        cwd: projectPath,
-      },
-    );
-    collectLogger('切换到目标分支', `切换成功：${checkoutResult.stdout}`);
+    const checkoutResult = await execa(`git checkout ${resolveGitBranchName}`, {
+      shell: true,
+      cwd: projectPath,
+    })
+    collectLogger('切换到目标分支', `切换成功：${checkoutResult.stdout}`)
 
-    const pullResult = await execa.command(
-      `git pull origin ${resolveGitBranchName}`,
-      {
-        shell: true,
-        cwd: projectPath,
-      },
-    );
-    collectLogger('更新目标分支', `更新成功：${pullResult.stdout}`);
+    const pullResult = await execa(`git pull origin ${resolveGitBranchName}`, {
+      shell: true,
+      cwd: projectPath,
+    })
+    collectLogger('更新目标分支', `更新成功：${pullResult.stdout}`)
   } catch (error) {
-    execResult.success = false;
-    collectLogger('克隆和更新仓库', `失败：${error.stderr}`);
+    execResult.success = false
+    collectLogger('克隆和更新仓库', `失败：${error.stderr}`)
   }
 
-  return execResult;
-};
+  return execResult
+}
 
 const extractChineseFieldListFromSourceCode = async (
   gitRepositoryUrl: string,
@@ -248,8 +229,8 @@ const extractChineseFieldListFromSourceCode = async (
   gitAccessToken: string,
   projectDirName: string,
   resolveGitBranchName: string,
-  resolveDirPathList: Array<string>,
-  filterExtNameList: Array<string>,
+  resolveDirPathList: string[],
+  filterExtNameList: string[],
   extractor: Extractor,
 ): Promise<ExecResult> => {
   const execResult: ExecResult = await actionResource(
@@ -258,57 +239,57 @@ const extractChineseFieldListFromSourceCode = async (
     gitAccessToken,
     projectDirName,
     resolveGitBranchName,
-  );
+  )
 
   if (!execResult.success) {
-    return execResult;
+    return execResult
   }
 
   const collectLogger = (action: string, result: string) => {
-    const str = logger(action, result);
-    execResult.message.push(str);
-  };
+    const str = logger(action, result)
+    execResult.message.push(str)
+  }
 
   try {
-    let readResult: LocaleItem[] = [];
-    let readResultMessage = '';
+    let readResult: LocaleItem[] = []
+    let readResultMessage = ''
 
-    const execTimer = new ExecTimer();
+    const execTimer = new ExecTimer()
     if (extractor === Extractor.REGEX) {
-      execTimer.start('regex');
+      execTimer.start('regex')
       readResult = await extractChineseFieldList(
         Extractor.REGEX,
         resolveDirPathList,
         filterExtNameList,
         sourceCodeContentHashMapPath,
-      );
-      execTimer.end('regex');
+      )
+      execTimer.end('regex')
       readResultMessage = `使用regex读取仓库中文key成功，共读取到${
         readResult.length
-      }条，耗时${execTimer.duration('regex') / 1000}s`;
+      }条，耗时${execTimer.duration('regex') / 1000}s`
     } else {
-      execTimer.start('ast');
+      execTimer.start('ast')
       readResult = await extractChineseFieldList(
         Extractor.AST,
         resolveDirPathList,
         filterExtNameList,
         sourceCodeContentHashMapPath,
-      );
-      execTimer.end('ast');
+      )
+      execTimer.end('ast')
       readResultMessage = `使用ast读取仓库中文key成功，共读取到${
         readResult.length
-      }条，耗时${execTimer.duration('ast') / 1000}s`;
+      }条，耗时${execTimer.duration('ast') / 1000}s`
     }
 
-    collectLogger('读取仓库中文key', `读取成功：${readResultMessage}`);
-    execResult.readResult = readResult;
+    collectLogger('读取仓库中文key', `读取成功：${readResultMessage}`)
+    execResult.readResult = readResult
   } catch (error) {
-    execResult.success = false;
-    collectLogger('读取仓库中文key', `读取失败：${error}`);
+    execResult.success = false
+    collectLogger('读取仓库中文key', `读取失败：${error}`)
   }
 
-  return execResult;
-};
+  return execResult
+}
 
 const extractLocaleFromSourceCode = async (
   gitRepositoryUrl: string,
@@ -318,7 +299,7 @@ const extractLocaleFromSourceCode = async (
   resolveGitBranchName: string,
   localeDict: string[],
 ): Promise<ExecResult> => {
-  const projectPath = path.resolve(`${sourceCodePath}/${projectDirName}`);
+  const projectPath = path.resolve(`${sourceCodePath}/${projectDirName}`)
 
   const execResult: ExecResult = await actionResource(
     gitRepositoryUrl,
@@ -326,50 +307,50 @@ const extractLocaleFromSourceCode = async (
     gitAccessToken,
     projectDirName,
     resolveGitBranchName,
-  );
+  )
 
   if (!execResult.success) {
-    return execResult;
+    return execResult
   }
 
   const collectLogger = (action: string, result: string) => {
-    const str = logger(action, result);
-    execResult.message.push(str);
-  };
+    const str = logger(action, result)
+    execResult.message.push(str)
+  }
 
   try {
-    const readResult = [];
+    const readResult = []
 
     // 读取所有json文件
-    const jsonPathList = await glob.promise(`${projectPath}/**/*.json`);
+    const jsonPathList = await glob.promise(`${projectPath}/**/*.json`)
 
     // 筛选出符合语言包格式的json文件map
     const localePathMap = localeDict.map((item) => {
-      const localePathItem = testPath(jsonPathList, [item]);
-      return { fileName: item, localePathItem };
-    });
+      const localePathItem = testPath(jsonPathList, [item])
+      return { fileName: item, localePathItem }
+    })
 
     localePathMap.forEach((i) => {
-      const { fileName, localePathItem } = i;
-      const localeObj = {};
+      const { fileName, localePathItem } = i
+      const localeObj = {}
       localePathItem.length > 0 &&
         localePathItem.forEach((k) => {
-          const res: Buffer = fs.readFileSync(k);
-          const json = convertStringToJSON(res.toString());
-          Object.assign(localeObj, json);
-        });
-      readResult.push({ fileName, locale: formatLocaleObj(localeObj) });
-    });
+          const res: Buffer = fs.readFileSync(k)
+          const json = convertStringToJSON(res.toString())
+          Object.assign(localeObj, json)
+        })
+      readResult.push({ fileName, locale: formatLocaleObj(localeObj) })
+    })
 
-    collectLogger('读取仓库语言包', `读取成功：读取仓库语言包成功`);
-    execResult.readResult = readResult;
+    collectLogger('读取仓库语言包', `读取成功：读取仓库语言包成功`)
+    execResult.readResult = readResult
   } catch (error) {
-    execResult.success = false;
-    collectLogger('读取仓库语言包', `读取失败：${error}`);
+    execResult.success = false
+    collectLogger('读取仓库语言包', `读取失败：${error}`)
   }
 
-  return execResult;
-};
+  return execResult
+}
 
 const extractAllDirPathFromSourceCode = async (
   gitRepositoryUrl: string,
@@ -378,7 +359,7 @@ const extractAllDirPathFromSourceCode = async (
   projectDirName: string,
   resolveGitBranchName: string,
 ): Promise<ExecResult> => {
-  const projectPath = path.resolve(`${sourceCodePath}/${projectDirName}`);
+  const projectPath = path.resolve(`${sourceCodePath}/${projectDirName}`)
 
   const execResult: ExecResult = await actionResource(
     gitRepositoryUrl,
@@ -386,48 +367,48 @@ const extractAllDirPathFromSourceCode = async (
     gitAccessToken,
     projectDirName,
     resolveGitBranchName,
-  );
+  )
 
   if (!execResult.success) {
-    return execResult;
+    return execResult
   }
 
   try {
-    const size = await getFolderSizeAsync(`${projectPath}`);
+    const size = await getFolderSizeAsync(`${projectPath}`)
     execResult.message.push(
       logger(
         '获取仓库大小',
         `获取成功，仓库占用${(size / 1024 / 1024).toFixed(2)} MB`,
       ),
-    );
+    )
 
-    const logResult = await execa.command('git log -1', {
+    const logResult = await execa('git log -1', {
       shell: true,
       cwd: projectPath,
-    });
+    })
 
     execResult.message.push(
       logger('获取仓库最近一次提交记录', `获取成功，\n ${logResult.stdout}`),
-    );
+    )
 
-    const readResult = await glob.promise(`${projectPath}/**/`);
+    const readResult = await glob.promise(`${projectPath}/**/`)
     execResult.message.push(
       logger(
         '获取仓库目录列表',
         `获取成功，共获取到${readResult.length}个目录`,
       ),
-    );
-    execResult.readResult = readResult;
+    )
+    execResult.readResult = readResult
   } catch (error) {
-    execResult.success = false;
-    execResult.message.push(error);
+    execResult.success = false
+    execResult.message.push(error)
   }
 
-  return execResult;
-};
+  return execResult
+}
 
 export {
   extractChineseFieldListFromSourceCode,
   extractLocaleFromSourceCode,
   extractAllDirPathFromSourceCode,
-};
+}

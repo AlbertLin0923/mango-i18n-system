@@ -1,17 +1,14 @@
-import React from 'react'
-import styles from './style.module.less'
+import './style.module.scss'
 
-type IgroupProps = React.PropsWithChildren<{
-  title: string
-}>
-
-const Igroup: React.FC<IgroupProps> = (props) => {
-  const { title, children } = props
-
+const Igroup: FC<
+  PropsWithChildren<{
+    title: string
+  }>
+> = ({ title, children }) => {
   return (
-    <div className={styles['wrapper']}>
-      <div className={styles['content']}>{children}</div>
-      <div className={styles['title']}>{title}</div>
+    <div className="wrapper">
+      <div className="content">{children}</div>
+      <div className="title">{title}</div>
     </div>
   )
 }

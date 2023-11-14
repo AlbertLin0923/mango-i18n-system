@@ -1,11 +1,11 @@
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { Module } from '@nestjs/common'
+import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { RecordEntity } from './record.entity';
-import { RecordController } from './record.controller';
-import { RecordService } from './record.service';
+import { RecordEntity } from './record.entity.js'
+import { RecordController } from './record.controller.js'
+import { RecordService } from './record.service.js'
 
-import { UserModule } from '../user/user.module';
+import { UserModule } from '../user/user.module.js'
 
 @Module({
   imports: [TypeOrmModule.forFeature([RecordEntity]), UserModule],

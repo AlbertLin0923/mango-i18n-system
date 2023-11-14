@@ -23,40 +23,40 @@ export type UpdateLocaleParamsType = {
 
 export async function getDict() {
   return request('/locale/get_dict', {
-    method: 'get'
+    method: 'get',
   })
 }
 
 export async function getLocaleList() {
   return request('/locale/get_locale_list', {
-    method: 'get'
+    method: 'get',
   })
 }
 
 export async function getLocaleMap() {
   return request('/locale/get_locale_map', {
-    method: 'get'
+    method: 'get',
   })
 }
 
 export async function addLocale(data: AddLocaleParamsType) {
   return request('/locale/add_locale', {
     method: 'post',
-    data: data
+    data: data,
   })
 }
 
 export async function updateLocale(data: UpdateLocaleParamsType) {
   return request('/locale/update_locale', {
     method: 'post',
-    data: data
+    data: data,
   })
 }
 
 export async function deleteLocale(key: string) {
   return request('/locale/delete_locale', {
     method: 'post',
-    data: { 'zh-CN': key }
+    data: { 'zh-CN': key },
   })
 }
 
@@ -64,7 +64,7 @@ export async function deleteLocale(key: string) {
 export async function uploadAnalyze(data: any) {
   return request('/locale/upload_analyze', {
     method: 'post',
-    data: data
+    data: data,
   })
 }
 
@@ -72,20 +72,20 @@ export async function uploadAnalyze(data: any) {
 export async function uploadSubmit(data: any) {
   return request('/locale/upload_submit', {
     method: 'post',
-    data: data
+    data: data,
   })
 }
 
 // 从仓库里面更新翻译的key列表
 export async function updateKeyListByLoadSourceCode() {
   return request('/locale/update_key_list_by_load_source_code', {
-    method: 'get'
+    method: 'get',
   })
 }
 
 // 从仓库里面的语言包json更新翻译的列表
 export async function updateListByLoadSourceCodeLocale() {
   return request('/locale/update_list_by_load_source_code_locale', {
-    method: 'get'
+    method: 'get',
   })
 }

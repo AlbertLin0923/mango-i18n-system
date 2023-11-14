@@ -1,43 +1,39 @@
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Catch, HttpException, HttpStatus } from '@nestjs/common'
 
-import { Logger } from '../plugin/log4js';
-import { BusinessException } from '../exception/business.exception';
-import { parseDateString } from '../utils/index';
+import { Logger } from '../plugin/log4js.js'
+import { BusinessException } from '../exception/business.exception.js'
+import { parseDateString } from '../utils/index.js'
+
+import type { Request, Response } from 'express'
+import type { ArgumentsHost, ExceptionFilter } from '@nestjs/common'
 
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {
   catch(exception: any & HttpException, host: ArgumentsHost) {
     // 把请求相关的参数转成标准http的上下文
-    const ctx = host.switchToHttp();
-    const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
+    const ctx = host.switchToHttp()
+    const response = ctx.getResponse<Response>()
+    const request = ctx.getRequest<Request>()
 
     // 判断状态是否为请求异常,否则直接抛回来服务内部错误
     const status =
       exception instanceof HttpException
         ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
+        : HttpStatus.INTERNAL_SERVER_ERROR
 
     // 此刻的时间
-    const nowDate = parseDateString(Date.now());
+    const nowDate = parseDateString(Date.now())
 
     const originResponse = {
       code: status,
       msg: exception?.message || exception?.message?.message || '请求失败',
       meta: exception?.response?.meta || '',
       error: exception?.name,
-    };
+    }
 
     if (exception instanceof BusinessException) {
-      originResponse.msg = exception.getErrorMsg();
-      originResponse.code = exception.getCode();
+      originResponse.msg = exception.getErrorMsg()
+      originResponse.code = exception.getCode()
     }
 
     // 包装异常信息
@@ -46,7 +42,7 @@ export class AllExceptionFilter implements ExceptionFilter {
       success: false,
       date: nowDate,
       path: request.url,
-    };
+    }
 
     // 记录异常信息到第三方logger
 
@@ -63,14 +59,14 @@ export class AllExceptionFilter implements ExceptionFilter {
     Error Code     : ${status}
     Exception      : ${exception}
     ============================End=============================
-    `;
+    `
 
-    Logger.error(logFormat);
+    Logger.error(logFormat)
 
     // 设置返回的状态码等
     response
       .status(status)
       .header('Content-Type', 'application/json; charset=utf-8')
-      .json(errorResponse);
+      .json(errorResponse)
   }
 }

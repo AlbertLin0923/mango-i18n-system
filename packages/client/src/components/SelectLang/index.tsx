@@ -1,59 +1,55 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { Dropdown, Menu } from 'antd'
+import { useSelector, useDispatch } from 'react-redux'
+import { Dropdown, App } from 'antd'
 import { TranslationOutlined } from '@ant-design/icons'
+
 import { localeDict } from '@/locales/index'
 
-import { RootState, Dispatch } from '@/store/index'
+import styles from './style.module.scss'
 
-import styles from './style.module.less'
+import type { MenuProps } from 'antd'
+import type { RootState, Dispatch } from '@/store/index'
 
-const mapState = (state: RootState) => ({
-  userModel: state.userModel,
-  appModel: state.appModel
-})
+const SelectLang: FC = () => {
+  const language = useSelector((state: RootState) => state.userModel.language)
+  const dispatch = useDispatch<Dispatch>()
 
-const mapDispatch = (dispatch: Dispatch) => ({
-  changeLanguage: (value: string) => dispatch.appModel.changeLanguage(value)
-})
+  const { message } = App.useApp()
 
-type StateProps = ReturnType<typeof mapState>
-type DispatchProps = ReturnType<typeof mapDispatch>
+  const items: MenuProps['items'] = localeDict.map((i) => ({
+    key: i.fileName,
+    label: (
+      <div className={styles['item-wrapper']}>
+        <div className={styles['icon']}>
+          <i.countryFlagIcons className={styles['country-flag-icons']} />
+        </div>
+        <div className={styles['text']}>{i.name}</div>
+      </div>
+    ),
+  }))
 
-type Props = StateProps & DispatchProps
+  const onClick: MenuProps['onClick'] = async ({ key }) => {
+    const { success, msg } = await dispatch.userModel.changeLanguage(key)
+    if (success) {
+      message.success(msg)
+    } else {
+      message.error(msg)
+    }
+  }
 
-const SelectLang: React.FC<Props> = ({ appModel: { selectedLanguage }, changeLanguage }) => {
-  const languageMenu = (
-    <Menu
-      className={styles.menu}
-      selectedKeys={[selectedLanguage]}
-      onClick={({ key }) => {
-        changeLanguage(key)
-      }}
-      items={localeDict.map((i) => {
-        return {
-          key: i.fileName,
-          label: i.name,
-          icon: (
-            <div className={styles.icon} aria-label={i.name}>
-              <i.countryFlagIcons className={styles['country-flag-icons']}></i.countryFlagIcons>
-            </div>
-          )
-        }
-      })}
-    ></Menu>
-  )
-
-  if (!selectedLanguage) {
+  if (!language) {
     return null
   }
   return (
-    <Dropdown overlay={languageMenu} placement="bottomRight" trigger={['click', 'hover']}>
-      <div className={styles['select-language-icon']}>
-        <TranslationOutlined />
+    <Dropdown
+      menu={{ items, onClick }}
+      placement="bottomRight"
+      trigger={['click', 'hover']}
+    >
+      <div className={styles['icon-btn-wrapper']}>
+        <TranslationOutlined className={styles['select-language-icon']} />
       </div>
     </Dropdown>
   )
 }
 
-export default connect(mapState, mapDispatch)(SelectLang)
+export default SelectLang

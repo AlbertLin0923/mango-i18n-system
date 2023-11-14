@@ -1,11 +1,20 @@
-import { Get, Post, Body, Controller, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { DeleteResult } from 'typeorm';
+import { Get, Post, Body, Controller, UseGuards } from '@nestjs/common'
+import { AuthGuard } from '@nestjs/passport'
+import { DeleteResult } from 'typeorm'
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-
-import { UserService } from './user.service';
 import {
+  TokenPairResponse,
+  AccessTokenResponse,
+  UserResponse,
+  UserListResponse,
+  UserSearchOptionsResponse,
+} from './user.vo.js'
+
+import { User } from '../../common/decorator/user.js'
+
+import type { UserService } from './user.service.js'
+import type {
   LoginDTO,
   RegisterDTO,
   RefreshTokenDTO,
@@ -15,20 +24,14 @@ import {
   UpdateMyPasswordDTO,
   UpdateOtherPasswordDTO,
   QueryUserDTO,
-} from './user.dto';
-import {
+} from './user.dto.js'
+import type {
   TokenPairVO,
-  TokenPairResponse,
   AccessTokenVO,
-  AccessTokenResponse,
   UserVO,
-  UserResponse,
   UserListVO,
-  UserListResponse,
   UserSearchOptionsVO,
-  UserSearchOptionsResponse,
-} from './user.vo';
-import { User } from '../../common/decorator/user';
+} from './user.vo.js'
 
 // @ApiBearerAuth()
 @ApiTags('user')
@@ -45,7 +48,7 @@ export class UserController {
   @UseGuards(AuthGuard('local'))
   @Post('/login')
   async login(@Body() loginDTO: LoginDTO): Promise<TokenPairVO> {
-    return this.userService.login(loginDTO);
+    return this.userService.login(loginDTO)
   }
 
   @ApiOperation({ summary: '账户注册' })
@@ -57,7 +60,7 @@ export class UserController {
   @UseGuards(AuthGuard('local'))
   @Post('/register')
   async register(@Body() registerDTO: RegisterDTO): Promise<TokenPairVO> {
-    return this.userService.register(registerDTO);
+    return this.userService.register(registerDTO)
   }
 
   @ApiOperation({ summary: '更新accessToken' })
@@ -70,7 +73,7 @@ export class UserController {
   async refreshToken(
     @Body() refreshTokenDTO: RefreshTokenDTO,
   ): Promise<AccessTokenVO> {
-    return this.userService.refreshToken(refreshTokenDTO);
+    return this.userService.refreshToken(refreshTokenDTO)
   }
 
   @ApiOperation({ summary: '获取用户信息' })
@@ -82,7 +85,7 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @Get('get_user')
   async getUserInfo(@User() user): Promise<UserVO> {
-    return await this.userService.getUser(user);
+    return await this.userService.getUser(user)
   }
 
   @ApiOperation({ summary: '获取全部用户信息列表搜索框下拉列表' })
@@ -94,7 +97,7 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @Get('get_search_options')
   async getSearchOptions(): Promise<UserSearchOptionsVO> {
-    return await this.userService.getSearchOptions();
+    return await this.userService.getSearchOptions()
   }
 
   @ApiOperation({ summary: '获取用户信息列表' })
@@ -106,7 +109,7 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @Post('get_user_list')
   async getUserList(@Body() queryUserDTO: QueryUserDTO): Promise<UserListVO> {
-    return await this.userService.getUserList(queryUserDTO);
+    return await this.userService.getUserList(queryUserDTO)
   }
 
   @ApiOperation({ summary: '新增用户' })
@@ -118,7 +121,7 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @Post('add_user')
   async addUser(@User() user, @Body() addUserDTO: AddUserDTO): Promise<UserVO> {
-    return await this.userService.addUser(user, addUserDTO);
+    return await this.userService.addUser(user, addUserDTO)
   }
 
   @ApiOperation({ summary: '根据用户名删除用户' })
@@ -132,7 +135,7 @@ export class UserController {
   async deteleUser(
     @Body() deleteUserDTO: DeleteUserDTO,
   ): Promise<DeleteResult> {
-    return await this.userService.deleteUser(deleteUserDTO);
+    return await this.userService.deleteUser(deleteUserDTO)
   }
 
   @ApiOperation({ summary: '更新用户信息' })
@@ -147,7 +150,7 @@ export class UserController {
     @User() user,
     @Body() updateUserInfoDTO: UpdateUserDTO,
   ): Promise<UserVO> {
-    return await this.userService.updateUser(user, updateUserInfoDTO);
+    return await this.userService.updateUser(user, updateUserInfoDTO)
   }
 
   @ApiOperation({ summary: '更新别人的密码' })
@@ -165,7 +168,7 @@ export class UserController {
     return await this.userService.updateOtherPassword(
       user,
       updateOtherPasswordDTO,
-    );
+    )
   }
 
   @ApiOperation({ summary: '更新自己的密码' })
@@ -180,6 +183,6 @@ export class UserController {
     @User() user,
     @Body() updateMyPasswordDTO: UpdateMyPasswordDTO,
   ): Promise<UserVO> {
-    return await this.userService.updateMyPassword(user, updateMyPasswordDTO);
+    return await this.userService.updateMyPassword(user, updateMyPasswordDTO)
   }
 }

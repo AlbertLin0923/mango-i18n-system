@@ -1,8 +1,8 @@
-import { IsOptional, IsEnum, IsString, ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional, IsEnum, IsString, ValidateNested } from 'class-validator'
+import { Type } from 'class-transformer'
+import { ApiProperty } from '@nestjs/swagger'
 
-import { Extractor } from '../../common/type/index';
+import { Extractor } from '../../common/type/index.js'
 
 export class Setting {
   @ApiProperty({
@@ -11,7 +11,7 @@ export class Setting {
   })
   @IsOptional()
   @IsString()
-  gitRepositoryUrl: string;
+  gitRepositoryUrl: string
 
   @ApiProperty({
     description: '项目GITACCESSUSERNAME',
@@ -19,7 +19,7 @@ export class Setting {
   })
   @IsOptional()
   @IsString()
-  gitAccessUserName: string;
+  gitAccessUserName: string
 
   @ApiProperty({
     description: '项目GITACCESSTOKEN',
@@ -27,7 +27,7 @@ export class Setting {
   })
   @IsOptional()
   @IsString()
-  gitAccessToken: string;
+  gitAccessToken: string
 
   @ApiProperty({
     description: '解析的git分支名',
@@ -35,7 +35,7 @@ export class Setting {
   })
   @IsOptional()
   @IsString()
-  resolveGitBranchName: string;
+  resolveGitBranchName: string
 
   @ApiProperty({
     description: '项目目录名',
@@ -43,7 +43,7 @@ export class Setting {
   })
   @IsOptional()
   @IsString()
-  projectDirName: string;
+  projectDirName: string
 
   @ApiProperty({
     description: '解析的文件后缀名',
@@ -52,7 +52,7 @@ export class Setting {
   })
   @IsOptional()
   @IsString({ each: true })
-  filterExtNameList: Array<string>;
+  filterExtNameList: string[]
 
   @ApiProperty({
     description: '系统语言包列表',
@@ -61,7 +61,7 @@ export class Setting {
   })
   @IsOptional()
   @IsString({ each: true })
-  localeDict: Array<string>;
+  localeDict: string[]
 
   @ApiProperty({
     description: '代码解析器类型',
@@ -69,7 +69,7 @@ export class Setting {
   })
   @IsOptional()
   @IsEnum(Extractor)
-  extractor: Extractor;
+  extractor: Extractor
 
   @ApiProperty({
     description: '解析的文件路径列表',
@@ -78,7 +78,7 @@ export class Setting {
   })
   @IsOptional()
   @IsString({ each: true })
-  resolveDirPathList: Array<string>;
+  resolveDirPathList: string[]
 
   @ApiProperty({
     description: '系统名称',
@@ -86,7 +86,7 @@ export class Setting {
   })
   @IsOptional()
   @IsString()
-  systemTitle: string;
+  systemTitle: string
 }
 
 export class UpdateSettingDTO {
@@ -96,5 +96,5 @@ export class UpdateSettingDTO {
   })
   @ValidateNested({ each: true })
   @Type(() => Setting)
-  setting: Setting;
+  setting: Setting
 }

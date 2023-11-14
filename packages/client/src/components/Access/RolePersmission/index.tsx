@@ -1,27 +1,20 @@
-import React from 'react'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 
-import { RootState } from '@/store/index'
+import type { RootState } from '@/store/index'
 
-const mapState = (state: RootState) => ({
-  userModel: state.userModel
-})
+type RolePersmissionProps = PropsWithChildren<{
+  noMatch?: ReactNode
+  role: string[] | string
+}>
 
-type StateProps = ReturnType<typeof mapState>
-
-type IProps = {
-  noMatch?: JSX.Element
-  role: Array<string> | string
-}
-
-type RolePersmissionProps = React.PropsWithChildren<StateProps & IProps>
-
-const RolePersmission: React.FC<RolePersmissionProps> = (props) => {
-  const { userModel, children, noMatch, role } = props
-
-  const {
-    userInfo: { role: userRole }
-  } = userModel
+const RolePersmission: FC<RolePersmissionProps> = ({
+  children,
+  noMatch,
+  role,
+}) => {
+  const { role: userRole } = useSelector(
+    (state: RootState) => state.userModel.userInfo,
+  )
 
   if (!role) return children as any
 
@@ -30,4 +23,4 @@ const RolePersmission: React.FC<RolePersmissionProps> = (props) => {
   return noMatch ?? null
 }
 
-export default connect(mapState)(RolePersmission)
+export default RolePersmission

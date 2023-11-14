@@ -1,14 +1,18 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
 
-import { RecordEntity } from './record.entity';
-import { AddRecordDTO, QueryRecordDTO } from './record.dto';
-import { RecordVO, RecordListVO, RecordSearchOptionsVO } from './record.vo';
+import { RecordEntity } from './record.entity.js'
 
-import { UserService } from '../user/user.service';
+import { createQueryParams } from '../../common/utils/index.js'
 
-import { createQueryParams } from '../../common/utils';
+import type { Repository } from 'typeorm'
+import type { AddRecordDTO, QueryRecordDTO } from './record.dto.js'
+import type {
+  RecordVO,
+  RecordListVO,
+  RecordSearchOptionsVO,
+} from './record.vo.js'
+import type { UserService } from '../user/user.service.js'
 
 @Injectable()
 export class RecordService {
@@ -28,7 +32,7 @@ export class RecordService {
         label: 'batch',
         value: 'batch',
       },
-    ];
+    ]
 
     const operateTypeMap = [
       {
@@ -43,18 +47,18 @@ export class RecordService {
         label: 'delete',
         value: 'delete',
       },
-    ];
+    ]
 
     const { list } = await this.userService.getUserList({
       pageSize: 100000,
       page: 1,
-    });
+    })
 
     const operatorNameMap = list.map((i) => {
-      return { label: i.username, value: i.username };
-    });
+      return { label: i.username, value: i.username }
+    })
 
-    return { operateWayMap, operateTypeMap, operatorNameMap };
+    return { operateWayMap, operateTypeMap, operatorNameMap }
   }
 
   async getRecordList({
@@ -78,9 +82,9 @@ export class RecordService {
       },
       'record',
       'create_time',
-    );
+    )
 
-    console.log('sql', sql);
+    console.log('sql', sql)
 
     const data: [RecordEntity[], number] = await this.recordRepository
       .createQueryBuilder('record')
@@ -88,27 +92,27 @@ export class RecordService {
       .orderBy('record.create_time', 'DESC')
       .skip(pageSize * (page - 1))
       .take(pageSize)
-      .getManyAndCount();
+      .getManyAndCount()
 
-    return { list: data[0], total: data[1] };
+    return { list: data[0], total: data[1] }
   }
 
   async addRecord(data: AddRecordDTO): Promise<RecordVO> {
     const item = await this.recordRepository.save(
       Object.assign(new RecordEntity(), data),
-    );
-    return { item };
+    )
+    return { item }
   }
 
   async addRecordList(data: AddRecordDTO[]): Promise<RecordListVO> {
     const list = await this.recordRepository.save(
       data.map((i) => {
-        return Object.assign(new RecordEntity(), i);
+        return Object.assign(new RecordEntity(), i)
       }),
       {
         chunk: data.length / 10,
       },
-    );
-    return { list, total: list.length };
+    )
+    return { list, total: list.length }
   }
 }

@@ -1,35 +1,41 @@
-import * as path from 'path';
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { ScheduleModule } from '@nestjs/schedule';
+import * as path from 'path'
 
-import { UserModule } from './modules/user/user.module';
-import { LocaleModule } from './modules/locale/locale.module';
-import { SettingModule } from './modules/setting/setting.module';
-import { RecordModule } from './modules/record/record.module';
-import { TaskModule } from './modules/task/task.module';
+import { Module } from '@nestjs/common'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { ServeStaticModule } from '@nestjs/serve-static'
+import { ScheduleModule } from '@nestjs/schedule'
+import { ConfigModule } from '@nestjs/config'
 
+import { AppService } from './app.service.js'
+import { AppController } from './app.controller.js'
+import { UserModule } from './modules/user/user.module.js'
+import { LocaleModule } from './modules/locale/locale.module.js'
+import { SettingModule } from './modules/setting/setting.module.js'
+import { RecordModule } from './modules/record/record.module.js'
+import { TaskModule } from './modules/task/task.module.js'
+import { UserEntity } from './modules/user/user.entity.js'
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       type: 'sqlite',
-      database: path.resolve(__dirname, '../database/translate.db'),
+      database: path.resolve(process.cwd(), './database/translate.db'),
       synchronize: true,
-      entities: ['dist/**/*.entity.js'],
+      entities: [UserEntity],
     }),
     ServeStaticModule.forRoot({
-      rootPath: path.join(__dirname, '../public'),
+      rootPath: path.resolve(process.cwd(), './public'),
       exclude: ['/api*'],
     }),
     ScheduleModule.forRoot(),
-    UserModule,
-    LocaleModule,
+    // UserModule,
+    // LocaleModule,
     SettingModule,
-    RecordModule,
-    TaskModule,
+
+    // TaskModule,
+    // RecordModule,
   ],
   controllers: [AppController],
   providers: [AppService],

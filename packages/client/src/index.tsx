@@ -1,19 +1,13 @@
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
-import * as ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
+import '@mango-kit/components/styles'
 
 import './locales'
 import './icons'
-
 import App from './app'
-import './styles/base.less'
+import './styles/globals.scss'
 
-function render() {
-  ReactDOM.render(<App />, document.getElementById('root'))
-}
+const root = createRoot(document.getElementById('root')!)
 
-render()
-
-if (module.hot) {
-  module.hot.accept('./app', render)
-}
+root.render(<App />)

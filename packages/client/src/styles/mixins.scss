@@ -1,0 +1,103 @@
+@use 'sass:color';
+@import './variables.scss';
+
+// 一些便捷的sass mixins
+
+@mixin mango-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin mango-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin mango-page-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100%;
+  border-radius: $mango-border-radius;
+}
+
+@mixin mango-card-container {
+  padding: 16px;
+  background-color: #fff;
+  border-radius: $mango-border-radius;
+}
+
+@mixin mango-primary-btn($height, $color, $bgColor) {
+  @include mango-center;
+
+  height: 32px;
+  padding: 4px 15px;
+  color: color;
+  text-align: center;
+  background: $bgColor;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+
+  &:hover {
+    color: color.adjust($color, $lightness: 5%);
+    background: color.adjust($bgColor, $lightness: 5%);
+  }
+}
+
+@mixin mango-default-btn($width, $height, $color) {
+  @include mango-center;
+
+  width: $width;
+  height: $height;
+  padding: 4px 15px;
+  color: $color;
+  text-align: center;
+  background-color: #fff;
+  border: 1px solid $color;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+
+  &:hover {
+    color: color.adjust($color, $lightness: 20%);
+    background-color: #fff;
+    border-color: color.adjust($color, $lightness: 20%);
+  }
+}
+
+@mixin mango-ghost-btn($width, $height) {
+  @include mango-center;
+
+  width: $width;
+  height: $height;
+  padding: 4px 15px;
+  color: $mango-text-color;
+  text-align: center;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+
+  &:hover {
+    color: $mango-primary-color;
+    background-color: color.adjust(#fff, $lightness: 5%);
+  }
+}
+
+@mixin mango-normal-link {
+  color: rgb(0 0 0 / 45%);
+
+  &:hover {
+    color: color.adjust(rgb(0 0 0 / 45%), $lightness: 10%);
+  }
+}
+
+@mixin mango-primary-link {
+  color: $mango-primary-color;
+
+  &:hover {
+    color: color.adjust($mango-primary-color, $lightness: 10%);
+  }
+}

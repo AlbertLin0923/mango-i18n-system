@@ -1,31 +1,51 @@
 import { createModel } from '@rematch/core'
-import storage from 'redux-persist/lib/storage'
+import Cookie from 'js-cookie'
+import { storage } from '@mango-kit/utils'
 
-import { message } from 'antd'
+import i18n, { getLanguage } from '@/locales'
 import * as API from '@/services/user'
-import { UpdateMyPasswordParamsType } from '@/services/user'
-import store from '../index'
-import i18n from '@/locales/index'
-import { filterAccessedRouterConfig } from '@/components/Access/Creater'
 
-import type { RootModel } from '../index'
+import type { RootModel } from '@/store'
+import type {
+  LoginParamsType,
+  RegisterParamsType,
+  UpdateMyPasswordParamsType,
+} from '@/services/user'
 
-import { TokenPari, UserInfo, AccessedRouteConfig, UserModelState } from '@/type/index'
+type TokenPari = {
+  accessToken: string
+  refreshToken: string
+}
+
+type UserInfo = {
+  role: string
+  userAllowedAuthList: (string | number)[]
+  userId: string
+  username: string
+}
+
+type UserModelState = {
+  tokenPair: TokenPari
+  userInfo: UserInfo
+  siderCollapsed: boolean
+  language: string
+}
 
 const userModel = createModel<RootModel>()({
   name: 'userModel',
   state: {
-    tokenPair: {
+    tokenPair: storage.getItem('TOKEN', {
       accessToken: '',
-      refreshToken: ''
-    },
+      refreshToken: '',
+    }),
     userInfo: {
+      role: '', // 用户的角色，用于权限系统
+      userAllowedAuthList: [], // 用户的具体权限列表，用于权限系统
       userId: '',
       username: '',
-      role: '',
-      authList: []
     },
-    accessedRouteConfig: []
+    siderCollapsed: storage.getItem('SIDER_COLLAPSED', true),
+    language: getLanguage(),
   } as UserModelState,
 
   reducers: {
@@ -33,103 +53,142 @@ const userModel = createModel<RootModel>()({
       return {
         ...state,
         ...{
-          tokenPair: payload
-        }
+          tokenPair: payload,
+        },
       }
     },
     updateUserInfo(state, payload: UserInfo) {
       return { ...state, ...{ userInfo: payload } }
     },
-    updateAccessedRouteConfig(state, payload: AccessedRouteConfig) {
+    updateSiderCollapsed(state, payload: boolean) {
       return {
         ...state,
         ...{
-          accessedRouteConfig: payload
-        }
+          siderCollapsed: payload,
+        },
       }
-    }
+    },
+    updateLanguage(state, payload: string) {
+      return {
+        ...state,
+        ...{
+          language: payload,
+        },
+      }
+    },
   },
   effects: (dispatch) => ({
-    async login(payload: { username: string; password: string }, rootState): Promise<string> {
-      const { username, password } = payload
-      const response = await API.login({ username, password })
-      if (response.success && response.data) {
-        dispatch.userModel.updateTokenPair(response.data)
-        return Promise.resolve(i18n.t('登录成功'))
+    async changeSiderCollapsed(siderCollapsed: boolean): Promise<void> {
+      dispatch.userModel.updateSiderCollapsed(siderCollapsed)
+      storage.setItem('SIDER_COLLAPSED', siderCollapsed)
+    },
+    async changeLanguage(language): Promise<{ success: boolean; msg: string }> {
+      try {
+        const t = await i18n.changeLanguage(language)
+        dispatch.userModel.updateLanguage(language)
+        storage.setItem('LANGUAGE', language)
+        return Promise.resolve({ success: true, msg: t('切换语言成功') })
+      } catch (error) {
+        return Promise.resolve({ success: false, msg: i18n.t('切换语言失败') })
+      }
+    },
+    async login(
+      payload: LoginParamsType,
+      rootState,
+    ): Promise<{ success: boolean; msg: string }> {
+      const { code, data, msg } = await API.login(payload)
+      if (code === 200) {
+        const { accessToken, refreshToken } = data
+        dispatch.userModel.updateTokenPair({
+          accessToken,
+          refreshToken,
+        })
+        storage.setItem('TOKEN', {
+          accessToken,
+          refreshToken,
+        })
+
+        return Promise.resolve({
+          success: true,
+          msg: i18n.t('登录成功'),
+        })
       } else {
-        return Promise.reject(response.msg || i18n.t('账户或者密码错误'))
+        return Promise.resolve({
+          success: false,
+          msg: msg || i18n.t('账户或者密码错误'),
+        })
       }
     },
     async register(
-      payload: {
-        username: string
-        password: string
-        email: string
-        key: string
-      },
-      rootState
-    ): Promise<string> {
-      const response = await API.register(payload)
-      if (response.success && response.data) {
-        dispatch.userModel.updateTokenPair(response.data)
-        return Promise.resolve(i18n.t('登录成功'))
+      payload: RegisterParamsType,
+      rootState,
+    ): Promise<{ success: boolean; msg: string }> {
+      const { code, data, msg } = await API.login(payload)
+      if (code === 200) {
+        const { accessToken, refreshToken } = data
+        dispatch.userModel.updateTokenPair({
+          accessToken,
+          refreshToken,
+        })
+        storage.setItem('TOKEN', {
+          accessToken,
+          refreshToken,
+        })
+
+        return Promise.resolve({
+          success: true,
+          msg: i18n.t('登录成功'),
+        })
       } else {
-        return Promise.reject(response.msg || i18n.t('账户或者密码错误'))
+        return Promise.resolve({
+          success: false,
+          msg: msg || i18n.t('账户或者密码错误'),
+        })
       }
     },
-    async refreshToken() {
-      const { refreshToken } = store.getState().userModel.tokenPair
-      const response = await API.refresh_token({ refreshToken })
-      if (response.success && response.data) {
-        const { accessToken } = response.data
-        const tokenPair = {
-          accessToken: accessToken,
-          refreshToken: refreshToken
-        }
-        dispatch.userModel.updateTokenPair(tokenPair)
-        return Promise.resolve(true)
+    async getUserInfo(): Promise<{ success: boolean; msg: string }> {
+      const { code, data, msg } = await API.getUserInfo()
+      if (code === 200) {
+        const { userAllowedAuthList, role, ...rest } = data
+        await dispatch.userModel.updateUserInfo({
+          userAllowedAuthList,
+          role,
+          ...rest,
+        })
+        return Promise.resolve({
+          success: true,
+          msg: i18n.t('获取用户信息成功'),
+        })
       } else {
-        return Promise.reject(i18n.t('更新accessToken失败'))
+        return Promise.resolve({
+          success: false,
+          msg: msg || i18n.t('获取用户信息失败'),
+        })
       }
     },
-    async getUserInfo() {
-      const response = await API.getUser()
-      if (response.success && response?.data?.user) {
-        const userInfo: UserInfo = response.data.user
-        const { authList, role } = userInfo
-        const accessedRouteConfig: AccessedRouteConfig = filterAccessedRouterConfig(authList, role)
-        await dispatch.userModel.updateUserInfo(userInfo)
-        await dispatch.userModel.updateAccessedRouteConfig(accessedRouteConfig)
-        return Promise.resolve(i18n.t('获取用户信息成功'))
+    async updateMyPassword(
+      payload: UpdateMyPasswordParamsType,
+      rootState,
+    ): Promise<{ success: boolean; msg: string }> {
+      const { code, msg } = await API.updateMyPassword(payload)
+      if (code === 200) {
+        return Promise.resolve({ success: true, msg: i18n.t('修改密码成功') })
       } else {
-        message.error(response.msg)
-        return Promise.reject(response.msg)
+        return Promise.resolve({
+          success: false,
+          msg: msg || i18n.t('修改密码失败'),
+        })
       }
     },
-    async logout() {
+    async logout(): Promise<{ success: boolean; msg: string }> {
       dispatch.userModel.updateTokenPair({
         accessToken: '',
-        refreshToken: ''
+        refreshToken: '',
       })
+      storage.removeItem('TOKEN')
+      return Promise.resolve({ success: true, msg: i18n.t('退出登录成功') })
     },
-    async changePassword(payload: UpdateMyPasswordParamsType) {
-      const response = await API.updateMyPassword(payload)
-      if (response.success && response?.data?.user) {
-        const userInfo: UserInfo = response.data.user
-        dispatch.userModel.updateUserInfo(userInfo)
-        dispatch.userModel.logout()
-        return Promise.resolve(i18n.t('修改密码成功，请重新登录'))
-      } else {
-        message.error(response.msg)
-        return Promise.reject(response.msg)
-      }
-    }
-  })
+  }),
 })
-
-export const userModelPersistConfig = {
-  key: 'userModel',
-  storage: storage
-}
 
 export default userModel

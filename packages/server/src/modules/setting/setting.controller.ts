@@ -1,22 +1,21 @@
-import { Get, Post, Body, Controller, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-
+import { Get, Post, Body, Controller, UseGuards } from '@nestjs/common'
+import { AuthGuard } from '@nestjs/passport'
 import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
-} from '@nestjs/swagger';
+} from '@nestjs/swagger'
 
-import { SettingService } from './setting.service';
-import { UpdateSettingDTO } from './setting.dto';
-import {
+import { SettingSearchOptionsResponse, SettingResponse } from './setting.vo.js'
+
+import type { SettingService } from './setting.service.js'
+import type { UpdateSettingDTO } from './setting.dto.js'
+import type {
   SettingSearchOptionsVO,
-  SettingSearchOptionsResponse,
   SettingVO,
-  SettingResponse,
   UpdateSettingVO,
-} from './setting.vo';
+} from './setting.vo.js'
 
 @ApiBearerAuth()
 @ApiTags('setting')
@@ -33,7 +32,7 @@ export class SettingController {
   @UseGuards(AuthGuard('jwt'))
   @Get('get_search_options')
   async getSearchOptions(): Promise<SettingSearchOptionsVO> {
-    return await this.settingService.getSearchOptions();
+    return await this.settingService.getSearchOptions()
   }
 
   @ApiOperation({ summary: '获取公开无权限控制的系统设置信息' })
@@ -44,7 +43,7 @@ export class SettingController {
   })
   @Get('get_public_setting')
   async getPublicSetting(): Promise<SettingVO> {
-    return await this.settingService.getPublicSetting();
+    return await this.settingService.getPublicSetting()
   }
 
   @ApiOperation({ summary: '获取系统设置信息' })
@@ -56,7 +55,7 @@ export class SettingController {
   @UseGuards(AuthGuard('jwt'))
   @Get('get_setting')
   async getSetting(): Promise<SettingVO> {
-    return await this.settingService.getSetting();
+    return await this.settingService.getSetting()
   }
 
   @ApiOperation({ summary: '更新系统设置信息' })
@@ -70,6 +69,6 @@ export class SettingController {
   async updateSetting(
     @Body() updateSettingDTO: UpdateSettingDTO,
   ): Promise<UpdateSettingVO> {
-    return await this.settingService.updateSetting(updateSettingDTO);
+    return await this.settingService.updateSetting(updateSettingDTO)
   }
 }

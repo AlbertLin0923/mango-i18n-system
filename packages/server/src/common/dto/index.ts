@@ -1,5 +1,5 @@
-import { IsInt } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsInt } from 'class-validator'
+import { ApiProperty } from '@nestjs/swagger'
 
 export class TablePaginationType {
   @ApiProperty({
@@ -7,12 +7,12 @@ export class TablePaginationType {
     example: 10,
   })
   @IsInt()
-  readonly pageSize: number;
+  readonly pageSize: number
 
   @ApiProperty({
     description: '页码',
     example: 1,
   })
   @IsInt()
-  readonly page: number;
+  readonly page: number
 }

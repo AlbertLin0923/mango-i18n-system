@@ -92,7 +92,7 @@ const WaterMark: React.FC<WaterMarkProps> = (props) => {
     fontColor = 'rgba(0,0,0,.15)',
     fontSize = 16,
     fontFamily = 'sans-serif',
-    prefixCls: customizePrefixCls
+    prefixCls: customizePrefixCls,
   } = props
 
   const { getPrefixCls } = useContext(ConfigProvider.ConfigContext)
@@ -135,7 +135,9 @@ const WaterMark: React.FC<WaterMarkProps> = (props) => {
         ctx.font = `${fontStyle} normal ${fontWeight} ${markSize}px/${markHeight}px ${fontFamily}`
         ctx.fillStyle = fontColor
         if (Array.isArray(content)) {
-          content?.forEach((item: string, index: number) => ctx.fillText(item, 0, index * 50))
+          content?.forEach((item: string, index: number) =>
+            ctx.fillText(item, 0, index * 50),
+          )
         } else {
           ctx.fillText(content, 0, 0)
         }
@@ -159,16 +161,16 @@ const WaterMark: React.FC<WaterMarkProps> = (props) => {
     fontColor,
     image,
     content,
-    fontSize
+    fontSize,
   ])
 
   return (
     <div
+      className={wrapperCls}
       style={{
         position: 'relative',
-        ...style
+        ...style,
       }}
-      className={wrapperCls}
     >
       {children}
       <div
@@ -185,10 +187,10 @@ const WaterMark: React.FC<WaterMarkProps> = (props) => {
           backgroundRepeat: 'repeat',
           ...(base64Url
             ? {
-                backgroundImage: `url('${base64Url}')`
+                backgroundImage: `url('${base64Url}')`,
               }
             : {}),
-          ...markStyle
+          ...markStyle,
         }}
       />
     </div>

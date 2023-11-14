@@ -1,14 +1,12 @@
-import { useMemo } from 'react'
-import { connect, Provider } from 'react-redux'
-import { ConfigProvider } from 'antd'
-import { getPersistor } from '@rematch/persist'
-import { PersistGate } from 'redux-persist/lib/integration/react'
-
-import { filterAccessedRouterConfig } from '@/components/Access/Creater'
-
-import router from './router/index'
-import store from './store/index'
-
+import { useState, useMemo } from 'react'
+import { useSelector, Provider } from 'react-redux'
+import { useAsyncEffect } from 'ahooks'
+import { HelmetProvider } from 'react-helmet-async'
+import { ConfigProvider, App as AntdApp } from 'antd'
+import { storage } from '@mango-kit/utils'
+import { browserSupportDetecter } from '@mango-kit/utils'
+import 'dayjs/locale/zh-cn'
+import 'dayjs/locale/en'
 import zh_CN from 'antd/es/locale/zh_CN'
 import en_US from 'antd/es/locale/en_US'
 import id_ID from 'antd/es/locale/id_ID'
@@ -21,73 +19,103 @@ import it_IT from 'antd/es/locale/it_IT'
 import pl_PL from 'antd/es/locale/pl_PL'
 import de_DE from 'antd/es/locale/de_DE'
 
-import 'moment/locale/zh-cn'
-import 'moment/locale/id'
+import store from '@/store'
+import {
+  constantRouterConfig,
+  createRouter,
+  filterAccessedRoute,
+} from '@/router'
 
-import { RootState } from '@/store/index'
+import type { RootState } from '@/store/index'
+import type { MessageInstance } from 'antd/es/message/interface'
+import type { ModalStaticFunctions } from 'antd/es/modal/confirm'
+import type { NotificationInstance } from 'antd/es/notification/interface'
 
-const mapState = (state: RootState) => ({
-  userModel: state.userModel,
-  appModel: state.appModel
-})
+let message: MessageInstance
+let notification: NotificationInstance
+let modal: Omit<ModalStaticFunctions, 'warn'>
 
-type StateProps = ReturnType<typeof mapState>
-type Props = StateProps
+const AppRouter: FC = () => {
+  const {
+    userInfo: { userAllowedAuthList, role },
+    language,
+  } = useSelector((state: RootState) => state.userModel)
+  const searchParams = new URLSearchParams(window.location.search)
 
-const persistor = getPersistor()
+  const [isbrowserSupportDetecterDone, setIsBrowserSupportDetecterDone] =
+    useState<boolean>()
 
-const AppRouter = connect(mapState)(
-  ({
-    appModel: { selectedLanguage },
-    userModel: {
-      userInfo: { authList, role }
+  const locale = useMemo(() => {
+    switch (language) {
+      case 'zh-CN':
+        return zh_CN
+      case 'en-US':
+        return en_US
+      case 'id-ID':
+        return id_ID
+      case 'vi-VN':
+        return vi_VN
+      case 'ms-MY':
+        return ms_MY
+      case 'es-ES':
+        return es_ES
+      case 'fr_FR':
+        return fr_FR
+      case 'fr_BE':
+        return fr_BE
+      case 'it_IT':
+        return it_IT
+      case 'pl_PL':
+        return pl_PL
+      case 'de_DE':
+        return de_DE
+      default:
+        return zh_CN
     }
-  }: Props) => {
-    const locale = useMemo(() => {
-      switch (selectedLanguage) {
-        case 'zh-CN':
-          return zh_CN
-        case 'en-US':
-          return en_US
-        case 'id-ID':
-          return id_ID
-        case 'vi-VN':
-          return vi_VN
-        case 'ms-MY':
-          return ms_MY
-        case 'es-ES':
-          return es_ES
-        case 'fr_FR':
-          return fr_FR
-        case 'fr_BE':
-          return fr_BE
-        case 'it_IT':
-          return it_IT
-        case 'pl_PL':
-          return pl_PL
-        case 'de_DE':
-          return de_DE
-        default:
-          return zh_CN
-      }
-    }, [selectedLanguage])
+  }, [language])
 
-    const accessedRouteConfig = useMemo(() => {
-      return filterAccessedRouterConfig(authList, role)
-    }, [authList, role])
+  const accessedRouteConfig = useMemo(() => {
+    return filterAccessedRoute(userAllowedAuthList, role)
+  }, [userAllowedAuthList, role])
 
-    return <ConfigProvider locale={locale}>{router(accessedRouteConfig)}</ConfigProvider>
-  }
-)
+  useAsyncEffect(async () => {
+    await browserSupportDetecter()
+    const channelNo = searchParams.get('channelNo')
+    channelNo && storage.setItem('CHANNEL_NO', channelNo, 'sessionStorage')
+    setIsBrowserSupportDetecterDone(true)
+  }, [])
 
-const App = () => {
+  return (
+    isbrowserSupportDetecterDone && (
+      <ConfigProvider locale={locale}>
+        <AntdApp>
+          <FeedbackWrapper>
+            {createRouter(constantRouterConfig, accessedRouteConfig)}
+          </FeedbackWrapper>
+        </AntdApp>
+      </ConfigProvider>
+    )
+  )
+}
+
+const App: FC = () => {
   return (
     <Provider store={store}>
-      <PersistGate persistor={persistor} loading={null}>
-        <AppRouter></AppRouter>
-      </PersistGate>
+      <HelmetProvider>
+        <AppRouter />
+      </HelmetProvider>
     </Provider>
   )
 }
+
+export const FeedbackWrapper: FC<PropsWithChildren<any>> = ({ children }) => {
+  const staticFunction = AntdApp.useApp()
+  message = staticFunction.message
+  modal = staticFunction.modal
+  notification = staticFunction.notification
+  return children
+}
+
+export { message, notification, modal }
 
 export default App

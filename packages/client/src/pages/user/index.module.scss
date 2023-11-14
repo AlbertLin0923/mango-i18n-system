@@ -1,0 +1,57 @@
+.page-container {
+  width: 100%;
+
+  .form-title {
+    margin-bottom: 24px;
+    color: #333;
+    font-weight: bold;
+    font-size: 22px;
+    text-align: center;
+  }
+
+  .form-container {
+    .control-btn-wrapper {
+      margin-bottom: 0;
+    }
+
+    .form-item-other {
+      @include mango-center;
+
+      width: 100%;
+
+      .form-text {
+        font-size: 16px;
+      }
+
+      :global {
+        .ant-btn {
+          padding-right: 0;
+          padding-left: 0;
+        }
+      }
+    }
+
+    &.result-wrapper {
+      @include mango-center;
+
+      width: 100%;
+      height: 460px;
+
+      :global {
+        .ant-result-icon {
+          .anticon {
+            color: $mango-primary-color;
+          }
+        }
+
+        .ant-result {
+          padding: 0;
+        }
+      }
+
+      .result-btn {
+        width: 368px;
+      }
+    }
+  }
+}

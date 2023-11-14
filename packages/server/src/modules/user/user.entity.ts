@@ -1,34 +1,34 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { IsEmail, IsString } from 'class-validator';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
+import { IsEmail, IsString } from 'class-validator'
 
-import { BaseEntity } from '../../common/entity';
+import { BaseEntity } from '../../common/entity/index.js'
 
-export type RoleType = 'user' | 'admin';
+export type RoleType = 'user' | 'admin'
 
-export type AccountStatusType = 'normal' | 'freeze';
+export type AccountStatusType = 'normal' | 'freeze'
 
 @Entity('user')
 export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  userId: string;
+  userId: string
 
   @Column()
-  username: string;
+  username: string
 
   @Column({ select: false })
-  password: string;
+  password: string
 
   @Column()
   @IsEmail()
-  email: string;
+  email: string
 
   @Column({ default: 'user' })
-  role: RoleType;
+  role: RoleType
 
   @Column({ default: 'normal' })
-  account_status: AccountStatusType;
+  account_status: AccountStatusType
 
   @Column()
   @IsString()
-  creator: string;
+  creator: string
 }

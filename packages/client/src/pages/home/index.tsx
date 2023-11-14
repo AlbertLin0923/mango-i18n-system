@@ -1,21 +1,16 @@
-import * as React from 'react'
-import { connect } from 'react-redux'
-import { RootState } from '@/store/index'
-
 import { useTranslation } from 'react-i18next'
-import styles from './index.module.less'
+import { useSelector } from 'react-redux'
 
-const mapState = (state: RootState) => ({
-  username: state.userModel.userInfo.username
-})
+import './index.module.scss'
 
-type StateProps = ReturnType<typeof mapState>
+import type { RootState } from '@/store'
 
-type Props = StateProps
-
-const Home: React.FC<Props> = (props) => {
+const Page: FC = (props) => {
   const { t } = useTranslation()
-  const { username } = props
+
+  const username = useSelector(
+    (state: RootState) => state.userModel.userInfo.username,
+  )
 
   const hello = () => {
     const int = new Date().getHours()
@@ -34,9 +29,9 @@ const Home: React.FC<Props> = (props) => {
 
   return (
     <div className="page-container">
-      <p className={styles.welcome}>
+      <p className="welcome">
         <span>Hi </span>
-        <label htmlFor="" className={styles.username}>
+        <label className="username" htmlFor="">
           {username}
         </label>
         <span>{hello()}</span>
@@ -45,4 +40,4 @@ const Home: React.FC<Props> = (props) => {
   )
 }
 
-export default connect(mapState)(Home)
+export default Page

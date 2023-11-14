@@ -1,26 +1,21 @@
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { PassportModule } from '@nestjs/passport';
+import { Module } from '@nestjs/common'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { PassportModule } from '@nestjs/passport'
+import { JwtModule } from '@nestjs/jwt'
 
-import { JwtModule } from '@nestjs/jwt';
-import { UserService } from './user.service';
+import { UserService } from './user.service.js'
+import { UserController } from './user.controller.js'
+import { UserEntity } from './user.entity.js'
 
-import { UserController } from './user.controller';
-
-import { UserEntity } from './user.entity';
-
-import { LocalStrategy } from '../../common/strategies/local.strategy';
-import { JwtStrategy } from '../../common/strategies/jwt.strategy';
-
-import CONFIG from '../../common/config';
-const jwtSecurity = CONFIG.get('jwtSecurity');
+import { JwtStrategy } from '../../common/strategies/jwt.strategy.js'
+import { LocalStrategy } from '../../common/strategies/local.strategy.js'
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserEntity]),
     JwtModule.register({
-      secret: jwtSecurity.jwtAccessSecret,
-      signOptions: { expiresIn: jwtSecurity.expiresIn },
+      secret: process.env.JWT_ACCESS_SECRET,
+      signOptions: { expiresIn: process.env.JWT_EXPIRES_IN },
     }),
     PassportModule,
   ],
