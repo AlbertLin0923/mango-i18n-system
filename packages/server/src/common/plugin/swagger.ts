@@ -1,6 +1,6 @@
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 
-import type { INestApplication } from '@nestjs/common'
+import { INestApplication } from '@nestjs/common'
 
 // 配置 Swagger UI
 export function setupSwagger(app: INestApplication) {

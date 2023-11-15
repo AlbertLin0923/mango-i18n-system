@@ -4,13 +4,9 @@ import { tap } from 'rxjs/operators'
 import { Logger } from '../plugin/log4js.js'
 import { parseDateString } from '../utils/index.js'
 
-import type { Request } from 'express'
-import type { Observable } from 'rxjs'
-import type {
-  NestInterceptor,
-  ExecutionContext,
-  CallHandler,
-} from '@nestjs/common'
+import { Request } from 'express'
+import { Observable } from 'rxjs'
+import { NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common'
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {

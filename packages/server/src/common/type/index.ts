@@ -2,7 +2,7 @@ import { applyDecorators } from '@nestjs/common'
 import { ApiOkResponse, ApiOperation, ApiProperty } from '@nestjs/swagger'
 import { IsInt } from 'class-validator'
 
-import type { Type } from '@nestjs/common'
+import { Type } from '@nestjs/common'
 export type ObjectLiteral = Record<string, any>
 
 export enum Extractor {

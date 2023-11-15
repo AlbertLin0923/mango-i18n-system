@@ -10,7 +10,7 @@ import { AllExceptionFilter } from './common/filter/all-exception.filter.js'
 import { ValidationPipe } from './common/pipe/validation.pipe.js'
 import { setupSwagger } from './common/plugin/swagger.js'
 
-import type { NestExpressApplication } from '@nestjs/platform-express'
+import { NestExpressApplication } from '@nestjs/platform-express'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {

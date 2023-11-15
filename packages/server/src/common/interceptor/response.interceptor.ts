@@ -1,12 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { map } from 'rxjs/operators'
 
-import type {
-  CallHandler,
-  ExecutionContext,
-  NestInterceptor,
-} from '@nestjs/common'
-import type { Observable } from 'rxjs'
+import { CallHandler, ExecutionContext, NestInterceptor } from '@nestjs/common'
+import { Observable } from 'rxjs'
 
 interface Response<T> {
   data: T

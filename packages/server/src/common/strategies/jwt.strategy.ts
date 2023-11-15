@@ -7,7 +7,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt'
 import { BusinessException } from '../exception/business.exception.js'
 import { UserEntity } from '../../modules/user/user.entity.js'
 
-import type { Repository } from 'typeorm'
+import { Repository } from 'typeorm'
 
 //通过在子类中实现 validate() 方法，可以提供verify 回调
 @Injectable()

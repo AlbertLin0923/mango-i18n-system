@@ -3,15 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm'
 
 import { UserEntity } from './user.entity.js'
 
+import { BusinessException } from '../../common/exception/business.exception.js'
 import {
   filterObjProperties,
   hashPassword,
   createQueryParams,
 } from '../../common/utils/index.js'
-import { BusinessException } from '../../common/exception/business.exception.js'
 
-import type { RoleType, AccountStatusType } from './user.entity.js'
-import type {
+import { RoleType, AccountStatusType } from './user.entity.js'
+import {
   LoginDTO,
   RegisterDTO,
   RefreshTokenDTO,
@@ -22,7 +22,7 @@ import type {
   UpdateOtherPasswordDTO,
   QueryUserDTO,
 } from './user.dto.js'
-import type {
+import {
   TokenPairVO,
   AccessTokenVO,
   User,
@@ -30,8 +30,8 @@ import type {
   UserListVO,
   UserSearchOptionsVO,
 } from './user.vo.js'
-import type { JwtService } from '@nestjs/jwt'
-import type { Repository, DeleteResult } from 'typeorm'
+import { JwtService } from '@nestjs/jwt'
+import { Repository, DeleteResult } from 'typeorm'
 
 @Injectable()
 export class UserService {

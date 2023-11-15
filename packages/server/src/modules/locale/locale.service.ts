@@ -7,15 +7,11 @@ import { BusinessException } from '../../common/exception/business.exception.js'
 import { LocaleEntity } from './locale.entity.js'
 import { transformListToObj, completeLocaleItem } from './locale.utils.js'
 
-import type { Repository, DeleteResult } from 'typeorm'
-import type {
-  AddLocaleDTO,
-  UpdateLocaleDTO,
-  DeleteLocaleDTO,
-} from './locale.dto.js'
-import type { LocaleListVO, LocaleVO } from './locale.vo.js'
-import type { RecordService } from '../record/record.service.js'
-import type { SettingService } from '../setting/setting.service.js'
+import { Repository, DeleteResult } from 'typeorm'
+import { AddLocaleDTO, UpdateLocaleDTO, DeleteLocaleDTO } from './locale.dto.js'
+import { LocaleListVO, LocaleVO } from './locale.vo.js'
+import { RecordService } from '../record/record.service.js'
+import { SettingService } from '../setting/setting.service.js'
 
 @Injectable()
 export class LocaleService {

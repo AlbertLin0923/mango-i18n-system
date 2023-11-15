@@ -16,7 +16,7 @@
     "preinstall": "npx only-allow pnpm"
   },
   "dependencies": {
-    "@mango-scripts/i18n-utils": "^2.0.2",
+    "@mango-scripts/i18n-utils": "^2.0.9",
     "@mango-scripts/dev-scripts": "^2.0.5",
     "@mango-scripts/esp-config": "^2.0.3",
     "@nestjs/common": "^10.2.8",

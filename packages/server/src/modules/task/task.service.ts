@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 
 import { RecordEntity } from '../record/record.entity.js'
 
-import type { Repository } from 'typeorm'
+import { Repository } from 'typeorm'
 
 @Injectable()
 export class TaskService {

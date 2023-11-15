@@ -3,7 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@mango-scripts/dev-scripts': ^2.0.5
   '@mango-scripts/esp-config': ^2.0.3
-  '@mango-scripts/i18n-utils': ^2.0.2
+  '@mango-scripts/i18n-utils': ^2.0.9
   '@nestjs/cli': ^10.2.1
   '@nestjs/common': ^10.2.8
   '@nestjs/config': ^3.1.1
@@ -65,7 +65,7 @@ specifiers:
 dependencies:
   '@mango-scripts/dev-scripts': 2.0.5
   '@mango-scripts/esp-config': 2.0.3_jpsdqw7cr3n7jdy7zbzsineyxy
-  '@mango-scripts/i18n-utils': 2.0.2
+  '@mango-scripts/i18n-utils': 2.0.9
   '@nestjs/common': 10.2.8_j3td4gnlgk75ora6o6suo62byy
   '@nestjs/config': 3.1.1_y65o4tbzpyjc6mimoffbgyficq
   '@nestjs/core': 10.2.8_snlncfyce6tyqfjhua7tjrti4u
@@ -1863,8 +1863,8 @@ packages:
       - typescript
     dev: false
 
-  /@mango-scripts/i18n-utils/2.0.2:
-    resolution: {integrity: sha512-TX25JRyevMYmsHGjeS3FCr/Z32eiZb8B5JezIvPdWTnBd7hMa+D92tR5oT7muiS6aZBBHpTB43Ovry1pZ26RoA==}
+  /@mango-scripts/i18n-utils/2.0.9:
+    resolution: {integrity: sha512-NbmS7Mvaz2cxKCoJZp49AyMeh5XQCSq1IaclD6BzTTsHwgzwnql8R5okV0Rnumu4nwiyzHUvpJfuvvTUIcb3lg==}
     engines: {node: '>=16.0.0'}
     dependencies:
       '@babel/core': 7.23.3

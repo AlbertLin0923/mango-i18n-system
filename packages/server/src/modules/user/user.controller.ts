@@ -13,8 +13,8 @@ import {
 
 import { User } from '../../common/decorator/user.js'
 
-import type { UserService } from './user.service.js'
-import type {
+import { UserService } from './user.service.js'
+import {
   LoginDTO,
   RegisterDTO,
   RefreshTokenDTO,
@@ -25,7 +25,7 @@ import type {
   UpdateOtherPasswordDTO,
   QueryUserDTO,
 } from './user.dto.js'
-import type {
+import {
   TokenPairVO,
   AccessTokenVO,
   UserVO,

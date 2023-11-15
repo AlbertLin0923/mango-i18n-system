@@ -9,9 +9,9 @@ import {
 
 import { SettingSearchOptionsResponse, SettingResponse } from './setting.vo.js'
 
-import type { SettingService } from './setting.service.js'
-import type { UpdateSettingDTO } from './setting.dto.js'
-import type {
+import { SettingService } from './setting.service.js'
+import { UpdateSettingDTO } from './setting.dto.js'
+import {
   SettingSearchOptionsVO,
   SettingVO,
   UpdateSettingVO,

@@ -10,13 +10,13 @@ import {
 } from '../locale/locale.tool.js'
 import { BusinessException } from '../../common/exception/business.exception.js'
 
-import type {
+import {
   SettingSearchOptionsVO,
   SettingVO,
   UpdateSettingVO,
 } from './setting.vo.js'
-import type { Setting, UpdateSettingDTO } from './setting.dto.js'
-import type { Repository } from 'typeorm'
+import { Repository } from 'typeorm'
+import { Setting, UpdateSettingDTO } from './setting.dto.js'
 
 const allLocaleDict = [
   {

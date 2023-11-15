@@ -3,7 +3,7 @@ import * as crypto from 'crypto'
 import dayjs from 'dayjs'
 import * as pico from 'picocolors'
 
-import type { ObjectLiteral } from '../type/index.js'
+import { ObjectLiteral } from '../type/index.js'
 
 export const isFunction = (value: any): boolean => {
   return typeof value === 'function'

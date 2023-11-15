@@ -42,15 +42,11 @@ import {
   extractLocaleFromSourceCode,
 } from './locale.tool.js'
 
-import type {
-  AddLocaleDTO,
-  UpdateLocaleDTO,
-  DeleteLocaleDTO,
-} from './locale.dto.js'
-import type { LocaleVO, LocaleListVO, LocaleMapVO } from './locale.vo.js'
-import type { LocaleService } from './locale.service.js'
-import type { SettingService } from '../setting/setting.service.js'
-import type { Response } from 'express'
+import { AddLocaleDTO, UpdateLocaleDTO, DeleteLocaleDTO } from './locale.dto.js'
+import { LocaleVO, LocaleListVO, LocaleMapVO } from './locale.vo.js'
+import { LocaleService } from './locale.service.js'
+import { SettingService } from '../setting/setting.service.js'
+import { Response } from 'express'
 
 @ApiBearerAuth()
 @ApiTags('locale')

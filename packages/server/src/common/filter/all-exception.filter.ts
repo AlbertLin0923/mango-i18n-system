@@ -4,8 +4,8 @@ import { Logger } from '../plugin/log4js.js'
 import { BusinessException } from '../exception/business.exception.js'
 import { parseDateString } from '../utils/index.js'
 
-import type { Request, Response } from 'express'
-import type { ArgumentsHost, ExceptionFilter } from '@nestjs/common'
+import { Request, Response } from 'express'
+import { ArgumentsHost, ExceptionFilter } from '@nestjs/common'
 
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {

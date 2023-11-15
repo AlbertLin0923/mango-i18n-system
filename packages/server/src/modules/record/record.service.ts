@@ -5,14 +5,10 @@ import { RecordEntity } from './record.entity.js'
 
 import { createQueryParams } from '../../common/utils/index.js'
 
-import type { Repository } from 'typeorm'
-import type { AddRecordDTO, QueryRecordDTO } from './record.dto.js'
-import type {
-  RecordVO,
-  RecordListVO,
-  RecordSearchOptionsVO,
-} from './record.vo.js'
-import type { UserService } from '../user/user.service.js'
+import { Repository } from 'typeorm'
+import { AddRecordDTO, QueryRecordDTO } from './record.dto.js'
+import { RecordVO, RecordListVO, RecordSearchOptionsVO } from './record.vo.js'
+import { UserService } from '../user/user.service.js'
 
 @Injectable()
 export class RecordService {

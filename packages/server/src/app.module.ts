@@ -13,7 +13,7 @@ import { LocaleModule } from './modules/locale/locale.module.js'
 import { SettingModule } from './modules/setting/setting.module.js'
 import { RecordModule } from './modules/record/record.module.js'
 import { TaskModule } from './modules/task/task.module.js'
-import { UserEntity } from './modules/user/user.entity.js'
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -23,19 +23,18 @@ import { UserEntity } from './modules/user/user.entity.js'
       type: 'sqlite',
       database: path.resolve(process.cwd(), './database/translate.db'),
       synchronize: true,
-      entities: [UserEntity],
+      entities: ['dist/**/*.entity.js'],
     }),
     ServeStaticModule.forRoot({
       rootPath: path.resolve(process.cwd(), './public'),
       exclude: ['/api*'],
     }),
     ScheduleModule.forRoot(),
-    // UserModule,
-    // LocaleModule,
+    UserModule,
+    LocaleModule,
     SettingModule,
-
-    // TaskModule,
-    // RecordModule,
+    TaskModule,
+    RecordModule,
   ],
   controllers: [AppController],
   providers: [AppService],
