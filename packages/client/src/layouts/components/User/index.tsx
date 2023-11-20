@@ -16,9 +16,9 @@ import styles from './index.module.scss'
 import type { RootState, Dispatch } from '@/store/index'
 
 const UserPanel: FC<{ onClose: () => void }> = ({ onClose }) => {
-  const { username } = useSelector(
-    (state: RootState) => state.userModel.userInfo,
-  )
+  const {
+    user: { username },
+  } = useSelector((state: RootState) => state.userModel.userInfo)
   const dispatch = useDispatch<Dispatch>()
   const { t } = useTranslation()
   const { modal, message } = App.useApp()
@@ -27,26 +27,26 @@ const UserPanel: FC<{ onClose: () => void }> = ({ onClose }) => {
   const actionList = [
     {
       icon: <ProfileOutlined />,
-      text: t('我的订单'),
+      text: t('文案配置'),
       action: () => {
         onClose()
-        navigate('/account/order')
+        navigate('/locale')
       },
     },
     {
       icon: <MailOutlined />,
-      text: t('我的信件'),
+      text: t('人员配置'),
       action: () => {
         onClose()
-        navigate('/account/letter')
+        navigate('/system/account')
       },
     },
     {
       icon: <SettingOutlined />,
-      text: t('账号设置'),
+      text: t('解析配置'),
       action: () => {
         onClose()
-        navigate('/account/setting')
+        navigate('/system/extract')
       },
     },
   ]

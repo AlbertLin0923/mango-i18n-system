@@ -32,18 +32,19 @@ import {
 } from './user.vo.js'
 import { JwtService } from '@nestjs/jwt'
 import { Repository, DeleteResult } from 'typeorm'
-
+import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     private readonly jwtService: JwtService,
+    private configService: ConfigService
   ) {}
 
   async login(loginDTO: LoginDTO): Promise<TokenPairVO> {
     const { username, password } = loginDTO
-    const hashedPassword = hashPassword(password, process.env.PASSWORD_SALT)
+    const hashedPassword = hashPassword(password, this.configService.get<string>('PASSWORD_SALT'))
     const user = await this.userRepository.findOneBy({
       username,
       password: hashedPassword,
@@ -61,10 +62,10 @@ export class UserService {
   }
 
   async register(registerDTO: RegisterDTO): Promise<TokenPairVO> {
-    const { username, password, email, key } = registerDTO
+    const { username, password, email, invitationCode } = registerDTO
 
-    if (key !== process.env.REGISTER_KEY) {
-      throw new BusinessException('注册密钥不正确', 500)
+    if (invitationCode !== this.configService.get<string>('INVITATION_CODE')) {
+      throw new BusinessException('邀请码不正确', 500)
     }
 
     const isHave = await this.userRepository.findBy({ username })
@@ -73,7 +74,7 @@ export class UserService {
       throw new BusinessException('用户名重复', 500)
     }
 
-    const hashedPassword = hashPassword(password, process.env.PASSWORD_SALT)
+    const hashedPassword = hashPassword(password, this.configService.get<string>('PASSWORD_SALT'))
 
     const newUser = await this.userRepository.save(
       Object.assign(new UserEntity(), {
@@ -97,7 +98,7 @@ export class UserService {
     const { refreshToken } = refreshTokenDTO
     try {
       const { userId } = this.jwtService.verify(refreshToken, {
-        secret: process.env.JWT_REFRESH_SECRET,
+        secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
       })
 
       const accessToken = this.generateAccessToken({
@@ -188,7 +189,7 @@ export class UserService {
       throw new BusinessException('用户名重复', 500)
     }
 
-    const hashedPassword = hashPassword(password, process.env.PASSWORD_SALT)
+    const hashedPassword = hashPassword(password, this.configService.get<string>('PASSWORD_SALT'))
 
     const newUser = await this.userRepository.save(
       Object.assign(new UserEntity(), {
@@ -254,13 +255,13 @@ export class UserService {
 
     if (
       toUpdateUser.password !==
-      hashPassword(oldPassword, process.env.PASSWORD_SALT)
+      hashPassword(oldPassword, this.configService.get<string>('PASSWORD_SALT'))
     ) {
       throw new BusinessException('原密码错误')
     }
 
     const updated = Object.assign(toUpdateUser, {
-      password: hashPassword(password, process.env.PASSWORD_SALT),
+      password: hashPassword(password, this.configService.get<string>('PASSWORD_SALT')),
     })
 
     const _user = await this.userRepository.save(updated)
@@ -293,7 +294,7 @@ export class UserService {
     }
 
     const updated = Object.assign(toUpdateUser, {
-      password: hashPassword(password, process.env.PASSWORD_SALT),
+      password: hashPassword(password, this.configService.get<string>('PASSWORD_SALT')),
     })
 
     const _user = await this.userRepository.save(updated)
@@ -313,8 +314,8 @@ export class UserService {
 
   private generateRefreshToken(payload: { userId: string }): string {
     return this.jwtService.sign(payload, {
-      secret: process.env.JWT_REFRESH_SECRET,
-      expiresIn: process.env.JWT_REFRESH_IN,
+      secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+      expiresIn: this.configService.get<string>('JWT_REFRESH_IN'),
     })
   }
 

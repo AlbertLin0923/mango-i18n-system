@@ -4,7 +4,7 @@ specifiers:
   '@ant-design/icons': ^5.0.1
   '@commitlint/cli': ^17.6.3
   '@commitlint/config-conventional': ^17.6.3
-  '@mango-kit/components': ^0.0.2
+  '@mango-kit/components': ^0.0.4
   '@mango-kit/utils': ^0.0.1
   '@mango-scripts/dev-scripts': ^2.0.5
   '@mango-scripts/esp-config': ^2.0.3
@@ -72,7 +72,7 @@ specifiers:
 
 dependencies:
   '@ant-design/icons': 5.2.6_biqbaboplfbrettd7655fr4n2y
-  '@mango-kit/components': 0.0.2_zgkbbnuyan3lyutgchaimvpy3m
+  '@mango-kit/components': 0.0.4_vnw6hvkzs7d5xjwu6572hvrt7q
   '@mango-kit/utils': 0.0.1
   '@rematch/core': 2.2.0_redux@4.2.1
   '@rematch/loading': 2.1.2_@rematch+core@2.2.0
@@ -2834,17 +2834,24 @@ packages:
       call-bind: 1.0.5
     dev: true
 
-  /@mango-kit/components/0.0.2_zgkbbnuyan3lyutgchaimvpy3m:
-    resolution: {integrity: sha512-JNp0b9RSnBrqU7OdBkLb13HoxoLqHaAldI5fFruYpxBS6w3vWJ6ucVEJCthXKW28dutGPnAWNxuTdEpSf9XUHw==}
+  /@mango-kit/components/0.0.4_vnw6hvkzs7d5xjwu6572hvrt7q:
+    resolution: {integrity: sha512-PvaHXVcNRlNl2yg7uxkK7NjDn5qEFCNFYsKWCukDuv4SDub+Iu2f+Gs+6od3b/uD9B1kLhbPRZKKVfXKyFqnYQ==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       antd: '>=5.8.4'
       react: '>=18'
       react-dom: '>=18'
+      react-router-dom: '>=6.4.1'
     dependencies:
+      '@ant-design/icons': 5.2.6_biqbaboplfbrettd7655fr4n2y
+      '@mango-kit/utils': 0.0.1
       antd: 5.11.1_biqbaboplfbrettd7655fr4n2y
+      classnames: 2.3.2
+      dayjs: 1.11.10
+      lodash-es: 4.17.21
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+      react-router-dom: 6.4.1_biqbaboplfbrettd7655fr4n2y
     dev: false
 
   /@mango-kit/utils/0.0.1:
@@ -10210,6 +10217,10 @@ packages:
     dependencies:
       p-locate: 6.0.0
     dev: true
+
+  /lodash-es/4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+    dev: false
 
   /lodash.camelcase/4.3.0:
     resolution: {integrity: sha512-TwuEnCnxbc3rAvhf/LbG7tJUDzhqXyFnv3dtzLOPgCG/hODL7WFnsbwktkD7yUV0RrreP/l1PALq/YSg6VvjlA==}

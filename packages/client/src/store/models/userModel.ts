@@ -20,8 +20,11 @@ type TokenPari = {
 type UserInfo = {
   role: string
   userAllowedAuthList: (string | number)[]
-  userId: string
-  username: string
+  user: {
+    userId: string
+    username: string
+    [key: string]: any
+  }
 }
 
 type UserModelState = {
@@ -41,8 +44,10 @@ const userModel = createModel<RootModel>()({
     userInfo: {
       role: '', // 用户的角色，用于权限系统
       userAllowedAuthList: [], // 用户的具体权限列表，用于权限系统
-      userId: '',
-      username: '',
+      user: {
+        userId: '',
+        username: '',
+      },
     },
     siderCollapsed: storage.getItem('SIDER_COLLAPSED', true),
     language: getLanguage(),
@@ -123,7 +128,7 @@ const userModel = createModel<RootModel>()({
       payload: RegisterParamsType,
       rootState,
     ): Promise<{ success: boolean; msg: string }> {
-      const { code, data, msg } = await API.login(payload)
+      const { code, data, msg } = await API.register(payload)
       if (code === 200) {
         const { accessToken, refreshToken } = data
         dispatch.userModel.updateTokenPair({
@@ -149,11 +154,11 @@ const userModel = createModel<RootModel>()({
     async getUserInfo(): Promise<{ success: boolean; msg: string }> {
       const { code, data, msg } = await API.getUserInfo()
       if (code === 200) {
-        const { userAllowedAuthList, role, ...rest } = data
+        const { userAllowedAuthList, role, user } = data
         await dispatch.userModel.updateUserInfo({
           userAllowedAuthList,
           role,
-          ...rest,
+          user,
         })
         return Promise.resolve({
           success: true,

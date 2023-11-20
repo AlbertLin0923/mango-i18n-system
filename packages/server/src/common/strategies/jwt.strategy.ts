@@ -6,7 +6,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt'
 
 import { BusinessException } from '../exception/business.exception.js'
 import { UserEntity } from '../../modules/user/user.entity.js'
-
+import { ConfigService } from '@nestjs/config';
 import { Repository } from 'typeorm'
 
 //通过在子类中实现 validate() 方法，可以提供verify 回调
@@ -15,10 +15,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    private configService: ConfigService
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: process.env.JWT_ACCESS_SECRET,
+      secretOrKey: configService.get<string>('JWT_ACCESS_SECRET'),
     })
   }
 

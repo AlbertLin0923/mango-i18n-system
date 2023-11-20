@@ -9,7 +9,7 @@ const NoFoundPage: FC = () => {
   return (
     <Result
       extra={
-        <Button type="primary" onClick={() => navigate('/mall')}>
+        <Button type="primary" onClick={() => navigate('/home')}>
           {t('回到首页')}
         </Button>
       }

@@ -61,12 +61,12 @@ export class RegisterDTO {
   readonly email: string
 
   @ApiProperty({
-    description: '注册密钥',
+    description: '邀请码',
     example: '48454dwesfwfwe451fc54wse15',
   })
   @IsString()
   @IsNotEmpty()
-  readonly key: string
+  readonly invitationCode: string
 }
 
 export class RefreshTokenDTO {

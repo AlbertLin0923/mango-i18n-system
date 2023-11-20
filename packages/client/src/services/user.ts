@@ -9,7 +9,7 @@ export type RegisterParamsType = {
   username: string
   password: string
   email: string
-  key: string
+  invitationCode: string
 }
 
 export interface UpdateMyPasswordParamsType {

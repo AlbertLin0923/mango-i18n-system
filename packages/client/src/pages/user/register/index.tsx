@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Form, Input, Button, App } from 'antd'
+import { MangoFormPassword } from '@mango-kit/components'
 
-import MangoPassword from '@/components/MangoPassword'
 import { getRedirect, MangoRegExp } from '@/utils'
 
 import '../index.module.scss'
@@ -24,13 +24,14 @@ const Register: FC = () => {
   const [formMessage, setFormMessage] = useState<string>('')
 
   const handleSubmit = async () => {
-    const { username, password, email, key } = form.getFieldsValue(true)
+    const { username, password, email, invitationCode } =
+      form.getFieldsValue(true)
     setFormMessage('')
     const { success, msg } = await dispatch.userModel.register({
       username,
       password,
       email,
-      key,
+      invitationCode,
     })
     if (success) {
       message.success(msg)
@@ -67,7 +68,7 @@ const Register: FC = () => {
             <Input maxLength={20} placeholder={t('请输入账号')} />
           </Form.Item>
 
-          <MangoPassword />
+          <MangoFormPassword />
 
           <Form.Item
             name="email"
@@ -98,7 +99,7 @@ const Register: FC = () => {
           </Form.Item>
 
           <Form.Item
-            name="key"
+            name="invitationCode"
             normalize={(value: any) => {
               return value.trim()
             }}
@@ -109,7 +110,7 @@ const Register: FC = () => {
               },
             ]}
           >
-            <Input maxLength={20} placeholder={t('请输入邀请码')} />
+            <Input maxLength={50} placeholder={t('请输入邀请码')} />
           </Form.Item>
 
           <Form.Item>

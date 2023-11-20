@@ -17,7 +17,7 @@ const User: FC = () => {
         <div className="layout-header">
           <div className="logo-wrapper">
             <SvgIcon className="logo" iconClass="logo" />
-            <div className="text">mango-i18n-system</div>
+            {/* <div className="text">mango-i18n-system</div> */}
           </div>
           <div className="select-lang-wrapper">
             <SelectLang />

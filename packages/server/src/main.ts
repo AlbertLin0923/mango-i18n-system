@@ -2,7 +2,7 @@ import { join } from 'node:path'
 
 import { NestFactory } from '@nestjs/core'
 import cookieParser from 'cookie-parser'
-
+import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module.js'
 import { ResponseInterceptor } from './common/interceptor/response.interceptor.js'
 import { LoggingInterceptor } from './common/interceptor/logging.interceptor.js'
@@ -16,6 +16,9 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     cors: { origin: '*' },
   })
+
+  // 使用 ConfigService 来获取配置信息
+  const configService = app.get(ConfigService);
 
   // 全局过滤器
   app.useGlobalFilters(new AllExceptionFilter())
@@ -43,13 +46,14 @@ async function bootstrap() {
   // swagger配置
   setupSwagger(app)
 
-  await app.listen(process.env.SERVER_PORT)
+  const port = Number(configService.get<string>('SERVER_PORT'))
+  await app.listen(port)
 
   console.log(
-    `Server started on port http:localhost:${process.env.SERVER_PORT}`,
+    `Server started on port http:localhost:${port}`,
   )
   console.log(
-    `Docs started on port http:localhost:${process.env.SERVER_PORT}/docs/`,
+    `Docs started on port http:localhost:${port}/docs/`,
   )
 }
 

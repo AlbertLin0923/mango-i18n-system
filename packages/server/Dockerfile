@@ -1,6 +1,5 @@
 FROM node:18.15.0
 
-# Create app directory
 WORKDIR /home/app/server
 
 RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm

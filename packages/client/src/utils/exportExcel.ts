@@ -1,5 +1,5 @@
-import * as Excel from 'exceljs'
-import * as FileSaver from 'file-saver'
+import Excel from 'exceljs'
+import FileSaver from 'file-saver'
 
 const setSheetStyle = (sheet: any, localeDictWithLabel: string[]) => {
   sheet.columns = localeDictWithLabel.map((i) => {

@@ -65,5 +65,9 @@ export const priceCalc = (arr: any[], unitPrice: string, quantity?: string) => {
     : 0
 }
 
+export const findStub = (str: string) => {
+  return str.match(/{{*[^{}]*}}*/g) || null
+}
+
 export const isObject = (val: any) =>
   Object.prototype.toString.call(val) === '[object Object]'
