@@ -36,7 +36,7 @@ const AccountLogin: FC = () => {
 
     if (success) {
       message.success(msg)
-      navigate(getRedirect() || '/home', { replace: true })
+      navigate(getRedirect() || '/locale', { replace: true })
     } else {
       setFormMessage(msg)
     }

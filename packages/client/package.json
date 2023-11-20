@@ -25,7 +25,7 @@
     "@rematch/loading": "^2.1.2",
     "@rematch/select": "^3.1.2",
     "@rematch/updated": "^2.1.2",
-    "@mango-kit/components": "^0.0.4",
+    "@mango-kit/components": "^0.0.9",
     "@mango-kit/utils": "^0.0.1",
     "ahooks": "^3.7.7",
     "antd": "^5.8.4",

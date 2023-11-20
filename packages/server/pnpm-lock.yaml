@@ -35,9 +35,8 @@ specifiers:
   execa: ^8.0.1
   express: ^4.18.2
   fs-extra: ^11.1.1
-  get-folder-size: 4.0.0
+  get-folder-size: ^4.0.0
   glob: ^10.3.10
-  glob-promise: ^6.0.5
   jsonwebtoken: ^9.0.2
   lodash-es: ^4.17.21
   log4js: ^6.9.1
@@ -87,7 +86,6 @@ dependencies:
   fs-extra: 11.1.1
   get-folder-size: 4.0.0
   glob: 10.3.10
-  glob-promise: 6.0.5_glob@10.3.10
   jsonwebtoken: 9.0.2
   lodash-es: 4.17.21
   log4js: 6.9.1
@@ -2400,13 +2398,6 @@ packages:
 
   /@types/glob/7.2.0:
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
-    dependencies:
-      '@types/minimatch': 5.1.2
-      '@types/node': 20.9.0
-    dev: false
-
-  /@types/glob/8.1.0:
-    resolution: {integrity: sha512-IO+MJPVhoqz+28h1qLAcBEH2+xHMK6MTyHJc7MTnnYb6wsoLR29POVGJ7LycmVXIqyy/4/2ShP5sUwTXuOwb/w==}
     dependencies:
       '@types/minimatch': 5.1.2
       '@types/node': 20.9.0
@@ -5705,16 +5696,6 @@ packages:
     engines: {node: '>=10.13.0'}
     dependencies:
       is-glob: 4.0.3
-
-  /glob-promise/6.0.5_glob@10.3.10:
-    resolution: {integrity: sha512-uUzvxo60yo/vMLXZHCNAlfdM5U5A07jCnUO8xTK44Z0Vc58poGDXhDx8ju1DmPdprOORh+4Lpog64hl+AJ5piA==}
-    engines: {node: '>=16'}
-    peerDependencies:
-      glob: ^8.0.3
-    dependencies:
-      '@types/glob': 8.1.0
-      glob: 10.3.10
-    dev: false
 
   /glob-to-regexp/0.3.0:
     resolution: {integrity: sha512-Iozmtbqv0noj0uDDqoL0zNq0VBEfK2YFoMAZoxJe4cwphvLR+JskfF30QhXHOR4m3KrE6NLRYw+U9MRXvifyig==}

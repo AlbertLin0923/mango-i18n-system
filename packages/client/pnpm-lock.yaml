@@ -4,7 +4,7 @@ specifiers:
   '@ant-design/icons': ^5.0.1
   '@commitlint/cli': ^17.6.3
   '@commitlint/config-conventional': ^17.6.3
-  '@mango-kit/components': ^0.0.4
+  '@mango-kit/components': ^0.0.9
   '@mango-kit/utils': ^0.0.1
   '@mango-scripts/dev-scripts': ^2.0.5
   '@mango-scripts/esp-config': ^2.0.3
@@ -72,7 +72,7 @@ specifiers:
 
 dependencies:
   '@ant-design/icons': 5.2.6_biqbaboplfbrettd7655fr4n2y
-  '@mango-kit/components': 0.0.4_vnw6hvkzs7d5xjwu6572hvrt7q
+  '@mango-kit/components': 0.0.9_vnw6hvkzs7d5xjwu6572hvrt7q
   '@mango-kit/utils': 0.0.1
   '@rematch/core': 2.2.0_redux@4.2.1
   '@rematch/loading': 2.1.2_@rematch+core@2.2.0
@@ -2834,8 +2834,8 @@ packages:
       call-bind: 1.0.5
     dev: true
 
-  /@mango-kit/components/0.0.4_vnw6hvkzs7d5xjwu6572hvrt7q:
-    resolution: {integrity: sha512-PvaHXVcNRlNl2yg7uxkK7NjDn5qEFCNFYsKWCukDuv4SDub+Iu2f+Gs+6od3b/uD9B1kLhbPRZKKVfXKyFqnYQ==}
+  /@mango-kit/components/0.0.9_vnw6hvkzs7d5xjwu6572hvrt7q:
+    resolution: {integrity: sha512-hFdgEwPTngN3/XZdS+9XjYRjWn4RzP1dnS3G8TahJJ/S31zZGdwVu/JVwn4M+apTaYBVW4guEanOGB1hCYhLsQ==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       antd: '>=5.8.4'

@@ -52,8 +52,8 @@ const exportExcel = (
   setSheetStyle(sheet, localeDictWithLabel)
   sheet.addRows(data)
 
-  workbook.xlsx.writeBuffer().then((data) => {
-    const blob = new Blob([data], {
+  workbook.xlsx.writeBuffer().then((d) => {
+    const blob = new Blob([d], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8',
     })
 

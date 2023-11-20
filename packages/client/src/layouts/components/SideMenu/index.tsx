@@ -12,32 +12,32 @@ const SideMenu: FC<{
 }> = ({ menuConfig }) => {
   const navigate = useNavigate()
   const { pathname } = useLocation()
-  const [selectedKeys, setSelectedKeys] = useState<string[]>([pathname])
-  const [openKeys, setOpenKeys] = useState<string[]>([])
+  const [selectedKeyList, setSelectedKeyList] = useState<string[]>([pathname])
+  const [openKeyList, setOpenKeyList] = useState<string[]>([])
 
   const handleSelect: MenuProps['onSelect'] = ({ key, selectedKeys }) => {
     navigate(key)
-    setSelectedKeys(selectedKeys)
+    setSelectedKeyList(selectedKeys)
   }
 
   const handleOpenChange: MenuProps['onOpenChange'] = (openKeys) => {
-    setOpenKeys(openKeys)
+    setOpenKeyList(openKeys)
   }
 
   useEffect(() => {
-    setSelectedKeys([pathname])
+    setSelectedKeyList([pathname])
     const _openKeys = getFullRoutePath(pathname).map((i) => {
       return i.path
     })
-    setOpenKeys(_openKeys)
+    setOpenKeyList(_openKeys)
   }, [pathname, menuConfig])
 
   return (
     <Menu
       items={menuConfig}
       mode="inline"
-      openKeys={openKeys}
-      selectedKeys={selectedKeys}
+      openKeys={openKeyList}
+      selectedKeys={selectedKeyList}
       onOpenChange={handleOpenChange}
       onSelect={handleSelect}
     />

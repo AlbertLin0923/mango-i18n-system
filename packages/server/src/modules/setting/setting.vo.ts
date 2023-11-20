@@ -48,10 +48,10 @@ export class SettingSearchOptionsVO {
     example: '',
   })
   searchOptions: {
-    allFilterExtName: { label: string; value: string }[]
-    allExtractor: { label: string; value: string }[]
-    allResolveDirPath: { label: string; value: string }[]
-    allLocaleDict: { label: string; value: string }[]
+    filterExtNameMap: { label: string; value: string }[]
+    extractorMap: { label: string; value: string }[]
+    resolveDirPathMap: { label: string; value: string }[]
+    localeDictMap: { label: string; value: string }[]
   }
   message: string[]
 }

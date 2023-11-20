@@ -1,7 +1,7 @@
-import * as crypto from 'crypto'
+import crypto from 'crypto'
 
 import dayjs from 'dayjs'
-import * as pico from 'picocolors'
+import pico from 'picocolors'
 
 import { ObjectLiteral } from '../type/index.js'
 
@@ -89,7 +89,7 @@ export const createQueryParams = (
 
   if (queryObject[timeDurationKey]) {
     queryStr = queryStr
-      ? `and ${timeDurationKey} BETWEEN :start AND :end`
+      ? `${queryStr} and ${timeDurationKey} BETWEEN :start AND :end`
       : `${timeDurationKey} BETWEEN :start AND :end`
 
     queryObj = {

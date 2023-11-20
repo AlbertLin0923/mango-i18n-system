@@ -1,5 +1,4 @@
 import { createModel } from '@rematch/core'
-import Cookie from 'js-cookie'
 import { storage } from '@mango-kit/utils'
 
 import i18n, { getLanguage } from '@/locales'
@@ -54,17 +53,6 @@ const userModel = createModel<RootModel>()({
   } as UserModelState,
 
   reducers: {
-    updateTokenPair(state, payload: TokenPari) {
-      return {
-        ...state,
-        ...{
-          tokenPair: payload,
-        },
-      }
-    },
-    updateUserInfo(state, payload: UserInfo) {
-      return { ...state, ...{ userInfo: payload } }
-    },
     updateSiderCollapsed(state, payload: boolean) {
       return {
         ...state,
@@ -80,6 +68,17 @@ const userModel = createModel<RootModel>()({
           language: payload,
         },
       }
+    },
+    updateTokenPair(state, payload: TokenPari) {
+      return {
+        ...state,
+        ...{
+          tokenPair: payload,
+        },
+      }
+    },
+    updateUserInfo(state, payload: UserInfo) {
+      return { ...state, ...{ userInfo: payload } }
     },
   },
   effects: (dispatch) => ({

@@ -2,7 +2,7 @@ import path from 'path'
 
 import fs from 'fs-extra'
 import { execa } from 'execa'
-import glob from 'glob-promise'
+import { glob } from 'glob'
 import getFolderSize from 'get-folder-size'
 
 import { ExecTimer, logger } from '../../common/utils/index.js'
@@ -34,18 +34,6 @@ const testPath = (jsonPathList: string[], alias: string[]): string[] => {
   return jsonPathList.filter((i) => {
     const r = pathList.some((p) => i.includes(p))
     return r
-  })
-}
-
-const getFolderSizeAsync = (folderPath: string): Promise<number> => {
-  return new Promise((resolve, reject) => {
-    getFolderSize(folderPath, (err, size) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(size)
-      }
-    })
   })
 }
 
@@ -211,7 +199,7 @@ export const reActionResource = async (
     collectLogger('切换到目标分支', `切换成功：${checkoutResult.stdout}`)
 
     const pullResult = await execa(`git pull origin ${resolveGitBranchName}`, {
-      shell: true,
+      // shell: true,
       cwd: projectPath,
     })
     collectLogger('更新目标分支', `更新成功：${pullResult.stdout}`)
@@ -322,7 +310,7 @@ const extractLocaleFromSourceCode = async (
     const readResult = []
 
     // 读取所有json文件
-    const jsonPathList = await glob.promise(`${projectPath}/**/*.json`)
+    const jsonPathList = await glob(`${projectPath}/**/*.json`)
 
     // 筛选出符合语言包格式的json文件map
     const localePathMap = localeDict.map((item) => {
@@ -369,12 +357,15 @@ const extractAllDirPathFromSourceCode = async (
     resolveGitBranchName,
   )
 
+  console.log('execResult', execResult)
+
   if (!execResult.success) {
     return execResult
   }
 
   try {
-    const size = await getFolderSizeAsync(`${projectPath}`)
+    const size = await getFolderSize.loose(`${projectPath}`)
+    console.log('size', size)
     execResult.message.push(
       logger(
         '获取仓库大小',
@@ -391,7 +382,7 @@ const extractAllDirPathFromSourceCode = async (
       logger('获取仓库最近一次提交记录', `获取成功，\n ${logResult.stdout}`),
     )
 
-    const readResult = await glob.promise(`${projectPath}/**/`)
+    const readResult = await glob(`${projectPath}/**/`)
     execResult.message.push(
       logger(
         '获取仓库目录列表',
@@ -400,6 +391,7 @@ const extractAllDirPathFromSourceCode = async (
     )
     execResult.readResult = readResult
   } catch (error) {
+    console.log('error', error)
     execResult.success = false
     execResult.message.push(error)
   }

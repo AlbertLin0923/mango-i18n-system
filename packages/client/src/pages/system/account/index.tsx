@@ -1,11 +1,12 @@
 import { useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Space, Modal, message } from 'antd'
+import { Button, Space } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { MangoProTable } from '@mango-kit/components'
+import { matchLabel } from '@mango-kit/utils'
 
-import * as API from '@/services/user'
 import { statusMap } from '@/dict/user'
+import * as API from '@/services/user'
 
 import AddUserModal from './AddUserModal'
 import ResetUserPasswordModal from './ResetUserPasswordModal'
@@ -32,51 +33,45 @@ const Page: FC = () => {
       data: {},
     })
 
-  const toggleStatus = async (record: any, val: boolean) => {
-    console.log('record, val', record, val)
+  const toggleStatus = async (record: any, val: string) => {
+    proTableRef?.current?.modal.confirm({
+      title: matchLabel(val, statusMap, ['冻结'])
+        ? t('账户解冻确认')
+        : t('账户冻结确认'),
+      icon: <ExclamationCircleOutlined />,
+      content: matchLabel(val, statusMap, ['冻结'])
+        ? t('请确认是否解冻该账户？')
+        : t('请确认是否冻结该账户？'),
+      async onOk() {
+        const { success, err_msg } = await API.updateUser({
+          userId: record.userId,
+          account_status: matchLabel(val, statusMap, ['冻结'])
+            ? 'normal'
+            : 'freeze',
+        })
 
-    return new Promise((resolve, reject) => {
-      Modal.confirm({
-        title: val ? t('账户解冻确认') : t('账户冻结确认'),
-        icon: <ExclamationCircleOutlined />,
-        content: val
-          ? t('请确认是否解冻该账户？')
-          : t('请确认是否冻结该账户？'),
-        async onOk() {
-          resolve('true')
-          const delivery = {
-            userId: record.userId,
-            account_status: val ? 'normal' : 'freeze',
-          }
-          API.updateUser(delivery)
-            .then((res) => {
-              if (res.success) {
-                message.success(t('操作成功'))
-                proTableRef?.current?.refresh()
-              } else {
-                message.error(res.err_msg)
-              }
-            })
-            .finally(() => {
-              resolve('true')
-            })
-        },
-        onCancel() {
-          message.info({
-            content: t('已取消'),
-          })
-          reject('false')
-        },
-      })
+        if (success) {
+          proTableRef?.current?.message.success(t('操作成功'))
+          proTableRef?.current?.refresh()
+        } else {
+          proTableRef?.current?.message.error(err_msg)
+        }
+      },
+      onCancel() {
+        proTableRef?.current?.message.info({
+          content: t('已取消'),
+        })
+      },
     })
   }
+
   return (
     <>
       <MangoProTable
         columnActions={{
-          width: 120,
+          width: 150,
           showAliasConfig: {
-            key: 'status',
+            key: 'account_status',
             map: statusMap,
           },
           list: [
@@ -157,17 +152,7 @@ const Page: FC = () => {
           closable: true,
         }}
         pageType="table"
-        ref={proTableRef}
-        request={{
-          getSearchOptions: {
-            api: API.getSearchOptions,
-          },
-          getList: {
-            api: API.getUserList,
-          },
-        }}
-        rowKey="id"
-        searchFormConfigList={[
+        queryFormFields={[
           [
             {
               name: 'username',
@@ -221,9 +206,22 @@ const Page: FC = () => {
               type: 'date-range-picker',
               picker: 'date',
               initialValue: undefined,
+              extraRawFieldProps: {
+                showTime: true,
+              },
             },
           ],
         ]}
+        ref={proTableRef}
+        request={{
+          getQuery: {
+            api: API.getSearchOptions,
+          },
+          getList: {
+            api: API.getUserList,
+          },
+        }}
+        rowKey="id"
         toolBarRender={() => {
           return (
             <Space>

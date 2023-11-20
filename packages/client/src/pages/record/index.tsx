@@ -4,6 +4,7 @@ import { Tag } from 'antd'
 import ReactJson from 'react-json-view'
 import { MangoProTable } from '@mango-kit/components'
 
+import { operateWayMap, operateTypeMap } from '@/dict/record'
 import * as API from '@/services/record'
 
 import type { MangoProTableHandle } from '@mango-kit/components'
@@ -34,14 +35,18 @@ const Page: FC = () => {
           {
             title: t('操作类型'),
             dataIndex: 'operate_type',
-            width: 150,
+            width: 80,
             ellipsis: true,
+            valueType: 'status',
+            valueEnum: operateTypeMap,
           },
           {
             title: t('操作方式'),
             dataIndex: 'operate_way',
-            width: 150,
+            width: 80,
             ellipsis: true,
+            valueType: 'map',
+            valueEnum: operateWayMap,
           },
           {
             title: t('操作前内容'),
@@ -91,8 +96,8 @@ const Page: FC = () => {
           {
             title: t('操作时间'),
             dataIndex: 'update_time',
-            width: 150,
-            valueType: 'date',
+            width: 200,
+            valueType: 'dateTime',
           },
         ]}
         pageTips={{
@@ -102,17 +107,7 @@ const Page: FC = () => {
           closable: true,
         }}
         pageType="table"
-        ref={proTableRef}
-        request={{
-          getSearchOptions: {
-            api: API.getSearchOptions,
-          },
-          getList: {
-            api: API.getRecordList,
-          },
-        }}
-        rowKey="id"
-        searchFormConfigList={[
+        queryFormFields={[
           [
             {
               name: 'operate_field',
@@ -129,7 +124,7 @@ const Page: FC = () => {
               initialValue: undefined,
               placeholder: t('请选择操作方式'),
               optionFilter: (data: any) => {
-                return data?.operateWayMap
+                return operateWayMap
               },
             },
             {
@@ -139,7 +134,7 @@ const Page: FC = () => {
               initialValue: undefined,
               placeholder: t('请选择服务类型'),
               optionFilter: (data: any) => {
-                return data?.operateTypeMap
+                return operateTypeMap
               },
             },
           ],
@@ -155,14 +150,27 @@ const Page: FC = () => {
               },
             },
             {
-              name: 'update_time',
+              name: 'create_time',
               label: t('操作时间'),
               type: 'date-range-picker',
               picker: 'date',
               initialValue: undefined,
+              extraRawFieldProps: {
+                showTime: true,
+              },
             },
           ],
         ]}
+        ref={proTableRef}
+        request={{
+          getQuery: {
+            api: API.getSearchOptions,
+          },
+          getList: {
+            api: API.getRecordList,
+          },
+        }}
+        rowKey="id"
       />
     </>
   )

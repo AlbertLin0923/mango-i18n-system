@@ -53,7 +53,7 @@ export async function register(data: RegisterParamsType) {
 }
 
 export async function getUserInfo() {
-  return request('/user/get_user/', {
+  return request('/user/get_user_info/', {
     method: 'get',
   })
 }

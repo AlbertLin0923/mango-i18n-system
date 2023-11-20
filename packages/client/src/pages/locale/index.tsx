@@ -8,7 +8,7 @@ import {
   Popconfirm,
   Card,
   Timeline,
-  message,
+  App,
 } from 'antd'
 import {
   FileAddOutlined,
@@ -95,6 +95,7 @@ const getFilterTableDataFromTableData = (
 
 const Page: FC = () => {
   const { t } = useTranslation()
+  const { message } = App.useApp()
 
   const [dict, dictAlready] = useDict()
 

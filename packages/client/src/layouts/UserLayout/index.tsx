@@ -17,7 +17,6 @@ const User: FC = () => {
         <div className="layout-header">
           <div className="logo-wrapper">
             <SvgIcon className="logo" iconClass="logo" />
-            {/* <div className="text">mango-i18n-system</div> */}
           </div>
           <div className="select-lang-wrapper">
             <SelectLang />
@@ -33,7 +32,7 @@ const User: FC = () => {
 
         <div className="layout-footer">
           <div className="copyright-info">
-            Open-source MIT Licensed | Copyright © 2022-present
+            Open-source MIT Licensed | Copyright © 2022-present AlbertLin
           </div>
         </div>
       </div>

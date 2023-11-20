@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import {
   Form,
   Space,
   Select,
   Button,
   Input,
-  message,
+  App,
   Card,
   Spin,
   Tooltip,
@@ -14,10 +14,11 @@ import {
 } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { InfoCircleOutlined } from '@ant-design/icons'
+import { useMount } from 'ahooks'
 
 import * as API from '@/services/system'
 
-import styles from './index.module.scss'
+import './index.module.scss'
 
 type RepositoryFormSettingType = {
   gitRepositoryUrl: string
@@ -36,10 +37,12 @@ type ExtractorFormSettingType = {
 
 export type SearchOptionsType = {
   already: boolean
-  allFilterExtName: { label: string; value: string }[]
-  allExtractor: { label: string; value: string }[]
-  allResolveDirPath: { label: string; value: string }[]
-  allLocaleDict: { label: string; value: string }[]
+  data: {
+    filterExtNameMap: { label: string; value: string }[]
+    extractorMap: { label: string; value: string }[]
+    resolveDirPathMap: { label: string; value: string }[]
+    localeDictMap: { label: string; value: string }[]
+  }
 }
 
 const Page: FC = () => {
@@ -47,16 +50,20 @@ const Page: FC = () => {
   const [repositoryForm] = Form.useForm()
   const [extractorForm] = Form.useForm()
 
+  const { message } = App.useApp()
+
   const [pageLoading, setPageLoading] = useState(false)
 
   const [extractorFormDisable, setExtractorFormDisable] = useState(true)
 
   const [searchOptions, setSearchOptions] = useState<SearchOptionsType>({
     already: false,
-    allFilterExtName: [],
-    allExtractor: [],
-    allResolveDirPath: [],
-    allLocaleDict: [],
+    data: {
+      filterExtNameMap: [],
+      extractorMap: [],
+      resolveDirPathMap: [],
+      localeDictMap: [],
+    },
   })
 
   const [repositoryActionMessages, setRepositoryActionMessages] = useState<
@@ -85,10 +92,11 @@ const Page: FC = () => {
   const getSearchOptions = async () => {
     const { data } = await API.getSearchOptions()
     if (data) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { searchOptions, message } = data
-      setSearchOptions(() => ({ ...searchOptions, already: true }))
-      setRepositoryActionMessages(() => [...message])
+      setSearchOptions(() => ({
+        data: data?.searchOptions,
+        already: true,
+      }))
+      setRepositoryActionMessages(() => [...(data?.message ?? [])])
     }
   }
 
@@ -106,7 +114,6 @@ const Page: FC = () => {
           localeDict,
           extractor,
           resolveDirPathList,
-          systemTitle,
         },
       } = data
 
@@ -146,17 +153,12 @@ const Page: FC = () => {
     }
   }
 
-  const pageInitFunc = async () => {
+  useMount(async () => {
     setPageLoading(true)
     await getSearchOptions()
     await getSetting()
     setPageLoading(false)
-  }
-
-  useEffect(() => {
-    pageInitFunc()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  })
 
   const handleRepositoryFormFinish = async (
     values: RepositoryFormSettingType,
@@ -206,9 +208,9 @@ const Page: FC = () => {
   return (
     <div className="page-container">
       <Spin spinning={pageLoading} tip="正在加载配置，请稍候。。。">
-        <Card className={styles.card}>
+        <Card className="card">
           <Collapse defaultActiveKey={['1']}>
-            <Collapse.Panel header={t('解析器操作日志')} key="1">
+            <Collapse.Panel header={t('文案解析器操作日志')} key="1">
               <Timeline mode="left">
                 {repositoryActionMessages.map((i, index) => {
                   return (
@@ -221,12 +223,10 @@ const Page: FC = () => {
         </Card>
 
         <Card
-          className={styles.card}
+          className="card"
           title={
-            <div className={styles['card-title']}>
-              <span className={styles['card-title-text']}>
-                {t('代码仓库配置')}
-              </span>
+            <div className="card-title">
+              <span className="card-title-text">{t('代码仓库配置')}</span>
               <Tooltip title="修改该配置任一个子项都会重新下载仓库仓库">
                 <InfoCircleOutlined style={{ color: '#1890ff' }} />
               </Tooltip>
@@ -342,7 +342,7 @@ const Page: FC = () => {
           </Form>
         </Card>
 
-        <Card className={styles.card} title="项目解析配置">
+        <Card className="card" title="项目解析配置">
           <Form
             form={extractorForm}
             labelAlign="left"
@@ -366,7 +366,7 @@ const Page: FC = () => {
                 allowClear
                 showSearch
               >
-                {searchOptions?.allFilterExtName.map((i: any) => (
+                {searchOptions?.data?.filterExtNameMap.map((i: any) => (
                   <Select.Option key={i.value} value={i.value}>
                     {i.label}
                   </Select.Option>
@@ -391,7 +391,7 @@ const Page: FC = () => {
                 allowClear
                 showSearch
               >
-                {searchOptions?.allLocaleDict.map((i) => (
+                {searchOptions?.data?.localeDictMap.map((i) => (
                   <Select.Option key={i.value} value={i.value}>
                     {i.label}
                   </Select.Option>
@@ -415,7 +415,7 @@ const Page: FC = () => {
                 allowClear
                 showSearch
               >
-                {searchOptions?.allExtractor.map((i) => (
+                {searchOptions?.data?.extractorMap.map((i) => (
                   <Select.Option key={i.value} value={i.value}>
                     {i.label}
                   </Select.Option>
@@ -440,7 +440,7 @@ const Page: FC = () => {
                 allowClear
                 showSearch
               >
-                {searchOptions?.allResolveDirPath.map((i) => (
+                {searchOptions?.data?.resolveDirPathMap.map((i) => (
                   <Select.Option key={i.value} value={i.value}>
                     {i.label}
                   </Select.Option>

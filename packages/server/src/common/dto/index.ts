@@ -14,5 +14,5 @@ export class TablePaginationType {
     example: 1,
   })
   @IsInt()
-  readonly pageNum: number
+  readonly page: number
 }

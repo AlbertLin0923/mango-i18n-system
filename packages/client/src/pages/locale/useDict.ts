@@ -40,8 +40,8 @@ const useDict = (): [DictType, boolean, () => Promise<void>] => {
   const updateDict = async () => {
     const result = await getDictFromBackend()
     if (result) {
-      setDict((dict) => ({
-        ...dict,
+      setDict((d) => ({
+        ...d,
         ...result,
       }))
     }

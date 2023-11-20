@@ -40,7 +40,7 @@ const BasicLayout: FC = () => {
           <div
             className="logo-wrapper"
             onClick={() => {
-              navigate('/home')
+              navigate('/locale')
             }}
           >
             <SvgIcon className="logo" iconClass="logo" />

@@ -6,7 +6,7 @@ const Footer: FC = () => {
   return (
     <Layout.Footer className="layout-footer">
       <div className="copyright-info">
-        Open-source MIT Licensed | Copyright © 2022-present
+        Open-source MIT Licensed | Copyright © 2022-present AlbertLin
       </div>
     </Layout.Footer>
   )

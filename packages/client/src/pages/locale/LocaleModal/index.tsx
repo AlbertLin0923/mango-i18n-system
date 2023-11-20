@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
-import { Form, Modal, Input, Select, Alert, message } from 'antd'
+import { Form, Modal, Input, Select, Alert, App } from 'antd'
 
-import * as API from '@/services/locale'
 import { findStub } from '@/utils'
+import * as API from '@/services/locale'
 
 import type {
   AddLocaleParamsType,
@@ -33,7 +33,7 @@ const LocaleModal: React.FC<LocaleModalProps> = ({
   const localeDictWithLabelWithoutZh = localeDictWithLabel.filter(
     (i) => i.value !== 'zh-CN',
   )
-
+  const { message } = App.useApp()
   const [form] = Form.useForm()
   const { t } = useTranslation()
 

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Spin, Modal, message, Upload, Table, Button, Alert } from 'antd'
+import { Spin, Modal, App, Upload, Table, Button, Alert } from 'antd'
 import { useTranslation } from 'react-i18next'
 import {
   DownloadOutlined,
@@ -50,7 +50,7 @@ export type StatColumnType = {
 
 const BatchImportModal: FC<BatchImportModalProps> = (props) => {
   const { t } = useTranslation()
-
+  const { message } = App.useApp()
   const { localeDictWithLabel, visible, tableData, onClose, onResetTableList } =
     props
 
@@ -157,7 +157,7 @@ const BatchImportModal: FC<BatchImportModalProps> = (props) => {
 
   const columns: ColumnsType<StatColumnType> = [
     {
-      title: '语言包',
+      title: '文案',
       dataIndex: 'locale',
       width: 230,
       fixed: 'left',

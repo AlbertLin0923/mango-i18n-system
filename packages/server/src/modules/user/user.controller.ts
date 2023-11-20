@@ -83,7 +83,7 @@ export class UserController {
     type: UserResponse,
   })
   @UseGuards(AuthGuard('jwt'))
-  @Get('get_user')
+  @Get('get_user_info')
   async getUserInfo(@User() user): Promise<UserVO> {
     return await this.userService.getUser(user)
   }

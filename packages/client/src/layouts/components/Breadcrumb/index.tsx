@@ -30,14 +30,14 @@ const Breadcrumb: FC<BreadcrumbProps> = ({
   )
 
   const generateTitle = (
-    autoGenerateItems: {
+    _autoGenerateItems: {
       path: string
       label: string
     }[],
     { path, label, icon }: { path: string; label: string; icon?: ReactNode },
     index: number,
   ) => {
-    if (index === autoGenerateItems.length - 1) {
+    if (index === _autoGenerateItems.length - 1) {
       return (
         <Link className="current" to={`${path}${search}`}>
           {icon} {t(label)}

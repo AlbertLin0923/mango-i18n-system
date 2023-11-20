@@ -3,7 +3,6 @@ import { useSelector, Provider } from 'react-redux'
 import { useAsyncEffect } from 'ahooks'
 import { HelmetProvider } from 'react-helmet-async'
 import { ConfigProvider, App as AntdApp } from 'antd'
-import { storage } from '@mango-kit/utils'
 import { browserSupportDetecter } from '@mango-kit/utils'
 import 'dayjs/locale/zh-cn'
 import 'dayjs/locale/en'
@@ -26,7 +25,7 @@ import {
   filterAccessedRoute,
 } from '@/router'
 
-import type { RootState } from '@/store/index'
+import type { RootState } from '@/store'
 import type { MessageInstance } from 'antd/es/message/interface'
 import type { ModalStaticFunctions } from 'antd/es/modal/confirm'
 import type { NotificationInstance } from 'antd/es/notification/interface'
@@ -40,7 +39,6 @@ const AppRouter: FC = () => {
     userInfo: { userAllowedAuthList, role },
     language,
   } = useSelector((state: RootState) => state.userModel)
-  const searchParams = new URLSearchParams(window.location.search)
 
   const [isbrowserSupportDetecterDone, setIsBrowserSupportDetecterDone] =
     useState<boolean>()
@@ -80,8 +78,6 @@ const AppRouter: FC = () => {
 
   useAsyncEffect(async () => {
     await browserSupportDetecter()
-    const channelNo = searchParams.get('channelNo')
-    channelNo && storage.setItem('CHANNEL_NO', channelNo, 'sessionStorage')
     setIsBrowserSupportDetecterDone(true)
   }, [])
 
