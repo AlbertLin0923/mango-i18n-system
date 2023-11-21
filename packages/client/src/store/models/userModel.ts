@@ -1,7 +1,7 @@
 import { createModel } from '@rematch/core'
 import { storage } from '@mango-kit/utils'
 
-import i18n, { getLanguage } from '@/locales'
+import i18n from '@/locales'
 import * as API from '@/services/user'
 
 import type { RootModel } from '@/store'
@@ -29,8 +29,6 @@ type UserInfo = {
 type UserModelState = {
   tokenPair: TokenPari
   userInfo: UserInfo
-  siderCollapsed: boolean
-  language: string
 }
 
 const userModel = createModel<RootModel>()({
@@ -48,27 +46,9 @@ const userModel = createModel<RootModel>()({
         username: '',
       },
     },
-    siderCollapsed: storage.getItem('SIDER_COLLAPSED', true),
-    language: getLanguage(),
   } as UserModelState,
 
   reducers: {
-    updateSiderCollapsed(state, payload: boolean) {
-      return {
-        ...state,
-        ...{
-          siderCollapsed: payload,
-        },
-      }
-    },
-    updateLanguage(state, payload: string) {
-      return {
-        ...state,
-        ...{
-          language: payload,
-        },
-      }
-    },
     updateTokenPair(state, payload: TokenPari) {
       return {
         ...state,
@@ -82,20 +62,6 @@ const userModel = createModel<RootModel>()({
     },
   },
   effects: (dispatch) => ({
-    async changeSiderCollapsed(siderCollapsed: boolean): Promise<void> {
-      dispatch.userModel.updateSiderCollapsed(siderCollapsed)
-      storage.setItem('SIDER_COLLAPSED', siderCollapsed)
-    },
-    async changeLanguage(language): Promise<{ success: boolean; msg: string }> {
-      try {
-        const t = await i18n.changeLanguage(language)
-        dispatch.userModel.updateLanguage(language)
-        storage.setItem('LANGUAGE', language)
-        return Promise.resolve({ success: true, msg: t('切换语言成功') })
-      } catch (error) {
-        return Promise.resolve({ success: false, msg: i18n.t('切换语言失败') })
-      }
-    },
     async login(
       payload: LoginParamsType,
       rootState,

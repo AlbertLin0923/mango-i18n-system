@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useMount } from 'ahooks'
 import {
   Table,
   Spin,
@@ -9,6 +10,7 @@ import {
   Card,
   Timeline,
   App,
+  Typography,
 } from 'antd'
 import {
   FileAddOutlined,
@@ -30,6 +32,7 @@ import BatchExportModal from './BatchExportModal/index'
 import DownloadLocaleModal from './DownloadLocaleModal/index'
 import AnalysisModal from './AnalysisModal/index'
 import useDict from './useDict'
+import './index.module.scss'
 
 import type { SearchOptionsType } from './SearchForm/SearchForm'
 import type { ColumnsType } from 'antd/es/table'
@@ -53,7 +56,7 @@ export interface TableListItem {
 
 export interface TablePaginationType {
   page: number
-  page_size?: number
+  pageSize?: number
 }
 
 const getFilterTableDataFromTableData = (
@@ -102,41 +105,41 @@ const Page: FC = () => {
   const { localeDictWithLabel } = dict
 
   const [localeModalConfig, setLocaleModalConfig] = useState<{
-    visible: boolean
+    open: boolean
     type: 'add' | 'modify'
     data: any
   }>({
-    visible: false,
+    open: false,
     type: 'add',
     data: null,
   })
 
   const [analysisModalConfig, setAnalysisModalConfig] = useState<{
-    visible: boolean
+    open: boolean
   }>({
-    visible: false,
+    open: false,
   })
 
   const [batchImportModalConfig, setBatchImportModalConfig] = useState<{
-    visible: boolean
+    open: boolean
   }>({
-    visible: false,
+    open: false,
   })
 
   const [batchExportModalConfig, setBatchExportModalConfig] = useState<{
-    visible: boolean
+    open: boolean
   }>({
-    visible: false,
+    open: false,
   })
 
   const [downloadLocaleModalConfig, setDownloadLocaleModalConfig] = useState<{
-    visible: boolean
+    open: boolean
   }>({
-    visible: false,
+    open: false,
   })
 
   const [tablePagination, setTablePagination] = useState<TablePaginationType>({
-    page_size: 5,
+    pageSize: 5,
     page: 1,
   })
 
@@ -178,9 +181,9 @@ const Page: FC = () => {
     }
   }
 
-  useEffect(() => {
+  useMount(() => {
     getLocaleList()
-  }, [])
+  })
 
   useEffect(() => {
     setFilterTableData(
@@ -190,7 +193,6 @@ const Page: FC = () => {
 
   const handleSearchFormSubmit = async (values: SearchOptionsType) => {
     setSearchOptions(() => ({ ...values }))
-    // 重置tablePagination到首页
     setTablePagination((d) => ({ ...d, page: 1 }))
   }
 
@@ -204,7 +206,7 @@ const Page: FC = () => {
 
   const updateLocale = async (record: any) => {
     setLocaleModalConfig(() => {
-      return { visible: true, type: 'modify', data: record }
+      return { open: true, type: 'modify', data: record }
     })
   }
 
@@ -224,34 +226,37 @@ const Page: FC = () => {
       dataIndex: 'zh-CN',
       width: 250,
       fixed: 'left',
+      render: (text) => {
+        return (
+          <Typography.Text copyable={true} ellipsis={{ tooltip: text }}>
+            {text}
+          </Typography.Text>
+        )
+      },
     },
     ...localeColumns,
     {
       title: '所属模块',
       dataIndex: 'modules',
-      align: 'center',
       width: 200,
       ellipsis: true,
     },
     {
       title: '创建时间',
       dataIndex: 'create_time',
-      align: 'center',
-      width: 160,
+      width: 200,
       render: (text: Date) => parseDate(text),
     },
     {
       title: '更新时间',
       dataIndex: 'update_time',
-      align: 'center',
-      width: 160,
+      width: 200,
       render: (text: Date) => parseDate(text),
     },
     {
       title: '操作',
       key: 'operation',
       fixed: 'right',
-      align: 'center',
       width: 200,
       render: (text: any, record: any) => (
         <Space size="middle">
@@ -259,7 +264,7 @@ const Page: FC = () => {
             loading={
               localeModalConfig.type === 'modify' &&
               localeModalConfig?.data?.['zh-CN'] === record?.['zh-CN'] &&
-              localeModalConfig.visible
+              localeModalConfig.open
             }
             size="middle"
             type="primary"
@@ -282,66 +287,67 @@ const Page: FC = () => {
 
   const paginationConfig = {
     current: tablePagination.page,
-    pageSize: tablePagination.page_size,
+    pageSize: tablePagination.pageSize,
     defaultPageSize: 5,
     total: filterTableData.length,
     pageSizeOptions: ['5', '8', '10', '15', '20', '30', '50', '100'],
     showQuickJumper: true,
     showSizeChanger: true,
-    showTotal: (total: number) =>
-      t('共 {{total}} 条翻译信息', { total: total }),
-    onChange: (page: number, page_size?: number) => {
-      const newTb = { page, page_size }
+    showTotal: (total: number) => t('共 {{total}} 条', { total: total }),
+    onChange: (page: number, pageSize?: number) => {
+      const newTb = { page, pageSize }
       setTablePagination(() => ({ ...newTb }))
     },
   }
 
   return (
-    <div className="page-container">
-      <Spin spinning={!dictAlready}>
-        <Igroup title={t('筛选栏')}>
-          <SearchForm
-            localeDictWithLabel={localeDictWithLabel}
-            moduleList={moduleList}
-            onSubmit={handleSearchFormSubmit}
-          >
-            <Button
-              icon={<UnorderedListOutlined />}
-              loading={analysisModalConfig.visible}
-              type="primary"
-              onClick={() => {
-                setAnalysisModalConfig(() => ({ visible: true }))
-              }}
+    <>
+      <div className="page-container">
+        <Spin spinning={!dictAlready}>
+          <Igroup title={t('筛选栏')}>
+            <SearchForm
+              localeDictWithLabel={localeDictWithLabel}
+              moduleList={moduleList}
+              onSubmit={handleSearchFormSubmit}
             >
-              {t('查看筛选的语言包数据统计')}
-            </Button>
+              <Button
+                icon={<UnorderedListOutlined />}
+                loading={analysisModalConfig.open}
+                type="primary"
+                onClick={() => {
+                  setAnalysisModalConfig(() => ({ open: true }))
+                }}
+              >
+                {t('查看筛选的语言包数据统计')}
+              </Button>
 
-            <Button
-              icon={<DownloadOutlined />}
-              loading={batchExportModalConfig.visible}
-              type="primary"
-              onClick={() => {
-                setBatchExportModalConfig(() => ({ visible: true }))
-              }}
-            >
-              {t('导出筛选的{{length}}条数据到Excel', {
-                length: filterTableData.length,
-              })}
-            </Button>
-          </SearchForm>
-        </Igroup>
+              <Button
+                icon={<DownloadOutlined />}
+                loading={batchExportModalConfig.open}
+                type="primary"
+                onClick={() => {
+                  setBatchExportModalConfig(() => ({ open: true }))
+                }}
+              >
+                {t('导出筛选的{{length}}条数据到Excel', {
+                  length: filterTableData.length,
+                })}
+              </Button>
+            </SearchForm>
+          </Igroup>
+        </Spin>
 
         <Igroup title={t('工具栏')}>
           <Space style={{ margin: '0 0 20px 0' }}>
             <Button
               icon={<FileAddOutlined />}
               loading={
-                localeModalConfig.type === 'add' && localeModalConfig.visible
+                localeModalConfig.type === 'add' && localeModalConfig.open
               }
               type="primary"
               onClick={() =>
                 setLocaleModalConfig(() => ({
-                  visible: true,
+                  open: true,
                   type: 'add',
                   data: null,
                 }))
@@ -352,10 +358,10 @@ const Page: FC = () => {
 
             <Button
               icon={<CloudUploadOutlined />}
-              loading={batchImportModalConfig.visible}
+              loading={batchImportModalConfig.open}
               type="primary"
               onClick={() => {
-                setBatchImportModalConfig(() => ({ visible: true }))
+                setBatchImportModalConfig(() => ({ open: true }))
               }}
             >
               {t('批量上传')}
@@ -363,10 +369,10 @@ const Page: FC = () => {
 
             <Button
               icon={<CloudDownloadOutlined />}
-              loading={downloadLocaleModalConfig.visible}
+              loading={downloadLocaleModalConfig.open}
               type="primary"
               onClick={() => {
-                setDownloadLocaleModalConfig((v) => ({ ...v, visible: true }))
+                setDownloadLocaleModalConfig((v) => ({ ...v, open: true }))
               }}
             >
               {t('下载语言包')}
@@ -395,16 +401,19 @@ const Page: FC = () => {
           ) : null}
         </Igroup>
 
-        <Table
-          columns={columns}
-          dataSource={filterTableData}
-          loading={tableLoading}
-          pagination={{ ...paginationConfig }}
-          rowKey={(record: any) => record['zh-CN']}
-          scroll={{ x: 1770, scrollToFirstRowOnChange: true }}
-          bordered
-        />
-      </Spin>
+        <div className="table-container">
+          <Table
+            className="table"
+            columns={columns}
+            dataSource={filterTableData}
+            loading={tableLoading}
+            pagination={{ ...paginationConfig }}
+            rowKey={(record: any) => record['zh-CN']}
+            scroll={{ x: '100%', scrollToFirstRowOnChange: true }}
+            bordered
+          />
+        </div>
+      </div>
 
       <LocaleModal
         {...localeModalConfig}
@@ -412,7 +421,7 @@ const Page: FC = () => {
         moduleList={moduleList}
         onClose={() => {
           setLocaleModalConfig(() => ({
-            visible: false,
+            open: false,
             type: 'add',
             data: null,
           }))
@@ -427,7 +436,7 @@ const Page: FC = () => {
         filterTableData={filterTableData}
         localeDictWithLabel={localeDictWithLabel}
         onClose={() => {
-          setAnalysisModalConfig(() => ({ visible: false }))
+          setAnalysisModalConfig(() => ({ open: false }))
         }}
       />
 
@@ -436,7 +445,7 @@ const Page: FC = () => {
         localeDictWithLabel={localeDictWithLabel}
         tableData={tableData}
         onClose={() => {
-          setBatchImportModalConfig(() => ({ visible: false }))
+          setBatchImportModalConfig(() => ({ open: false }))
         }}
         onResetTableList={() => {
           getLocaleList(false)
@@ -448,7 +457,7 @@ const Page: FC = () => {
         filterTableData={filterTableData}
         localeDictWithLabel={localeDictWithLabel}
         onClose={() => {
-          setBatchExportModalConfig(() => ({ visible: false }))
+          setBatchExportModalConfig(() => ({ open: false }))
         }}
       />
 
@@ -456,10 +465,10 @@ const Page: FC = () => {
         {...downloadLocaleModalConfig}
         localeDictWithLabel={localeDictWithLabel}
         onClose={() => {
-          setDownloadLocaleModalConfig(() => ({ visible: false }))
+          setDownloadLocaleModalConfig(() => ({ open: false }))
         }}
       />
-    </div>
+    </>
   )
 }
 

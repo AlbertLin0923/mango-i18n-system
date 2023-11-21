@@ -13,7 +13,7 @@ import {
 
 import styles from './index.module.scss'
 
-import type { RootState, Dispatch } from '@/store/index'
+import type { RootState, Dispatch } from '@/store'
 
 const UserPanel: FC<{ onClose: () => void }> = ({ onClose }) => {
   const {

@@ -20,9 +20,9 @@ import type { UploadProps, RcFile } from 'antd/es/upload'
 
 const { Dragger } = Upload
 
-export type BatchImportModalProps = React.PropsWithChildren<{
+export type BatchImportModalProps = PropsWithChildren<{
   localeDictWithLabel: any[]
-  visible: boolean
+  open: boolean
   tableData: any[]
   onClose: () => void
   onResetTableList: () => void
@@ -48,11 +48,15 @@ export type StatColumnType = {
   sameNumber: number
 }
 
-const BatchImportModal: FC<BatchImportModalProps> = (props) => {
+const BatchImportModal: FC<BatchImportModalProps> = ({
+  localeDictWithLabel,
+  open,
+  tableData,
+  onClose,
+  onResetTableList,
+}) => {
   const { t } = useTranslation()
   const { message } = App.useApp()
-  const { localeDictWithLabel, visible, tableData, onClose, onResetTableList } =
-    props
 
   const downloadTemplate = () => {
     exportExcel(
@@ -463,9 +467,10 @@ const BatchImportModal: FC<BatchImportModalProps> = (props) => {
     <Modal
       footer={null}
       maskClosable={false}
+      open={open}
       title={t('批量导入字段')}
-      visible={visible}
       width="1000px"
+      centered
       onCancel={() => {
         setUploadConfig(() => ({
           loading: false,

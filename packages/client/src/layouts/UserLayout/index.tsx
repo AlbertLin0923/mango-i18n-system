@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux'
 import { Outlet } from 'react-router-dom'
 import { SvgIcon } from '@mango-kit/components'
 import { useTranslation } from 'react-i18next'
@@ -8,15 +9,25 @@ import './index.module.scss'
 
 import Helmet from '../components/Helmet'
 
+import type { RootState } from '@/store'
+
 const User: FC = () => {
   const { t } = useTranslation()
+
+  const {
+    publicSystemSetting: { systemTitle },
+  } = useSelector((state: RootState) => state.appModel)
   return (
     <>
       <Helmet />
       <div className="layout-container">
         <div className="layout-header">
           <div className="logo-wrapper">
-            <SvgIcon className="logo" iconClass="logo" />
+            {systemTitle ? (
+              systemTitle
+            ) : (
+              <SvgIcon className="logo" iconClass="logo" />
+            )}
           </div>
           <div className="select-lang-wrapper">
             <SelectLang />
@@ -25,7 +36,7 @@ const User: FC = () => {
 
         <div className="layout-wrapper">
           <div className="layout-content">
-            <h2 className="title">{t('自动国际化文案配置系统')}</h2>
+            <h2 className="title">{t(systemTitle)}</h2>
             <Outlet />
           </div>
         </div>

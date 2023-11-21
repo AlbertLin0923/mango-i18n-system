@@ -211,13 +211,12 @@ const Page: FC = () => {
         <Card className="card">
           <Collapse defaultActiveKey={['1']}>
             <Collapse.Panel header={t('文案解析器操作日志')} key="1">
-              <Timeline mode="left">
-                {repositoryActionMessages.map((i, index) => {
-                  return (
-                    <Timeline.Item key={i}>{renderMessage(i)}</Timeline.Item>
-                  )
-                })}
-              </Timeline>
+              <Timeline
+                items={repositoryActionMessages.map((i) => ({
+                  children: renderMessage(i),
+                }))}
+                mode="left"
+              />
             </Collapse.Panel>
           </Collapse>
         </Card>

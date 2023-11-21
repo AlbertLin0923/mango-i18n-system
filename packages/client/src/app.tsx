@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { useSelector, Provider } from 'react-redux'
+import { useSelector, useDispatch, Provider } from 'react-redux'
 import { useAsyncEffect } from 'ahooks'
 import { HelmetProvider } from 'react-helmet-async'
 import { ConfigProvider, App as AntdApp } from 'antd'
@@ -25,7 +25,7 @@ import {
   filterAccessedRoute,
 } from '@/router'
 
-import type { RootState } from '@/store'
+import type { RootState, Dispatch } from '@/store'
 import type { MessageInstance } from 'antd/es/message/interface'
 import type { ModalStaticFunctions } from 'antd/es/modal/confirm'
 import type { NotificationInstance } from 'antd/es/notification/interface'
@@ -35,10 +35,11 @@ let notification: NotificationInstance
 let modal: Omit<ModalStaticFunctions, 'warn'>
 
 const AppRouter: FC = () => {
-  const {
-    userInfo: { userAllowedAuthList, role },
-    language,
-  } = useSelector((state: RootState) => state.userModel)
+  const { userAllowedAuthList, role } = useSelector(
+    (state: RootState) => state.userModel.userInfo,
+  )
+  const language = useSelector((state: RootState) => state.appModel.language)
+  const dispatch = useDispatch<Dispatch>()
 
   const [isbrowserSupportDetecterDone, setIsBrowserSupportDetecterDone] =
     useState<boolean>()
@@ -78,6 +79,7 @@ const AppRouter: FC = () => {
 
   useAsyncEffect(async () => {
     await browserSupportDetecter()
+    await dispatch.appModel.getPublicSetting()
     setIsBrowserSupportDetecterDone(true)
   }, [])
 

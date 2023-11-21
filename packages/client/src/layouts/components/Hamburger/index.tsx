@@ -1,20 +1,21 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons'
 
-import styles from './index.module.scss'
+import './index.module.scss'
 
-import type { RootState, Dispatch } from '@/store/index'
+import type { RootState, Dispatch } from '@/store'
 
 const Hamburger: FC = () => {
   const siderCollapsed = useSelector(
-    (state: RootState) => state.userModel.siderCollapsed,
+    (state: RootState) => state.appModel.siderCollapsed,
   )
   const dispatch = useDispatch<Dispatch>()
+
   return (
     <div
-      className={styles['hamburger-container']}
+      className="hamburger-container"
       onClick={() => {
-        dispatch.userModel.changeSiderCollapsed(!siderCollapsed)
+        dispatch.appModel.changeSiderCollapsed(!siderCollapsed)
       }}
     >
       {siderCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}

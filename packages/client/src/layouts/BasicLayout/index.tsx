@@ -7,26 +7,30 @@ import { SvgIcon } from '@mango-kit/components'
 import PageLoading from '@/components/PageLoading'
 import { createMenu, filterAccessedRoute } from '@/router'
 
-import styles from './index.module.scss'
+import './index.module.scss'
 
 import SideMenu from '../components/SideMenu'
 import User from '../components/User'
-import Hamburger from '../components/Hamburger/index'
+import Hamburger from '../components/Hamburger'
 import Helmet from '../components/Helmet'
 import Breadcrumb from '../components/Breadcrumb'
 import Footer from '../components/Footer'
 
-import type { RootState } from '@/store/index'
+import type { RootState } from '@/store'
 
 const { Sider, Header, Content } = Layout
 
 const BasicLayout: FC = () => {
   const navigate = useNavigate()
 
+  const { userAllowedAuthList, role } = useSelector(
+    (state: RootState) => state.userModel.userInfo,
+  )
+
   const {
-    userInfo: { userAllowedAuthList, role },
     siderCollapsed,
-  } = useSelector((state: RootState) => state.userModel)
+    publicSystemSetting: { systemTitle },
+  } = useSelector((state: RootState) => state.appModel)
 
   const menuConfig = useMemo(() => {
     return createMenu(filterAccessedRoute(userAllowedAuthList, role))
@@ -35,7 +39,7 @@ const BasicLayout: FC = () => {
   return (
     <>
       <Helmet />
-      <Layout className={styles['layout-container']}>
+      <Layout className="layout-container">
         <Header className="layout-header">
           <div
             className="logo-wrapper"
@@ -43,7 +47,11 @@ const BasicLayout: FC = () => {
               navigate('/locale')
             }}
           >
-            <SvgIcon className="logo" iconClass="logo" />
+            {systemTitle ? (
+              systemTitle
+            ) : (
+              <SvgIcon className="logo" iconClass="logo" />
+            )}
           </div>
           <div className="control-wrapper">
             <User />

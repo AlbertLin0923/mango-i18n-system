@@ -6,7 +6,7 @@ import cx from 'classnames'
 
 import { getFullRoutePath } from '@/router'
 
-import styles from './index.module.scss'
+import './index.module.scss'
 
 export type BreadcrumbProps = {
   items?: { label: string; path: string }[]
@@ -66,11 +66,11 @@ const Breadcrumb: FC<BreadcrumbProps> = ({
       : []
 
   return (
-    <div className={cx(styles['breadcrumb-container'], className)}>
-      <AntBreadcrumb className={styles['breadcrumb']} items={breadcrumbItems} />
+    <div className={cx('breadcrumb-container', className)}>
+      <AntBreadcrumb className="breadcrumb" items={breadcrumbItems} />
       {breadcrumbItems.length > 2 ? (
         <span
-          className={styles['go-back-btn']}
+          className="go-back-btn"
           onClick={async () => {
             if (beforeGoBack) {
               const r = await beforeGoBack()

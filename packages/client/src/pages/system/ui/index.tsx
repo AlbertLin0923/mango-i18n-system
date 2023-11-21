@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Form, Space, Button, Input, App, Card, Spin } from 'antd'
 import { useTranslation } from 'react-i18next'
+import { useMount } from 'ahooks'
 
 import * as API from '@/services/system'
 
@@ -47,16 +48,11 @@ const Page: FC = () => {
     }
   }
 
-  const pageInitFunc = async () => {
+  useMount(async () => {
     setPageLoading(true)
     await getSetting()
     setPageLoading(false)
-  }
-
-  useEffect(() => {
-    pageInitFunc()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  })
 
   const handleSystemFormFinish = async (values: SystemFormSettingType) => {
     setPageLoading(true)
@@ -83,21 +79,8 @@ const Page: FC = () => {
             name="systemForm"
             onFinish={handleSystemFormFinish}
           >
-            <Form.Item
-              label="系统名称"
-              name="systemTitle"
-              rules={[
-                { required: true },
-                {
-                  validator: (_, value) => {
-                    if (value && !String(value).trim())
-                      return Promise.reject(new Error('请输入'))
-                    return Promise.resolve()
-                  },
-                },
-              ]}
-            >
-              <Input allowClear />
+            <Form.Item label="系统名称" name="systemTitle">
+              <Input maxLength={20} allowClear showCount />
             </Form.Item>
 
             <Form.Item style={{ textAlign: 'right' }}>

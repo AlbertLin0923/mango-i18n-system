@@ -4,14 +4,14 @@ import { useTranslation } from 'react-i18next'
 export type AnalysisModalProps = PropsWithChildren<{
   localeDictWithLabel: any[]
   filterTableData: any[]
-  visible: boolean
+  open: boolean
   onClose: () => void
 }>
 
 const AnalysisModal: FC<AnalysisModalProps> = ({
   localeDictWithLabel,
   filterTableData,
-  visible,
+  open,
   onClose,
 }) => {
   const { t } = useTranslation()
@@ -44,7 +44,7 @@ const AnalysisModal: FC<AnalysisModalProps> = ({
     <Modal
       footer={null}
       maskClosable={false}
-      open={visible}
+      open={open}
       title={t('数据统计')}
       width="50vw"
       onCancel={() => {

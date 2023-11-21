@@ -1,0 +1,9 @@
+.page-container {
+  @include mango-page-container;
+
+  .table-container {
+    @include mango-card-container;
+
+    flex: 1;
+  }
+}

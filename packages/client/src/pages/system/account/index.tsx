@@ -221,7 +221,7 @@ const Page: FC = () => {
             api: API.getUserList,
           },
         }}
-        rowKey="id"
+        rowKey="userId"
         toolBarRender={() => {
           return (
             <Space>

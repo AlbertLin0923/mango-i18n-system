@@ -1,5 +1,13 @@
 import { lazy } from 'react'
-import { DashboardOutlined, SettingOutlined } from '@ant-design/icons'
+import {
+  SettingOutlined,
+  TeamOutlined,
+  ToolOutlined,
+  BarsOutlined,
+  FileSearchOutlined,
+  LaptopOutlined,
+  TranslationOutlined,
+} from '@ant-design/icons'
 
 import BasicLayout from '@/layouts/BasicLayout'
 import UserLayout from '@/layouts/UserLayout'
@@ -65,7 +73,7 @@ export const asyncRouterConfig: RouterItem[] = [
     role: '',
     path: '/locale',
     name: '文案配置',
-    icon: <DashboardOutlined />,
+    icon: <TranslationOutlined />,
     component: BasicLayout,
     children: [
       {
@@ -83,7 +91,7 @@ export const asyncRouterConfig: RouterItem[] = [
     role: '',
     path: '/record',
     name: '操作记录',
-    icon: <DashboardOutlined />,
+    icon: <BarsOutlined />,
     component: BasicLayout,
     children: [
       {
@@ -99,7 +107,7 @@ export const asyncRouterConfig: RouterItem[] = [
   {
     auth: '',
     role: '',
-    icon: <DashboardOutlined />,
+    icon: <SettingOutlined />,
     path: '/system',
     name: '系统管理',
     component: BasicLayout,
@@ -107,7 +115,7 @@ export const asyncRouterConfig: RouterItem[] = [
       {
         auth: '',
         role: '',
-        icon: <SettingOutlined />,
+        icon: <TeamOutlined />,
         path: 'account',
         name: '人员配置',
         component: lazy(() => import('@/pages/system/account')),
@@ -115,7 +123,7 @@ export const asyncRouterConfig: RouterItem[] = [
       {
         auth: '',
         role: '',
-        icon: <SettingOutlined />,
+        icon: <LaptopOutlined />,
         path: 'ui',
         name: '界面配置',
         component: lazy(() => import('@/pages/system/ui')),
@@ -123,7 +131,7 @@ export const asyncRouterConfig: RouterItem[] = [
       {
         auth: '',
         role: '',
-        icon: <SettingOutlined />,
+        icon: <FileSearchOutlined />,
         path: 'extract',
         name: '解析配置',
         component: lazy(() => import('@/pages/system/extract')),
@@ -131,7 +139,7 @@ export const asyncRouterConfig: RouterItem[] = [
       {
         auth: '',
         role: '',
-        icon: <SettingOutlined />,
+        icon: <ToolOutlined />,
         path: 'tool',
         name: '便捷工具',
         component: lazy(() => import('@/pages/system/tool')),

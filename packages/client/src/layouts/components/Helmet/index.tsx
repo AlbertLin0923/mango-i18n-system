@@ -7,8 +7,7 @@ import { getFullRoutePath } from '@/router'
 
 const Helmet: FC = () => {
   const { t } = useTranslation()
-  const location = useLocation()
-  const { pathname } = location
+  const { pathname } = useLocation()
 
   const pageTitle = useMemo(() => {
     const items = getFullRoutePath(pathname, true).reverse()

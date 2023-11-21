@@ -24,8 +24,7 @@ const AccountLogin: FC = () => {
   const [formMessage, setFormMessage] = useState<string>('')
 
   const handleSubmit = async () => {
-    const values = await form.validateFields()
-    const { username, password } = values
+    const { username, password } = await form.validateFields()
 
     setFormMessage('')
 

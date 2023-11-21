@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
-import { Form, Modal, Input, Select, Alert, App } from 'antd'
+import { Form, Modal, Input, Select, Alert, App, Typography } from 'antd'
 
 import { findStub } from '@/utils'
 import * as API from '@/services/locale'
@@ -15,7 +15,7 @@ export type LocaleModalProps = React.PropsWithChildren<{
   localeDictWithLabel: any[]
   moduleList: string[]
   type: 'add' | 'modify'
-  visible: boolean
+  open: boolean
   data: Record<string, string>
   onClose: () => void
   onResetTableList: () => void
@@ -25,7 +25,7 @@ const LocaleModal: React.FC<LocaleModalProps> = ({
   localeDictWithLabel,
   moduleList,
   type,
-  visible,
+  open,
   data,
   onClose,
   onResetTableList,
@@ -243,7 +243,7 @@ const LocaleModal: React.FC<LocaleModalProps> = ({
   return (
     <Modal
       confirmLoading={submitLoading}
-      open={visible}
+      open={open}
       title={type === 'add' ? t('新增字段') : t('修改字段')}
       width="50vw"
       forceRender
@@ -330,10 +330,11 @@ const LocaleModal: React.FC<LocaleModalProps> = ({
         {type === 'modify' ? (
           <Form.Item label={`zh-CN (简体中文)`} shouldUpdate>
             {() => {
+              const _t = form.getFieldValue('zh-CN')
               return (
-                <span style={{ padding: '4px 11px', border: '1px solid #ccc' }}>
-                  {form.getFieldValue('zh-CN')}
-                </span>
+                <Typography.Text copyable={true} ellipsis={{ tooltip: _t }}>
+                  {_t}
+                </Typography.Text>
               )
             }}
           </Form.Item>

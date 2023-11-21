@@ -6,14 +6,14 @@ import { exportExcel } from '@/utils/exportExcel'
 
 export type BatchExportModalProps = PropsWithChildren<{
   localeDictWithLabel: any[]
-  visible: boolean
+  open: boolean
   filterTableData: any[]
   onClose: () => void
 }>
 
 const BatchExportModal: FC<BatchExportModalProps> = ({
   localeDictWithLabel,
-  visible,
+  open,
   filterTableData,
   onClose,
 }) => {
@@ -39,7 +39,7 @@ const BatchExportModal: FC<BatchExportModalProps> = ({
     <Modal
       confirmLoading={submitLoading}
       okText={t('下载')}
-      open={visible}
+      open={open}
       title={t('导出语言包')}
       width="50vw"
       onCancel={() => {
