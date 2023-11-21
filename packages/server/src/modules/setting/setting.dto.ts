@@ -39,7 +39,7 @@ export class Setting {
 
   @ApiProperty({
     description: '项目目录名',
-    example: 'web-risk-console',
+    example: 'vue-sell',
   })
   @IsOptional()
   @IsString()
@@ -82,7 +82,7 @@ export class Setting {
 
   @ApiProperty({
     description: '系统名称',
-    example: 'mango-i18n-system 翻译系统',
+    example: 'mango-i18n-system',
   })
   @IsOptional()
   @IsString()

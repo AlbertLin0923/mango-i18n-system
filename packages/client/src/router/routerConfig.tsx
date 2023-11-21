@@ -109,7 +109,7 @@ export const asyncRouterConfig: RouterItem[] = [
     role: '',
     icon: <SettingOutlined />,
     path: '/system',
-    name: '系统管理',
+    name: '系统配置',
     component: BasicLayout,
     children: [
       {
