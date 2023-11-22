@@ -5,10 +5,9 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
   UserOutlined,
-  SettingOutlined,
+  BarsOutlined,
   PoweroffOutlined,
-  ProfileOutlined,
-  MailOutlined,
+  TranslationOutlined,
 } from '@ant-design/icons'
 
 import styles from './index.module.scss'
@@ -16,9 +15,9 @@ import styles from './index.module.scss'
 import type { RootState, Dispatch } from '@/store'
 
 const UserPanel: FC<{ onClose: () => void }> = ({ onClose }) => {
-  const {
-    user: { username },
-  } = useSelector((state: RootState) => state.userModel.userInfo)
+  const { username } = useSelector(
+    (state: RootState) => state.userModel.userInfo,
+  )
   const dispatch = useDispatch<Dispatch>()
   const { t } = useTranslation()
   const { modal, message } = App.useApp()
@@ -26,7 +25,7 @@ const UserPanel: FC<{ onClose: () => void }> = ({ onClose }) => {
 
   const actionList = [
     {
-      icon: <ProfileOutlined />,
+      icon: <TranslationOutlined />,
       text: t('文案配置'),
       action: () => {
         onClose()
@@ -34,19 +33,19 @@ const UserPanel: FC<{ onClose: () => void }> = ({ onClose }) => {
       },
     },
     {
-      icon: <MailOutlined />,
-      text: t('人员配置'),
+      icon: <BarsOutlined />,
+      text: t('操作记录'),
       action: () => {
         onClose()
-        navigate('/system/account')
+        navigate('/record')
       },
     },
     {
-      icon: <SettingOutlined />,
-      text: t('解析配置'),
+      icon: <UserOutlined />,
+      text: t('账户设置'),
       action: () => {
         onClose()
-        navigate('/system/extract')
+        navigate('/account')
       },
     },
   ]

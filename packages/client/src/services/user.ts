@@ -12,30 +12,32 @@ export type RegisterParamsType = {
   invitationCode: string
 }
 
-export interface UpdateMyPasswordParamsType {
+export type UpdateMyUserInfoParamsType = Partial<{
+  email: string
+}>
+
+export type UpdateMyPasswordParamsType = {
   oldPassword: string
   password: string
 }
 
-export interface UpdateOtherPasswordParamsType {
-  userId: string
-  password: string
-}
-
-export interface AddUserParamsType {
+export type AddUserParamsType = {
   username: string
   password: string
   email: string
   role: string
 }
 
-export interface UpdateUserParamsType {
+export type UpdateOtherUserInfoParamsType = {
   userId: string
-  username?: string
-  password?: string
   email?: string
   role?: string
   account_status?: string
+}
+
+export type UpdateOtherPasswordParamsType = {
+  userId: string
+  password: string
 }
 
 export async function login(data: LoginParamsType) {
@@ -58,8 +60,8 @@ export async function getUserInfo() {
   })
 }
 
-export async function getUserList(data: any) {
-  return request('/user/get_user_list', {
+export async function updateMyUserInfo(data: UpdateMyUserInfoParamsType) {
+  return request('/user/update_my_user_info', {
     method: 'post',
     data,
   })
@@ -72,8 +74,16 @@ export async function updateMyPassword(data: UpdateMyPasswordParamsType) {
   })
 }
 
-export async function updateOtherPassword(data: UpdateOtherPasswordParamsType) {
-  return request('/user/update_other_password', {
+// ----------------------------------------------------------------
+
+export async function getSearchOptions() {
+  return request('/user/get_search_options', {
+    method: 'get',
+  })
+}
+
+export async function getUserList(data: any) {
+  return request('/user/get_user_list', {
     method: 'post',
     data,
   })
@@ -86,15 +96,16 @@ export async function addUser(data: AddUserParamsType) {
   })
 }
 
-export async function updateUser(data: UpdateUserParamsType) {
-  return request('/user/update_user', {
+export async function updateOtherUserInfo(data: UpdateOtherUserInfoParamsType) {
+  return request('/user/update_other_user_info', {
     method: 'post',
     data,
   })
 }
 
-export async function getSearchOptions() {
-  return request('/user/get_search_options', {
-    method: 'get',
+export async function updateOtherPassword(data: UpdateOtherPasswordParamsType) {
+  return request('/user/update_other_password', {
+    method: 'post',
+    data,
   })
 }

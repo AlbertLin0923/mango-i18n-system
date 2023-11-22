@@ -1,0 +1,69 @@
+.page-container {
+  .user-setting {
+    display: flex;
+    padding: 20px 0;
+
+    .avatar {
+      flex: 0 0 80px;
+      width: 80px;
+      height: 80px;
+      margin-right: 40px;
+      border-radius: 50%;
+
+      @include mango-center;
+    }
+
+    .content {
+      .line {
+        display: flex;
+        height: 50%;
+
+        .item {
+          display: flex;
+          align-items: center;
+          width: 400px;
+
+          .label {
+            font-weight: bold;
+          }
+
+          .value {
+            display: flex;
+            align-items: center;
+            width: 300px;
+            color: $mango-text-slight-color;
+
+            .text {
+              margin-bottom: 0;
+              color: $mango-text-slight-color;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .bottom-card {
+    margin-top: 16px;
+
+    .safe-setting {
+      .line {
+        display: flex;
+        margin-bottom: 40px;
+
+        .item {
+          display: flex;
+          align-items: center;
+
+          .label {
+            font-weight: bold;
+          }
+
+          .value {
+            color: $mango-text-slight-color;
+          }
+        }
+      }
+    }
+  }
+}

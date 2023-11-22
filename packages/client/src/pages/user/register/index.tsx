@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Form, Input, Button, App } from 'antd'
 import { MangoFormPassword } from '@mango-kit/components'
+import md5 from 'md5'
 
 import { getRedirect, MangoRegExp } from '@/utils'
 
@@ -26,10 +27,11 @@ const Register: FC = () => {
   const handleSubmit = async () => {
     const { username, password, email, invitationCode } =
       form.getFieldsValue(true)
+
     setFormMessage('')
     const { success, msg } = await dispatch.userModel.register({
       username,
-      password,
+      password: md5(password),
       email,
       invitationCode,
     })

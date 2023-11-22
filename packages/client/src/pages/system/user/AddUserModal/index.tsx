@@ -23,15 +23,13 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
 
   const [submitLoading, setSubmitLoading] = useState<boolean>(false)
 
-  const handleFormSubmit = () => {
-    form.validateFields().then((values) => {
-      addUser(values)
-    })
+  const handleFormSubmit = async () => {
+    const values = await form.validateFields()
+    addUser(values)
   }
 
-  const addUser = async (values: any) => {
+  const addUser = async ({ username, password, email, role }: any) => {
     setSubmitLoading(true)
-    const { username, password, email, role } = values
 
     const { success } = await API.addUser({
       username: username.trim(),
@@ -53,7 +51,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
       confirmLoading={submitLoading}
       open={open}
       title={t('创建用户')}
-      width="500px"
+      width="600px"
       onCancel={() => {
         form.resetFields()
         onClose()
@@ -62,7 +60,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
         handleFormSubmit()
       }}
     >
-      <Form autoComplete="off" form={form} layout="vertical">
+      <Form autoComplete="off" form={form}>
         <Form.Item
           label={t('用户名')}
           name="username"

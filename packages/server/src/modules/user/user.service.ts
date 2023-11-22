@@ -10,15 +10,17 @@ import {
   createQueryParams,
 } from '../../common/utils/index.js'
 
-import { RoleType, AccountStatusType } from './user.entity.js'
+import { accountStatusMap, roleMap } from './user.dict.js'
+
 import {
   LoginDTO,
   RegisterDTO,
   RefreshTokenDTO,
+  UpdateMyUserInfoDTO,
   AddUserDTO,
   DeleteUserDTO,
-  UpdateUserDTO,
   UpdateMyPasswordDTO,
+  UpdateOtherUserInfoDTO,
   UpdateOtherPasswordDTO,
   QueryUserDTO,
 } from './user.dto.js'
@@ -32,19 +34,22 @@ import {
 } from './user.vo.js'
 import { JwtService } from '@nestjs/jwt'
 import { Repository, DeleteResult } from 'typeorm'
-import { ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config'
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     private readonly jwtService: JwtService,
-    private configService: ConfigService
+    private configService: ConfigService,
   ) {}
 
   async login(loginDTO: LoginDTO): Promise<TokenPairVO> {
     const { username, password } = loginDTO
-    const hashedPassword = hashPassword(password, this.configService.get<string>('PASSWORD_SALT'))
+    const hashedPassword = hashPassword(
+      password,
+      this.configService.get<string>('PASSWORD_SALT'),
+    )
     const user = await this.userRepository.findOneBy({
       username,
       password: hashedPassword,
@@ -74,7 +79,10 @@ export class UserService {
       throw new BusinessException('用户名重复', 500)
     }
 
-    const hashedPassword = hashPassword(password, this.configService.get<string>('PASSWORD_SALT'))
+    const hashedPassword = hashPassword(
+      password,
+      this.configService.get<string>('PASSWORD_SALT'),
+    )
 
     const newUser = await this.userRepository.save(
       Object.assign(new UserEntity(), {
@@ -86,8 +94,6 @@ export class UserService {
         creator: 'from register page',
       }),
     )
-
-    console.log('newUser', newUser)
 
     return this.generateTokenPair({
       userId: newUser.userId,
@@ -110,38 +116,27 @@ export class UserService {
     }
   }
 
-  async getUser(user): Promise<UserVO> {
+  async getUserInfo(user): Promise<UserVO> {
     const _user = await this.userRepository.findOneBy({ userId: user.userId })
 
     return this.buildUserVO(_user)
   }
 
+  async updateMyUserInfo(
+    user,
+    updateMyUserInfoDTO: UpdateMyUserInfoDTO,
+  ): Promise<UserVO> {
+    const oldUserInfo = await this.userRepository.findOneBy({
+      userId: user.userId,
+    })
+
+    const newUserInfo = await this.userRepository.save(
+      Object.assign(oldUserInfo, updateMyUserInfoDTO),
+    )
+    return this.buildUserVO(newUserInfo)
+  }
+
   async getSearchOptions(): Promise<UserSearchOptionsVO> {
-    const roleMap: { label: string; value: RoleType }[] = [
-      {
-        label: '普通用户',
-        value: 'user',
-      },
-      {
-        label: '管理员',
-        value: 'admin',
-      },
-    ]
-
-    const accountStatusMap: {
-      label: string
-      value: AccountStatusType
-    }[] = [
-      {
-        label: '账户正常',
-        value: 'normal',
-      },
-      {
-        label: '账户冻结',
-        value: 'freeze',
-      },
-    ]
-
     return { roleMap, accountStatusMap }
   }
 
@@ -189,7 +184,10 @@ export class UserService {
       throw new BusinessException('用户名重复', 500)
     }
 
-    const hashedPassword = hashPassword(password, this.configService.get<string>('PASSWORD_SALT'))
+    const hashedPassword = hashPassword(
+      password,
+      this.configService.get<string>('PASSWORD_SALT'),
+    )
 
     const newUser = await this.userRepository.save(
       Object.assign(new UserEntity(), {
@@ -205,11 +203,10 @@ export class UserService {
     return this.buildUserVO(newUser)
   }
 
-  async deleteUser(deleteUserDTO: DeleteUserDTO): Promise<DeleteResult> {
-    return await this.userRepository.delete(deleteUserDTO)
-  }
-
-  async updateUser(user, updateUserDTO: UpdateUserDTO): Promise<UserVO> {
+  async updateOtherUserInfo(
+    user,
+    updateOtherUserInfoDTO: UpdateOtherUserInfoDTO,
+  ): Promise<UserVO> {
     const actionUser = await this.userRepository.findOneBy({
       userId: user.userId,
     })
@@ -218,21 +215,26 @@ export class UserService {
       throw new BusinessException('该用户无权限进行该操作')
     }
 
-    const toUpdateUser = await this.userRepository.findOneBy({
-      userId: updateUserDTO.userId,
+    const oldUserInfo = await this.userRepository.findOneBy({
+      userId: updateOtherUserInfoDTO.userId,
     })
 
-    if (!toUpdateUser) {
+    if (!oldUserInfo) {
       throw new BusinessException('找不到该用户')
     }
 
-    if (actionUser.userId === updateUserDTO.userId) {
+    if (actionUser.userId === updateOtherUserInfoDTO.userId) {
       throw new BusinessException('用户不能修改本用户信息')
     }
 
-    const updated = Object.assign(toUpdateUser, updateUserDTO)
-    const _user = await this.userRepository.save(updated)
-    return this.buildUserVO(_user)
+    const newUserInfo = await this.userRepository.save(
+      Object.assign(oldUserInfo, updateOtherUserInfoDTO),
+    )
+    return this.buildUserVO(newUserInfo)
+  }
+
+  async deleteUser(deleteUserDTO: DeleteUserDTO): Promise<DeleteResult> {
+    return await this.userRepository.delete(deleteUserDTO)
   }
 
   async updateMyPassword(
@@ -261,7 +263,10 @@ export class UserService {
     }
 
     const updated = Object.assign(toUpdateUser, {
-      password: hashPassword(password, this.configService.get<string>('PASSWORD_SALT')),
+      password: hashPassword(
+        password,
+        this.configService.get<string>('PASSWORD_SALT'),
+      ),
     })
 
     const _user = await this.userRepository.save(updated)
@@ -294,7 +299,10 @@ export class UserService {
     }
 
     const updated = Object.assign(toUpdateUser, {
-      password: hashPassword(password, this.configService.get<string>('PASSWORD_SALT')),
+      password: hashPassword(
+        password,
+        this.configService.get<string>('PASSWORD_SALT'),
+      ),
     })
 
     const _user = await this.userRepository.save(updated)

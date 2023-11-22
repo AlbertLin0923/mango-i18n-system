@@ -29,7 +29,7 @@ const AccountLogin: FC = () => {
     setFormMessage('')
 
     const { success, msg } = await dispatch.userModel.login({
-      username: username,
+      username,
       password: md5(password),
     })
 

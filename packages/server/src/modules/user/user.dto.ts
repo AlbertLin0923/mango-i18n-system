@@ -79,6 +79,37 @@ export class RefreshTokenDTO {
   readonly refreshToken: string
 }
 
+export class UpdateMyUserInfoDTO {
+  @ApiProperty({
+    description: '邮箱',
+    example: '123456@qq.com',
+  })
+  @IsOptional()
+  @IsString()
+  @IsEmail()
+  email: string
+}
+
+export class UpdateMyPasswordDTO {
+  @ApiProperty({
+    description: '原密码',
+    example: '123456',
+  })
+  @IsString()
+  @IsNotEmpty()
+  @Length(6)
+  oldPassword: string
+
+  @ApiProperty({
+    description: '密码',
+    example: '123456',
+  })
+  @IsString()
+  @IsNotEmpty()
+  @Length(6)
+  password: string
+}
+
 export class AddUserDTO {
   @ApiProperty({
     description: '用户名',
@@ -127,7 +158,7 @@ export class DeleteUserDTO {
   username: string
 }
 
-export class UpdateUserDTO {
+export class UpdateOtherUserInfoDTO {
   @ApiProperty({
     description: '用户id',
     example: 'c7aecb6a-0c49-4617-bdfb-751ec76d40f3',
@@ -135,14 +166,6 @@ export class UpdateUserDTO {
   @IsString()
   @IsNotEmpty()
   userId: string
-
-  @ApiProperty({
-    description: '用户名',
-    example: '123456',
-  })
-  @IsOptional()
-  @IsString()
-  username: string
 
   @ApiProperty({
     description: '邮箱',
@@ -168,26 +191,6 @@ export class UpdateUserDTO {
   @IsOptional()
   @IsString()
   account_status: AccountStatusType
-}
-
-export class UpdateMyPasswordDTO {
-  @ApiProperty({
-    description: '原密码',
-    example: '123456',
-  })
-  @IsString()
-  @IsNotEmpty()
-  @Length(6)
-  oldPassword: string
-
-  @ApiProperty({
-    description: '密码',
-    example: '123456',
-  })
-  @IsString()
-  @IsNotEmpty()
-  @Length(6)
-  password: string
 }
 
 export class UpdateOtherPasswordDTO {

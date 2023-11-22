@@ -56,7 +56,7 @@ const ResetUserPasswordModal: React.FC<ResetUserPasswordModalProps> = ({
       confirmLoading={submitLoading}
       open={open}
       title={t('重置用户密码')}
-      width="500px"
+      width="600px"
       onCancel={() => {
         form.resetFields()
         onClose()
@@ -65,14 +65,14 @@ const ResetUserPasswordModal: React.FC<ResetUserPasswordModalProps> = ({
         handleFormSubmit()
       }}
     >
-      <Form autoComplete="off" form={form} layout="vertical">
-        <Form.Item label={t('用户名')} shouldUpdate>
+      <Form autoComplete="off" form={form}>
+        <Form.Item label={t('用户名')} required shouldUpdate>
           {() => {
             return form.getFieldValue('username') || '--'
           }}
         </Form.Item>
 
-        <MangoFormPassword />
+        <MangoFormPassword label={[t('新密码'), t('确认密码')]} widthLabel />
       </Form>
     </Modal>
   )

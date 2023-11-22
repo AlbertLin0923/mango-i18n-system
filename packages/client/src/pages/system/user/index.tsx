@@ -35,17 +35,17 @@ const Page: FC = () => {
 
   const toggleStatus = async (record: any, val: string) => {
     proTableRef?.current?.modal.confirm({
-      title: matchLabel(val, statusMap, ['冻结'])
+      title: matchLabel(val, statusMap, ['账户冻结'])
         ? t('账户解冻确认')
         : t('账户冻结确认'),
       icon: <ExclamationCircleOutlined />,
-      content: matchLabel(val, statusMap, ['冻结'])
+      content: matchLabel(val, statusMap, ['账户冻结'])
         ? t('请确认是否解冻该账户？')
         : t('请确认是否冻结该账户？'),
       async onOk() {
-        const { success, err_msg } = await API.updateUser({
+        const { success } = await API.updateOtherUserInfo({
           userId: record.userId,
-          account_status: matchLabel(val, statusMap, ['冻结'])
+          account_status: matchLabel(val, statusMap, ['账户冻结'])
             ? 'normal'
             : 'freeze',
         })
@@ -53,14 +53,7 @@ const Page: FC = () => {
         if (success) {
           proTableRef?.current?.message.success(t('操作成功'))
           proTableRef?.current?.refresh()
-        } else {
-          proTableRef?.current?.message.error(err_msg)
         }
-      },
-      onCancel() {
-        proTableRef?.current?.message.info({
-          content: t('已取消'),
-        })
       },
     })
   }
@@ -88,14 +81,14 @@ const Page: FC = () => {
               action: (record: any, navigate: any) => {
                 toggleStatus(record, record?.account_status)
               },
-              show: ['正常'],
+              show: ['账户正常'],
             },
             {
               title: '解冻',
               action: (record: any, navigate: any) => {
                 toggleStatus(record, record?.account_status)
               },
-              show: ['冻结'],
+              show: ['账户冻结'],
             },
           ],
         }}
@@ -103,7 +96,7 @@ const Page: FC = () => {
           {
             title: t('序号'),
             dataIndex: 'index',
-            width: 50,
+            width: 80,
             render: (text, record, index) => index + 1,
           },
           {

@@ -7,6 +7,7 @@ import {
   FileSearchOutlined,
   LaptopOutlined,
   TranslationOutlined,
+  UserOutlined,
 } from '@ant-design/icons'
 
 import BasicLayout from '@/layouts/BasicLayout'
@@ -106,7 +107,7 @@ export const asyncRouterConfig: RouterItem[] = [
   },
   {
     auth: '',
-    role: '',
+    role: ['admin'],
     icon: <SettingOutlined />,
     path: '/system',
     name: '系统配置',
@@ -116,9 +117,9 @@ export const asyncRouterConfig: RouterItem[] = [
         auth: '',
         role: '',
         icon: <TeamOutlined />,
-        path: 'account',
+        path: 'user',
         name: '人员配置',
-        component: lazy(() => import('@/pages/system/account')),
+        component: lazy(() => import('@/pages/system/user')),
       },
       {
         auth: '',
@@ -143,6 +144,24 @@ export const asyncRouterConfig: RouterItem[] = [
         path: 'tool',
         name: '便捷工具',
         component: lazy(() => import('@/pages/system/tool')),
+      },
+    ],
+  },
+  {
+    auth: '',
+    role: '',
+    path: '/account',
+    name: '账户设置',
+    icon: <UserOutlined />,
+    component: BasicLayout,
+    children: [
+      {
+        auth: '',
+        role: '',
+        path: '',
+        name: '',
+        hideInMenu: true,
+        component: lazy(() => import('@/pages/account')),
       },
     ],
   },

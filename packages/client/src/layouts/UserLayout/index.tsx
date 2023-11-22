@@ -36,7 +36,9 @@ const User: FC = () => {
 
         <div className="layout-wrapper">
           <div className="layout-content">
-            <h2 className="title">{t(systemTitle)}</h2>
+            <h2 className="title">
+              {systemTitle ? t(systemTitle) : t('自动国际化文案配置系统')}
+            </h2>
             <Outlet />
           </div>
         </div>

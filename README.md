@@ -32,22 +32,48 @@
 
 ## 系统预览
 
-以下是系统预览图
+以下是系统部分预览图
 
-![image.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3a75cea2398b454496c677b7d00f8133~tplv-k3u1fbpfcp-watermark.image?)
+登录页面
 
-![image.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c7b6180df3a042cf954bec10f7a82213~tplv-k3u1fbpfcp-watermark.image?)
+![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f26b3985a8a044e6b8f6ef9a74ac595f~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=3286&h=1826&s=102821&e=png&b=f9fafd)
 
-![image.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/21a35462713a433f9e39289b5dc549b1~tplv-k3u1fbpfcp-watermark.image?)
+管理员账号注册页面
 
-![image.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f5581be1eb5d4355a17a7b8d40ace916~tplv-k3u1fbpfcp-watermark.image?)
+> 系统注册默认邀请码：`mango-i18n-system-invitation-code` ,可用于管理员账户的注册，可在项目部署前，手动修改该环境变量来变更（文件地址：mango- i18n-system/packages/server/.env）
+
+![image.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d4c96fa0b1c342cc95f56607d1651a23~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=3252&h=1822&s=120923&e=png&b=f9fafd)
+
+文案配置页面
+
+![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6ac2a396cf6f421faaa512f99e1c54b8~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=3332&h=1836&s=266846&e=png&b=fdfdfd)
+
+添加翻译词条
+
+![image.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c8f07d07e0fb4c29a926d8121988f6c9~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=3284&h=1824&s=283795&e=png&b=8a8a8a)
+
+操作记录页面
+
+![image.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/24b85698ff7d4dafba5bd3a01a3e41fb~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=3310&h=1830&s=331656&e=png&b=fdfdfd)
+
+人员配置
+
+![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7930be753976465f911075fe78e91cdb~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=3310&h=1836&s=229576&e=png&b=fefefe)
+
+解析配置
+
+![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/121d0348071249c0a115586824b578d3~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=3316&h=1828&s=242873&e=png&b=fefefe)
+
+账户设置
+
+![image.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8aa2bb13138f48758bb1c3dd2d610ff4~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=3312&h=1846&s=155409&e=png&b=fafafa)
 
 ## 系统特性
 
 - 自动拉取业务项目源代码
 - 自动提取业务项目代码`中文文案 key` 到系统中
 - 支持使用辅助插件 [@mango-scripts/i18n-scripts](https://github.com/AlbertLin0923/mango-scripts/tree/main/packages/i18n-scripts) 进行一键下载、导入语言包到业务项目`本地代码`中
-- 支持操作历史记录查询，方便对文案变更作全流程跟踪
+- 支持`用户管理`、`操作记录` 等常规后台管理系统功能，方便对文案变更作全流程跟踪
 - 支持`正则表达式`、`AST`两种解析方式
 - 支持`vue，js，jsx，ts，tsx，svelte`等多种格式文件
 - 支持`配置文案模块标识`，`配置无需提取的文案`等功能
@@ -59,7 +85,7 @@
 
 - 系统前后端全栈 采用 `TypeScript` 进行编写
 - 文案解析器：[@mango-scripts/i18n-utils](https://github.com/AlbertLin0923/mango-scripts/tree/main/packages/i18n-utils)：基于 babel, vue-template-compiler, hyntax, pug, svelte/compiler 等 对目标源码进行 AST 解析
-- 辅助插件：[@mango-scripts/i18n-scripts](https://github.com/AlbertLin0923/mango-scripts/tree/main/packages/i18n-scripts)：基于 commander，fs-extra，glob，inquirer 等
+- 辅助插件：[@mango-scripts/i18n-scripts](https://github.com/AlbertLin0923/mango-scripts/tree/main/packages/i18n-scripts)：基于 commander，fs-extra，glob，inquirer，undici 等
 - 系统前端基于 react@17, react-router@6, redux，rematch, Antd, echarts, react-json-view 等
 - 系统后台主要采用 nestjs 全家桶 以及 typeorm，execa， exceljs，glob，jsonwebtoken 等
 - 数据库方案采用轻量级数据库 splite3
@@ -85,11 +111,11 @@ git clone https://github.com/AlbertLin0923/mango-i18n-system.git
 cd /home/app/i18n/mango-i18n-system/
 ```
 
-4. 在`项目根目录`执行`zx ./scripts/adapt.mjs` ,该文件会帮助你修改项目一些配置文件，以适配你的 **端口**
+4. 在`项目根目录`执行`zx ./scripts/adapt.mjs` ,该文件会帮助你修改项目一些配置文件，以适配你的 **系统部署端口**
 
 5. 执行 `docker-compose up -d` 进行 docker 一键部署
 
-这时候打开服务器对应的项目端口，例如：http://host:port/register （ host 为内网服务器 IP 地址，port 为我们刚才设置的端口） 就可以看到项目已经启动
+这时候打开服务器对应的项目端口，例如：http://host:port/user/login （ host 为内网服务器 IP 地址，port 为我们刚才设置的端口） 就可以看到项目已经启动
 
 ### 配置
 
@@ -97,14 +123,14 @@ cd /home/app/i18n/mango-i18n-system/
 
 1. 登录 http://host:port/user/login 进行账户的注册或者登录
 
-   > 系统注册默认邀请码：`mango-i18n-system-invitation-code` ,可在项目部署前，手动修改该环境变量来变更（文件地址：mango- i18n-system/packages/server/.env）
+   > 系统注册默认邀请码：`mango-i18n-system-invitation-code` ,可用于管理员账户的注册，可在项目部署前，手动修改该环境变量来变更（文件地址：mango- i18n-system/packages/server/.env）
 
 2. 登录后 进入 `系统配置-人员配置` `系统配置-界面配置` `系统配置-解析配置` 进行项目配置
 
 ### 业务系统接入
 
-1. 如上文提到，编码过程需要以 `中文` 作为文案
-2. 业务项目 下载脚本包  `pnpm add @mango-scripts/i18n-scripts -D`，
+1. 如上文提到，编码过程需要以 `中文` 作为文案，具体使用可参考 `该项目mango-i18n-system/packages/client` 代码
+2. 业务项目 下载脚本插件  `pnpm add @mango-scripts/i18n-scripts -D`，
 3. 业务项目`package.json`里添加更新指令：
 
 ```js

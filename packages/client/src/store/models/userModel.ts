@@ -8,6 +8,7 @@ import type { RootModel } from '@/store'
 import type {
   LoginParamsType,
   RegisterParamsType,
+  UpdateMyUserInfoParamsType,
   UpdateMyPasswordParamsType,
 } from '@/services/user'
 
@@ -19,11 +20,14 @@ type TokenPari = {
 type UserInfo = {
   role: string
   userAllowedAuthList: (string | number)[]
-  user: {
-    userId: string
-    username: string
-    [key: string]: any
-  }
+  userId: string
+  username: string
+  email: string
+  account_status: string
+  creator: string
+  create_time: number
+  update_time: number
+  [key: string]: any
 }
 
 type UserModelState = {
@@ -41,10 +45,13 @@ const userModel = createModel<RootModel>()({
     userInfo: {
       role: '', // 用户的角色，用于权限系统
       userAllowedAuthList: [], // 用户的具体权限列表，用于权限系统
-      user: {
-        userId: '',
-        username: '',
-      },
+      userId: '',
+      username: '',
+      email: '',
+      account_status: '',
+      creator: '',
+      create_time: 0,
+      update_time: 0,
     },
   } as UserModelState,
 
@@ -119,12 +126,8 @@ const userModel = createModel<RootModel>()({
     async getUserInfo(): Promise<{ success: boolean; msg: string }> {
       const { code, data, msg } = await API.getUserInfo()
       if (code === 200) {
-        const { userAllowedAuthList, role, user } = data
-        await dispatch.userModel.updateUserInfo({
-          userAllowedAuthList,
-          role,
-          user,
-        })
+        const { user } = data
+        await dispatch.userModel.updateUserInfo(user)
         return Promise.resolve({
           success: true,
           msg: i18n.t('获取用户信息成功'),
@@ -136,12 +139,26 @@ const userModel = createModel<RootModel>()({
         })
       }
     },
+    async updateMyUserInfo(
+      payload: UpdateMyUserInfoParamsType,
+      rootState,
+    ): Promise<{ success: boolean; msg: string }> {
+      const { success, msg } = await API.updateMyUserInfo(payload)
+      if (success) {
+        return Promise.resolve({ success: true, msg: i18n.t('修改成功') })
+      } else {
+        return Promise.resolve({
+          success: false,
+          msg: msg || i18n.t('修改失败'),
+        })
+      }
+    },
     async updateMyPassword(
       payload: UpdateMyPasswordParamsType,
       rootState,
     ): Promise<{ success: boolean; msg: string }> {
-      const { code, msg } = await API.updateMyPassword(payload)
-      if (code === 200) {
+      const { success, msg } = await API.updateMyPassword(payload)
+      if (success) {
         return Promise.resolve({ success: true, msg: i18n.t('修改密码成功') })
       } else {
         return Promise.resolve({

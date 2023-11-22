@@ -20,8 +20,9 @@ import {
   RefreshTokenDTO,
   AddUserDTO,
   DeleteUserDTO,
-  UpdateUserDTO,
+  UpdateMyUserInfoDTO,
   UpdateMyPasswordDTO,
+  UpdateOtherUserInfoDTO,
   UpdateOtherPasswordDTO,
   QueryUserDTO,
 } from './user.dto.js'
@@ -33,7 +34,6 @@ import {
   UserSearchOptionsVO,
 } from './user.vo.js'
 
-// @ApiBearerAuth()
 @ApiTags('user')
 @Controller('user')
 export class UserController {
@@ -85,7 +85,37 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @Get('get_user_info')
   async getUserInfo(@User() user): Promise<UserVO> {
-    return await this.userService.getUser(user)
+    return await this.userService.getUserInfo(user)
+  }
+
+  @ApiOperation({ summary: '更新自己用户信息' })
+  @ApiOkResponse({
+    status: 200,
+    description: '返回用户信息',
+    type: UserResponse,
+  })
+  @UseGuards(AuthGuard('jwt'))
+  @Post('update_my_user_info')
+  async updateUserInfo(
+    @User() user,
+    @Body() updateMyUserInfoDTO: UpdateMyUserInfoDTO,
+  ): Promise<UserVO> {
+    return await this.userService.updateMyUserInfo(user, updateMyUserInfoDTO)
+  }
+
+  @ApiOperation({ summary: '更新自己的密码' })
+  @ApiOkResponse({
+    status: 200,
+    description: '返回用户信息',
+    type: UserResponse,
+  })
+  @UseGuards(AuthGuard('jwt'))
+  @Post('update_my_password')
+  async updateMyPassword(
+    @User() user,
+    @Body() updateMyPasswordDTO: UpdateMyPasswordDTO,
+  ): Promise<UserVO> {
+    return await this.userService.updateMyPassword(user, updateMyPasswordDTO)
   }
 
   @ApiOperation({ summary: '获取全部用户信息列表搜索框下拉列表' })
@@ -124,6 +154,24 @@ export class UserController {
     return await this.userService.addUser(user, addUserDTO)
   }
 
+  @ApiOperation({ summary: '更新其他用户信息' })
+  @ApiOkResponse({
+    status: 200,
+    description: '返回用户信息',
+    type: UserResponse,
+  })
+  @UseGuards(AuthGuard('jwt'))
+  @Post('update_other_user_info')
+  async updateOtherUserInfo(
+    @User() user,
+    @Body() updateOtherUserInfoDTO: UpdateOtherUserInfoDTO,
+  ): Promise<UserVO> {
+    return await this.userService.updateOtherUserInfo(
+      user,
+      updateOtherUserInfoDTO,
+    )
+  }
+
   @ApiOperation({ summary: '根据用户名删除用户' })
   @ApiOkResponse({
     status: 200,
@@ -136,21 +184,6 @@ export class UserController {
     @Body() deleteUserDTO: DeleteUserDTO,
   ): Promise<DeleteResult> {
     return await this.userService.deleteUser(deleteUserDTO)
-  }
-
-  @ApiOperation({ summary: '更新用户信息' })
-  @ApiOkResponse({
-    status: 200,
-    description: '返回用户信息',
-    type: UserResponse,
-  })
-  @UseGuards(AuthGuard('jwt'))
-  @Post('update_user')
-  async updateUserInfo(
-    @User() user,
-    @Body() updateUserInfoDTO: UpdateUserDTO,
-  ): Promise<UserVO> {
-    return await this.userService.updateUser(user, updateUserInfoDTO)
   }
 
   @ApiOperation({ summary: '更新别人的密码' })
@@ -169,20 +202,5 @@ export class UserController {
       user,
       updateOtherPasswordDTO,
     )
-  }
-
-  @ApiOperation({ summary: '更新自己的密码' })
-  @ApiOkResponse({
-    status: 200,
-    description: '返回用户信息',
-    type: UserResponse,
-  })
-  @UseGuards(AuthGuard('jwt'))
-  @Post('update_my_password')
-  async updateMyPassword(
-    @User() user,
-    @Body() updateMyPasswordDTO: UpdateMyPasswordDTO,
-  ): Promise<UserVO> {
-    return await this.userService.updateMyPassword(user, updateMyPasswordDTO)
   }
 }

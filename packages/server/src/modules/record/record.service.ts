@@ -9,7 +9,7 @@ import { Repository } from 'typeorm'
 import { AddRecordDTO, QueryRecordDTO } from './record.dto.js'
 import { RecordVO, RecordListVO, RecordSearchOptionsVO } from './record.vo.js'
 import { UserService } from '../user/user.service.js'
-
+import { operateWayMap, operateTypeMap } from './record.dict.js'
 @Injectable()
 export class RecordService {
   constructor(
@@ -19,42 +19,18 @@ export class RecordService {
   ) {}
 
   async getSearchOptions(): Promise<RecordSearchOptionsVO> {
-    const operateWayMap = [
-      {
-        label: 'single',
-        value: 'single',
-      },
-      {
-        label: 'batch',
-        value: 'batch',
-      },
-    ]
-
-    const operateTypeMap = [
-      {
-        label: 'add',
-        value: 'add',
-      },
-      {
-        label: 'modify',
-        value: 'modify',
-      },
-      {
-        label: 'delete',
-        value: 'delete',
-      },
-    ]
-
     const { list } = await this.userService.getUserList({
       pageSize: 100000,
       page: 1,
     })
 
-    const operatorNameMap = list.map((i) => {
-      return { label: i.username, value: i.username }
-    })
-
-    return { operateWayMap, operateTypeMap, operatorNameMap }
+    return {
+      operateWayMap,
+      operateTypeMap,
+      operatorNameMap: list.map((i) => {
+        return { label: i.username, value: i.username }
+      }),
+    }
   }
 
   async getRecordList({
