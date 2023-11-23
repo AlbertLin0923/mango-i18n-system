@@ -1,6 +1,5 @@
 import { v4 as uuid } from 'uuid'
-
-import { multiply, add } from './math'
+import { multiply, add } from '@mango-kit/utils'
 
 export const getRandomKey = (length = 16): string => {
   return (

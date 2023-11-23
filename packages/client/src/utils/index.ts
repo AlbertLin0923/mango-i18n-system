@@ -13,4 +13,3 @@ export { transformImageUrl } from './file'
 export { getRedirect } from './url'
 export { useQuery, useStepNav } from './hooks'
 export { MangoRegExp }
-export { add, subtract, multiply, divide, toPercent, toPrice } from './math'

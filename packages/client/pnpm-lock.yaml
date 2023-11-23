@@ -5,7 +5,7 @@ specifiers:
   '@commitlint/cli': ^17.6.3
   '@commitlint/config-conventional': ^17.6.3
   '@mango-kit/components': ^0.0.10
-  '@mango-kit/utils': ^0.0.1
+  '@mango-kit/utils': ^0.0.2
   '@mango-scripts/dev-scripts': ^2.0.5
   '@mango-scripts/esp-config': ^2.0.3
   '@mango-scripts/i18n-scripts': ^2.0.0
@@ -46,7 +46,6 @@ specifiers:
   js-cookie: ^3.0.5
   lint-staged: ^13.2.1
   lodash: ^4.17.21
-  mathjs: ^11.8.0
   md5: ^2.3.0
   nprogress: ^0.2.0
   prettier: ^3.0.3
@@ -73,7 +72,7 @@ specifiers:
 dependencies:
   '@ant-design/icons': 5.2.6_biqbaboplfbrettd7655fr4n2y
   '@mango-kit/components': 0.0.10_vnw6hvkzs7d5xjwu6572hvrt7q
-  '@mango-kit/utils': 0.0.1
+  '@mango-kit/utils': 0.0.2
   '@rematch/core': 2.2.0_redux@4.2.1
   '@rematch/loading': 2.1.2_@rematch+core@2.2.0
   '@rematch/select': 3.1.2_tuopf2jjs54vt5jkpopg7ynoly
@@ -91,7 +90,6 @@ dependencies:
   i18next: 22.5.1
   js-cookie: 3.0.5
   lodash: 4.17.21
-  mathjs: 11.12.0
   md5: 2.3.0
   nprogress: 0.2.0
   react: 18.2.0
@@ -2859,6 +2857,14 @@ packages:
     engines: {node: '>=16.0.0'}
     dependencies:
       dayjs: 1.11.10
+    dev: false
+
+  /@mango-kit/utils/0.0.2:
+    resolution: {integrity: sha512-2I0zbwhcNoaUZnd6tE6t2H6bcDI33uF3vXTWNuEa6vXVncu77fh+8VORCXQ2e0ZayHZLYuvrKSZgC9JL1Aex+w==}
+    engines: {node: '>=16.0.0'}
+    dependencies:
+      dayjs: 1.11.10
+      mathjs: 12.1.0
     dev: false
 
   /@mango-scripts/dev-scripts/2.0.5:
@@ -10520,9 +10526,9 @@ packages:
     resolution: {integrity: sha512-1RUZVgQlpJSPWYbFSpmudq5nHY1doEIv89gBtF0s4gW1GF2XorxcA/70M5vq7rLv0a6mhOUccRsqkwhwLCIQ2Q==}
     dev: true
 
-  /mathjs/11.12.0:
-    resolution: {integrity: sha512-UGhVw8rS1AyedyI55DGz9q1qZ0p98kyKPyc9vherBkoueLntPfKtPBh14x+V4cdUWK0NZV2TBwqRFlvadscSuw==}
-    engines: {node: '>= 14'}
+  /mathjs/12.1.0:
+    resolution: {integrity: sha512-x5wUkWo3CfXMl4mf/jHsbVNuMcUwN2m4qbj+tR/jYr9fdiIrlsexQbKYav8Uwfe+E5he30CyVaABNLmAlTFO3w==}
+    engines: {node: '>= 18'}
     hasBin: true
     dependencies:
       '@babel/runtime': 7.23.2
