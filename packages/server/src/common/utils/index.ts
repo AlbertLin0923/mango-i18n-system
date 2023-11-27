@@ -21,12 +21,6 @@ export const isBoolean = (value: any): boolean => {
   return typeof value === 'boolean'
 }
 
-/**
- * @description: 过滤对象属性
- * @param {Record<string, unknown>} object 待过滤的对象
- * @param {string[]} filterPropertyList 待过滤的属性名列表
- * @return {Record<string, unknown>}  已过滤的对象
- */
 export const filterObjProperties = (
   object: ObjectLiteral,
   filterPropertyList: string[],

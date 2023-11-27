@@ -1,5 +1,5 @@
 import { createParamDecorator } from '@nestjs/common'
-import * as requestIp from 'request-ip'
+import requestIp from 'request-ip'
 
 import { ExecutionContext } from '@nestjs/common'
 

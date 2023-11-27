@@ -5,7 +5,7 @@ import { MangoFormPassword } from '@mango-kit/components'
 
 import './index.module.scss'
 
-export type ChangePasswordFormProps = {}
+export type ChangePasswordFormProps = any
 
 export type ChangePasswordFormHandle = {
   getValues: () => Promise<[any, any]>

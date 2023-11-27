@@ -1,18 +1,16 @@
 import { useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
-import { EditOutlined, VerifiedOutlined, UserOutlined } from '@ant-design/icons'
+import { EditOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, App, Avatar, Typography, Card } from 'antd'
 import md5 from 'md5'
-import { LoadableButton } from '@mango-kit/components'
 import { getLabel } from '@mango-kit/utils'
 
-import * as API from '@/services/user'
 import { roleMap } from '@/dict/user'
 
 import ChangeEmailForm from './components/ChangeEmailForm'
 import ChangePasswordForm from './components/ChangePasswordForm'
-import styles from './index.module.scss'
+import './index.module.scss'
 
 import type { RootState, Dispatch } from '@/store'
 import type { ChangeEmailFormHandle } from './components/ChangeEmailForm'
@@ -96,7 +94,7 @@ const Page: FC = () => {
   }
 
   return (
-    <div className={styles['page-container']}>
+    <div className="page-container">
       <Card title={t('个人信息')}>
         <div className="user-setting">
           <Avatar

@@ -59,11 +59,11 @@ const Breadcrumb: FC<BreadcrumbProps> = ({
           title: generateTitle(items, item, index),
         }))
       : autoGenerateItems?.length > 1
-      ? autoGenerateItems.map((item, index) => ({
-          key: item.path,
-          title: generateTitle(autoGenerateItems, item, index),
-        }))
-      : []
+        ? autoGenerateItems.map((item, index) => ({
+            key: item.path,
+            title: generateTitle(autoGenerateItems, item, index),
+          }))
+        : []
 
   return (
     <div className={cx('breadcrumb-container', className)}>
