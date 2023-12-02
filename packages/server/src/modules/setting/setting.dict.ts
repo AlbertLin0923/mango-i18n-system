@@ -72,8 +72,10 @@ export const localeDictMap = [
 export const filterExtNameMap = [
   { label: '.vue', value: '.vue' },
   { label: '.js', value: '.js' },
+  { label: '.mjs', value: '.mjs' },
   { label: '.jsx', value: '.jsx' },
   { label: '.ts', value: '.ts' },
+  { label: '.mts', value: '.mts' },
   { label: '.tsx', value: '.tsx' },
   { label: '.svelte', value: '.svelte' },
 ]
