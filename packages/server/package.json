@@ -16,7 +16,7 @@
     "preinstall": "npx only-allow pnpm"
   },
   "dependencies": {
-    "@mango-scripts/i18n-utils": "^2.0.11",
+    "@mango-scripts/i18n-utils": "^2.0.12",
     "@nestjs/common": "^10.2.10",
     "@nestjs/config": "^3.1.1",
     "@nestjs/core": "^10.2.10",
@@ -58,8 +58,8 @@
     "typeorm": "^0.3.17"
   },
   "devDependencies": {
-    "@mango-scripts/dev-scripts": "^2.0.6",
-    "@mango-scripts/esp-config": "^2.0.4",
+    "@mango-scripts/dev-scripts": "^2.0.7",
+    "@mango-scripts/esp-config": "^2.0.5",
     "@nestjs/cli": "^10.2.1",
     "@nestjs/schematics": "^10.0.3",
     "@types/cookie-parser": "^1.4.6",

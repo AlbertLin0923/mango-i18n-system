@@ -1,9 +1,3 @@
-/** @type {import("prettier").Config} */
-const config = {
-  semi: false,
-  singleQuote: true,
-  proseWrap: 'never',
-  endOfLine: 'auto',
-};
+import config from '@mango-scripts/esp-config/prettier'
 
-export default config;
+export default config
