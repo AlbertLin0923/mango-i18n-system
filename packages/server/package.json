@@ -30,7 +30,6 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.6",
-    "csurf": "^1.11.0",
     "dayjs": "^1.11.10",
     "exceljs": "^4.4.0",
     "execa": "^8.0.1",
@@ -47,7 +46,7 @@
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "picocolors": "^1.0.0",
-    "reflect-metadata": "^0.1.13",
+    "reflect-metadata": "^0.2.1",
     "request-ip": "^3.3.0",
     "rimraf": "^5.0.5",
     "rxjs": "^7.8.1",
@@ -59,7 +58,7 @@
   },
   "devDependencies": {
     "@mango-scripts/dev-scripts": "^2.0.7",
-    "@mango-scripts/esp-config": "^2.0.5",
+    "@mango-scripts/esp-config": "^2.0.7",
     "@nestjs/cli": "^10.2.1",
     "@nestjs/schematics": "^10.0.3",
     "@types/cookie-parser": "^1.4.6",
@@ -71,15 +70,15 @@
     "@types/passport-local": "^1.0.38",
     "@types/request-ip": "0.0.41",
     "cross-env": "^7.0.3",
-    "eslint": "^8.55.0",
-    "prettier": "^3.1.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.1.1",
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.3.2"
   },
   "engines": {
-    "node": ">=18.15.0",
-    "pnpm": "=7.29.3"
+    "node": ">=20.10.0",
+    "pnpm": "=8.12.1"
   }
 }

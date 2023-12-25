@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 declare type FC<P = {}> = React.FunctionComponent<P>
 
 declare type PropsWithChildren<P = unknown> = P & {

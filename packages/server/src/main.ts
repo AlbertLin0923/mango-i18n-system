@@ -39,7 +39,6 @@ async function bootstrap() {
   })
 
   app.use(cookieParser())
-  // app.use(csurf({ cookie: true }));
 
   app.setGlobalPrefix('api')
 
