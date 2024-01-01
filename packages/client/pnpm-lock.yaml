@@ -131,8 +131,8 @@ devDependencies:
     specifier: ^2.0.2
     version: 2.0.2(typescript@5.3.3)(vue@3.4.3)
   '@mango-scripts/react-scripts':
-    specifier: 2.0.6
-    version: 2.0.6(eslint@8.56.0)(react@18.2.0)(stylelint@16.1.0)(typescript@5.3.3)
+    specifier: 2.0.7
+    version: 2.0.7(eslint@8.56.0)(react@18.2.0)(stylelint@16.1.0)(typescript@5.3.3)
   '@types/file-saver':
     specifier: ^2.0.5
     version: 2.0.7
@@ -4127,8 +4127,8 @@ packages:
       - vue
     dev: true
 
-  /@mango-scripts/react-scripts@2.0.6(eslint@8.56.0)(react@18.2.0)(stylelint@16.1.0)(typescript@5.3.3):
-    resolution: {integrity: sha512-zSH2T95gYlveZHMcHp+TuQTfw8BxVz98xeOwFSQg/CBfig8j//5nA5vvMhv5oV+xttRrwqhilkjiwRd04rhd1w==}
+  /@mango-scripts/react-scripts@2.0.7(eslint@8.56.0)(react@18.2.0)(stylelint@16.1.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-A5sJs6keYwJ548TrE9gEYX7GmtfY0g8+6I/IXVjVpWjiMbx+JT5l7PrgMHAh7NlW24N3WWrrCMysOEuh647png==}
     engines: {node: '>=18.12.0'}
     hasBin: true
     peerDependencies:
@@ -8479,7 +8479,7 @@ packages:
     resolution: {integrity: sha512-QHTXI/sZQmko1cbDoNAa3mJ5qhWUUNAq3vR0/YiD379fWQrcfuoX1+HW2S0MTt7XmoPLapdaDKUtelUSPic7hQ==}
     engines: {node: '>=10.13.0'}
     dependencies:
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       tapable: 2.2.1
     dev: true
 
