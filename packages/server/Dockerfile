@@ -10,8 +10,8 @@ RUN pnpm -v && pnpm install --frozen-lockfile
 
 COPY . .
 
-RUN pnpm run prebuild && pnpm run build
+RUN pnpm prebuild && pnpm build
 
 EXPOSE 5006
 
-CMD [ "pnpm", "run", "start:prod" ]
+CMD [ "pnpm", "start" ]

@@ -1,4 +1,4 @@
-import * as path from 'path'
+import { resolve } from 'node:path'
 
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
@@ -21,12 +21,12 @@ import { TaskModule } from './modules/task/task.module.js'
     }),
     TypeOrmModule.forRoot({
       type: 'sqlite',
-      database: path.resolve(process.cwd(), './database/translate.db'),
+      database: resolve(process.cwd(), './database/translate.db'),
       synchronize: true,
       entities: ['dist/**/*.entity.js'],
     }),
     ServeStaticModule.forRoot({
-      rootPath: path.resolve(process.cwd(), './public'),
+      rootPath: resolve(process.cwd(), './public'),
       exclude: ['/api*'],
     }),
     ScheduleModule.forRoot(),

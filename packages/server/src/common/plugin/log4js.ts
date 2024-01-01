@@ -1,4 +1,4 @@
-import path from 'node:path'
+import { resolve, basename } from 'node:path'
 import util from 'node:util'
 
 import log4js from 'log4js'
@@ -7,7 +7,8 @@ import pico from 'picocolors'
 
 import { parseDateString } from '../utils/index.js'
 
-const baseLogPath = path.resolve(process.cwd(), './logs')
+const baseLogPath = resolve(process.cwd(), './logs')
+
 const log4jsConfig = {
   appenders: {
     console: {
@@ -212,7 +213,7 @@ export class Logger {
     const lineNumber: number = stackInfo.lineNumber
     const columnNumber: number = stackInfo.columnNumber
     const fileName: string = stackInfo.fileName
-    const basename: string = path.basename(fileName)
-    return `${basename}(line: ${lineNumber}, column: ${columnNumber}): \n`
+    const _basename: string = basename(fileName)
+    return `${_basename}(line: ${lineNumber}, column: ${columnNumber}): \n`
   }
 }

@@ -1,4 +1,4 @@
-import path from 'path'
+import { resolve } from 'node:path'
 
 import fs from 'fs-extra'
 import { execa } from 'execa'
@@ -21,8 +21,8 @@ export interface ExecResult {
   readResult: any[]
 }
 
-const sourceCodePath = path.resolve(process.cwd(), './sourceCode')
-const sourceCodeContentHashMapPath = path.resolve(
+const sourceCodePath = resolve(process.cwd(), './sourceCode')
+const sourceCodeContentHashMapPath = resolve(
   process.cwd(),
   './contentHash/source-code-content-hash-map.json',
 )
@@ -59,7 +59,7 @@ const actionResource = async (
     readResult: [],
   }
 
-  const projectPath = path.resolve(`${sourceCodePath}/${projectDirName}`)
+  const projectPath = resolve(`${sourceCodePath}/${projectDirName}`)
   const isHttpsHeaderGitRepositoryUrl = gitRepositoryUrl.startsWith(`https:`)
   const subGitRepositoryUrl = gitRepositoryUrl.match(
     /(?<=(https|http):\/\/)(.*)/g,
@@ -71,14 +71,14 @@ const actionResource = async (
   }
 
   try {
-    if (!fs.existsSync(sourceCodePath)) {
+    if (!(await fs.pathExists(sourceCodePath))) {
       await fs.ensureDir(sourceCodePath)
       collectLogger('创建仓库存储目录', `创建目录成功，路径：${sourceCodePath}`)
     } else {
       collectLogger('创建仓库存储目录', `目录已存在，路径：${sourceCodePath}`)
     }
 
-    if (!fs.existsSync(projectPath)) {
+    if (!(await fs.pathExists(projectPath))) {
       const storeGitAccessTokenResult = await execa(
         'git config --global credential.helper store',
         {
@@ -143,7 +143,7 @@ export const reActionResource = async (
     readResult: [],
   }
 
-  const projectPath = path.resolve(`${sourceCodePath}/${projectDirName}`)
+  const projectPath = resolve(`${sourceCodePath}/${projectDirName}`)
   const isHttpsHeaderGitRepositoryUrl = gitRepositoryUrl.startsWith(`https:`)
   const subGitRepositoryUrl = gitRepositoryUrl.match(
     /(?<=(https|http):\/\/)(.*)/g,
@@ -155,14 +155,14 @@ export const reActionResource = async (
   }
 
   try {
-    if (!fs.existsSync(sourceCodePath)) {
+    if (!(await fs.pathExists(sourceCodePath))) {
       await fs.ensureDir(sourceCodePath)
       collectLogger('创建仓库存储目录', `创建目录成功，路径：${sourceCodePath}`)
     } else {
       collectLogger('创建仓库存储目录', `目录已存在，路径：${sourceCodePath}`)
     }
 
-    if (fs.existsSync(projectPath)) {
+    if (await fs.pathExists(projectPath)) {
       await fs.remove(projectPath)
       collectLogger('删除目标仓库', `删除成功：${projectPath}`)
     } else {
@@ -287,7 +287,7 @@ const extractLocaleFromSourceCode = async (
   resolveGitBranchName: string,
   localeDict: string[],
 ): Promise<ExecResult> => {
-  const projectPath = path.resolve(`${sourceCodePath}/${projectDirName}`)
+  const projectPath = resolve(`${sourceCodePath}/${projectDirName}`)
 
   const execResult: ExecResult = await actionResource(
     gitRepositoryUrl,
@@ -347,7 +347,7 @@ const extractAllDirPathFromSourceCode = async (
   projectDirName: string,
   resolveGitBranchName: string,
 ): Promise<ExecResult> => {
-  const projectPath = path.resolve(`${sourceCodePath}/${projectDirName}`)
+  const projectPath = resolve(`${sourceCodePath}/${projectDirName}`)
 
   const execResult: ExecResult = await actionResource(
     gitRepositoryUrl,

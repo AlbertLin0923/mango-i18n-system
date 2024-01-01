@@ -133,16 +133,17 @@ cd /home/app/i18n/mango-i18n-system/
 2. 业务项目 下载脚本插件  `pnpm add @mango-scripts/i18n-scripts -D`，
 3. 业务项目`package.json`里添加更新指令：
 
-```js
+```json
 "scripts": {
-  "updateLocale": "i18n-scripts updateLocale -f http://xxx:5003/api/locale/get_locale_map -o ./src/locales/common/ -l zh-CN en-US id-ID"
+  "updateLocale": "i18n-scripts updateLocale --address http://xxx:5003/api/locale/get_locale_map --output ./src/locales/common/ --localeList zh-CN en-US id-ID"
 }
+```
 
+```
 其中
-
--o 参数为 在业务项目里存储语言包的目录地址，例如：./src/locales/common/
--f 参数为 部署的服务器的地址和端口，例如：http://xxx:5003/api/locale/get_locale_map
--l 参数为 需要下载的语言包列表，例如：zh-CN en-US id-ID
+--address     部署的服务器的地址和端口，例如：http://xxx:5003/api/locale/get_locale_map
+--output      在业务项目里存储语言包的目录地址，例如：./src/locales/common/
+--localeList  需要下载的语言包列表，例如：zh-CN en-US id-ID
 ```
 
 4. 当需要更新语言包的时候，只需要执行`pnpm run updateLocale`即可
