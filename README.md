@@ -2,7 +2,7 @@
 
 ## 为什么写这个系统
 
-日常前端 web 项目开发中，由于公司项目需要支持多国语言，项目的代码文案需要提取、收集、整理出来，供翻译人员进行翻译，添加多国语言，再经过校对、审核后，导入到项目代码中。此过程往往非常重复繁琐，存在工作效率低，又容易出错的问题。由此结合一些代码解析工具，针对该工作流程开发了此系统。通过该系统，无需手工提取、收集、整理、录入国际化文案，只需部署好系统，输入系统 Github/GitLab 地址等配置，即可自动化处理以上流程。
+日常前端 web 项目开发中，由于公司项目需要支持多国语言，项目的代码文案需要提取、收集、整理出来，供翻译人员进行翻译，添加多国语言，再经过校对、审核后，导入到项目代码中。此过程往往非常重复繁琐，存在工作效率低，又容易出错的问题。由此我结合一些代码解析工具，针对该工作流程开发了此系统。通过该系统，无需手工提取、收集、整理、录入国际化文案，只需部署好系统，输入系统 Github/GitLab 地址等配置，即可自动化处理以上流程。
 
 `更多说明请参考掘金文章`：[前端国际化自动工具-国际化文案配置系统](https://juejin.cn/post/7202082404353228855)
 
@@ -84,12 +84,12 @@
 ## 系统技术栈
 
 - 系统前后端全栈 采用 `TypeScript` 进行编写
-- 文案解析器：[@mango-scripts/i18n-utils](https://github.com/AlbertLin0923/mango-scripts/tree/main/packages/i18n-utils)：基于 babel, vue-template-compiler, hyntax, pug, svelte/compiler 等 对目标源码进行 AST 解析
-- 辅助插件：[@mango-scripts/i18n-scripts](https://github.com/AlbertLin0923/mango-scripts/tree/main/packages/i18n-scripts)：基于 commander，fs-extra，glob，inquirer，undici 等
-- 系统前端基于 react@17, react-router@6, redux，rematch, Antd, echarts, react-json-view 等
-- 系统后台主要采用 nestjs 全家桶 以及 typeorm，execa， exceljs，glob，jsonwebtoken 等
+- 文案解析器：[@mango-scripts/i18n-utils](https://github.com/AlbertLin0923/mango-scripts/tree/main/packages/i18n-utils)：基于 babel、vue-template-compiler、hyntax、pug、svelte/compiler 等 对目标源码进行 AST 解析与提取
+- 辅助插件：[@mango-scripts/i18n-scripts](https://github.com/AlbertLin0923/mango-scripts/tree/main/packages/i18n-scripts)：基于 commander、fs-extra、glob、inquirer、undici 等
+- 系统前端基于 react 18、react-router 6、rematch、antd 5、echarts、react-json-view、nginx 等
+- 系统后台主要采用 nestjs 全家桶 以及 typeorm、execa、 exceljs、glob、jsonwebtoken 等
 - 数据库方案采用轻量级数据库 splite3
-- 项目整体基于 docker，使用 docker-compose 一键部署
+- 项目部署基于 docker，使用 docker-compose 一键部署
 
 ## 系统使用
 
@@ -113,7 +113,7 @@ cd /home/app/i18n/mango-i18n-system/
 
 4. 在`项目根目录`执行`zx ./scripts/adapt.mjs` ,该文件会帮助你修改项目一些配置文件，以适配你的 **系统部署端口**
 
-5. 执行 `docker-compose up -d` 进行 docker 一键部署
+5. 执行 `docker-compose up -d` 进行 docker-compose 一键部署
 
 这时候打开服务器对应的项目端口，例如：http://host:port/user/login （ host 为内网服务器 IP 地址，port 为我们刚才设置的端口） 就可以看到项目已经启动
 
@@ -127,7 +127,7 @@ cd /home/app/i18n/mango-i18n-system/
 
 2. 登录后 进入 `系统配置-人员配置` `系统配置-界面配置` `系统配置-解析配置` 进行项目配置
 
-### 业务系统接入
+### 业务系统接入（可选）
 
 1. 如上文提到，编码过程需要以 `中文` 作为文案，具体使用可参考 `该项目mango-i18n-system/packages/client` 代码
 2. 业务项目 下载脚本插件  `pnpm add @mango-scripts/i18n-scripts -D`，
@@ -170,7 +170,7 @@ cd /home/app/i18n/mango-i18n-system/
 
 #### 配置无需提取的文案
 
-系统会默认忽视业务代码里面的注释，但有些时候，我们一些未被注释的特殊的中文文案 key 并不想出现在自动文案配置系统前端页面上，这时候，我们可以在 `AST 解析模式`下，支持类似`eslint-disable`的注释效果，以注释不需要提取的中文文案 key
+系统会默认忽视业务代码里面的注释。但有些时候，我们一些**未被注释**的特殊的中文文案 key 并不想被自动文案配置系统提取，这时候，我们可以在 `AST 解析模式`下，使用类似`eslint-disable`的注释效果，以注释不需要提取的中文文案 key
 
 ```js
 

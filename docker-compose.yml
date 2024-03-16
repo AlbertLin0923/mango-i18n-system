@@ -12,7 +12,6 @@ services:
     networks:
       - backend
 
-
   client:
     build: ./packages/client/
     container_name: "mango-i18n-system-client"
@@ -25,3 +24,4 @@ services:
 
 networks:
   backend:
+    driver: bridge
