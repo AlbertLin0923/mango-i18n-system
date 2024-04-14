@@ -2,7 +2,9 @@
 
 ## 为什么写这个系统
 
-日常前端 web 项目开发中，由于公司项目需要支持多国语言，项目的代码文案需要提取、收集、整理出来，供翻译人员进行翻译，添加多国语言，再经过校对、审核后，导入到项目代码中。此过程往往非常重复繁琐，存在工作效率低，又容易出错的问题。由此我结合一些代码解析工具，针对该工作流程开发了此系统。通过该系统，无需手工提取、收集、整理、录入国际化文案，只需部署好系统，输入系统 Github/GitLab 地址等配置，即可自动化处理以上流程。
+日常前端 web 项目开发中，对于支持多国语言的业务系统，需要进行前端文案的国际化，此过程需要前端开发人员进行项目文案收集和整理，供翻译人员进行翻译后，再导入到项目代码中。该流程往往非常重复繁琐，存在工作效率低，又容易出错的问题。
+
+由此我结合一些代码解析工具，针对该工作流程开发了此系统。通过该系统，无需手工提取、收集、整理、录入国际化文案，只需部署好系统，输入系统 Github/GitLab 地址等配置，即可自动化处理以上流程。
 
 `更多说明请参考掘金文章`：[前端国际化自动工具-国际化文案配置系统](https://juejin.cn/post/7202082404353228855)
 
@@ -19,16 +21,16 @@
 其系统运行流程是：
 
 1. 翻译人员打开 自动国际化文案配置系统 前端页面
-2. 每次系统前端页面进行`刷新`，页面会调用更新源代码接口,通知系统后台进行`业务项目源代码`的拉取和更新
-3. 对应地，系统后台执行更新业务项目源代码，使用`文案解析器`对源代码进行解析，读取文案 key 的词条，收集、整理、去重后，同步到数据库
-4. 系统后台回传到系统前端页面
+2. 每当前端页面进行`刷新`，页面会调用接口,通知系统后台进行`业务项目源代码`的拉取和更新
+3. 对应地，系统后台执行更新业务项目源代码，并使用`文案解析器`对源代码进行解析，自动化读取和收集业务代码的中文文案 key，再经过系统整理、去重后，同步进数据库
+4. 系统后台将收集到的中文文案 key 回传到系统前端页面
 5. 翻译人员进行文案的翻译、修改、更新、删除等操作
-6. 翻译人员完成翻译工作后，通知到前端开发
-7. 前端开发使用辅助插件 [@mango-scripts/i18n-scripts](https://github.com/AlbertLin0923/mango-scripts/tree/main/packages/i18n-scripts) 进行一键下载、导入语言包到业务系统`本地代码`中
+6. 翻译人员完成翻译工作后，通知到前端开发人员
+7. 前端开发人员手动下载已经翻译好的文案json，导入到业务代码里；或者可使用辅助插件 [@mango-scripts/i18n-scripts](https://github.com/AlbertLin0923/mango-scripts/tree/main/packages/i18n-scripts) 进行一键下载导入
 
 可以看到，这个过程，`作为前端开发，无需参与其中文案的提取工作，从繁杂无聊的文案 key 的提取中解放出来，而最后的文案录入工作，也有辅助插件一键完成`
 
-那么，作为前端开发，只需要在业务项目的初期，部署接入该自动国际化文案配置系统，然后，在需求代码编写中，只需`像写国内的中文项目一样`，文案 key 使用`中文`，每次业务代码完成时，通知翻译人员进行文案翻译，待翻译工作结束后，执行项目辅助脚本，`一键更新`到`本地项目`里面
+那么，作为前端开发，只需要在业务项目的初期，部署接入该自动国际化文案配置系统，然后，在需求代码编写中，`就像国内的中文项目一样`，文案 key 使用`中文`，每次业务代码完成时，通知翻译人员进行文案翻译，待翻译工作结束后，执行项目辅助脚本，`一键更新`到`本地项目`里面
 
 ## 系统预览
 
@@ -73,9 +75,9 @@
 - 自动拉取业务项目源代码
 - 自动提取业务项目代码`中文文案 key` 到系统中
 - 支持使用辅助插件 [@mango-scripts/i18n-scripts](https://github.com/AlbertLin0923/mango-scripts/tree/main/packages/i18n-scripts) 进行一键下载、导入语言包到业务项目`本地代码`中
-- 支持`用户管理`、`操作记录` 等常规后台管理系统功能，方便对文案变更作全流程跟踪
+- 支持`用户管理`、`操作记录` 等常规后台管理系统功能，方便对文案变更作`全流程跟踪`
 - 支持`正则表达式`、`AST`两种解析方式
-- 支持`vue，js，jsx，ts，tsx，svelte`等多种格式文件
+- 支持`vue、js、jsx、mjs、ts、tsx、mts、svelte`等多种格式文件
 - 支持`配置文案模块标识`，`配置无需提取的文案`等功能
 - 支持文案的 `excel`、`json` 等格式的上传以及下载
 - 系统使用文件 hash 进行`缓存`，未修改过的业务代码文件不作解析，提高解析速度
@@ -86,8 +88,8 @@
 - 系统前后端全栈 采用 `TypeScript` 进行编写
 - 文案解析器：[@mango-scripts/i18n-utils](https://github.com/AlbertLin0923/mango-scripts/tree/main/packages/i18n-utils)：基于 babel、vue-template-compiler、hyntax、pug、svelte/compiler 等 对目标源码进行 AST 解析与提取
 - 辅助插件：[@mango-scripts/i18n-scripts](https://github.com/AlbertLin0923/mango-scripts/tree/main/packages/i18n-scripts)：基于 commander、fs-extra、glob、inquirer、undici 等
-- 系统前端基于 react 18、react-router 6、rematch、antd 5、echarts、react-json-view、nginx 等
-- 系统后台主要采用 nestjs 全家桶 以及 typeorm、execa、 exceljs、glob、jsonwebtoken 等
+- 系统前端基于 react@18、react-router@6、zustand、antd@5、echarts、react-json-view、nginx、rsbuild 等
+- 系统后台主要采用 nestjs 全家桶 以及 typeorm、execa、exceljs、glob、jsonwebtoken，tsup 等
 - 数据库方案采用轻量级数据库 splite3
 - 项目部署基于 docker，使用 docker-compose 一键部署
 
@@ -111,11 +113,11 @@ git clone https://github.com/AlbertLin0923/mango-i18n-system.git
 cd /home/app/i18n/mango-i18n-system/
 ```
 
-4. 在`项目根目录`执行`zx ./scripts/adapt.mjs` ,该文件会帮助你修改项目一些配置文件，以适配你的 **系统部署端口**
+4. 在`项目根目录`执行`zx ./scripts/adapt.mjs`，该命令会帮助你修改项目配置文件，以适配你的 **系统部署端口**
 
 5. 执行 `docker-compose up -d` 进行 docker-compose 一键部署
 
-这时候打开服务器对应的项目端口，例如：http://host:port/user/login （ host 为内网服务器 IP 地址，port 为我们刚才设置的端口） 就可以看到项目已经启动
+这时候打开服务器对应的项目端口，例如：http://host:port/user/login （ host 为该内网服务器 IP 地址，port 为我们刚才设置的端口） 就可以看到项目已经启动
 
 ### 配置
 
@@ -152,7 +154,7 @@ cd /home/app/i18n/mango-i18n-system/
 
 #### 配置文案模块标识
 
-系统支持文案添加模块标识，可通过如下注释进行标识：
+系统支持文案添加模块标识，便于翻译人员进行筛选，前端开发人员可通过如下注释对业务源代码进行标识：
 
 例如：在目标 `src/views/xxx/index.vue`文件最上面加注释：
 
@@ -218,7 +220,7 @@ const getFilterStatusMap = (statusMap, type) => {
 ## TODO List
 
 - 改善部署体验
-- 文案解析器支持更多格式的文件
+- 文案解析器支持小程序等更多格式的文件
 
 ## 参考资料
 
