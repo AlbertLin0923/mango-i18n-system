@@ -8,7 +8,7 @@ RUN npm install -g pnpm@8.12.1 && pnpm -v && pnpm install --frozen-lockfile
 
 COPY . .
 
-RUN pnpm run build:prod
+RUN pnpm build:prod
 
 
 
@@ -18,7 +18,7 @@ WORKDIR /usr/share/nginx/html/
 
 COPY ./nginx/ /etc/nginx/
 
-COPY --from=builder /home/app/client/build  /usr/share/nginx/html/
+COPY --from=builder /home/app/client/dist  /usr/share/nginx/html/
 
 EXPOSE 5005
 

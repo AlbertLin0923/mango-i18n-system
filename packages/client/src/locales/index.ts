@@ -260,7 +260,7 @@ i18n.use(initReactI18next).init(
       escapeValue: false, // react already safes from xss
     },
   },
-  (err, t) => {
+  (err: any, t: any) => {
     if (err) return console.error(err)
   },
 )
