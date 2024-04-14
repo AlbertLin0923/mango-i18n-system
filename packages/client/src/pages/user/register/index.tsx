@@ -1,40 +1,39 @@
 import { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Form, Input, Button, App } from 'antd'
 import { MangoFormPassword } from '@mango-kit/components'
 import md5 from 'md5'
 
+import { useUserStore } from '@/store'
 import { getRedirect, MangoRegExp } from '@/utils'
 
 import '../index.module.scss'
 import FormMessage from '../components/FormMessage'
 
-import type { RootState, Dispatch } from '@/store'
-
 const Register: FC = () => {
-  const loading = useSelector(
-    (state: RootState) => state.loading.effects.userModel.register,
-  )
-  const dispatch = useDispatch<Dispatch>()
+  const { register } = useUserStore()
+
   const { t } = useTranslation()
   const [form] = Form.useForm()
   const { message } = App.useApp()
   const navigate = useNavigate()
   const [formMessage, setFormMessage] = useState<string>('')
+  const [loading, setLoading] = useState<boolean>(false)
 
   const handleSubmit = async () => {
     const { username, password, email, invitationCode } =
       form.getFieldsValue(true)
 
     setFormMessage('')
-    const { success, msg } = await dispatch.userModel.register({
+    setLoading(true)
+    const { success, msg } = await register({
       username,
       password: md5(password),
       email,
       invitationCode,
     })
+    setLoading(false)
     if (success) {
       message.success(msg)
       navigate(getRedirect() || '/locale', { replace: true })

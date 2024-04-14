@@ -1,23 +1,21 @@
 import { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
 import { useLocation, useNavigate, Outlet } from 'react-router-dom'
 import { Spin } from 'antd'
+import { useMount } from 'ahooks'
 
-import type { RootState } from '@/store/index'
+import { useUserStore } from '@/store'
 
 const NotRequireLogin: FC = () => {
-  const {
-    tokenPair: { accessToken },
-  } = useSelector((state: RootState) => state.userModel)
+  const { accessToken } = useUserStore((state) => state.tokenPair)
   const location = useLocation()
   const navigate = useNavigate()
   const { pathname } = location
 
   const [isReady, setIsReady] = useState<boolean>(false)
 
-  useEffect(() => {
+  useMount(() => {
     setIsReady(true)
-  }, [])
+  })
 
   useEffect(() => {
     if (pathname.startsWith('/user') && accessToken) {

@@ -1,19 +1,19 @@
 import { defineConfig } from '@mango-scripts/react-scripts'
 
 export default defineConfig({
-  distDir: 'build',
-  loader: {
+  tools: {
     sass: {
-      enable: true,
-      options: {
-        additionalData: `@import "src/styles/mixins.scss";`,
-      },
+      additionalData: `@import "src/styles/mixins.scss";`,
     },
   },
-  optimization: {
-    minimizer: {
-      jsMinimizer: {
-        minify: 'esbuildMinify',
+  server: {
+    port: process.env.PORT,
+    proxy: {
+      '/api': {
+        target: process.env.PROXY_TARGET,
+        changeOrigin: true,
+        secure: false,
+        logLevel: 'debug',
       },
     },
   },

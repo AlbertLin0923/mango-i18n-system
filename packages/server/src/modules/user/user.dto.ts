@@ -8,9 +8,9 @@ import {
 } from 'class-validator'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 
-import { TablePaginationType } from '../../common/type/index.js'
-
 import { RoleType, AccountStatusType } from './user.entity.js'
+
+import { TablePaginationType } from '../../common/type/index.js'
 
 export class LoginDTO {
   @ApiProperty({

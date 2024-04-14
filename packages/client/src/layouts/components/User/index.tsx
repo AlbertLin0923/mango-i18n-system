@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
 import { App, Avatar, Popover, Row, Col, Button } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -10,15 +9,15 @@ import {
   TranslationOutlined,
 } from '@ant-design/icons'
 
+import { useUserStore } from '@/store'
+
 import styles from './index.module.scss'
 
-import type { RootState, Dispatch } from '@/store'
-
 const UserPanel: FC<{ onClose: () => void }> = ({ onClose }) => {
-  const { username } = useSelector(
-    (state: RootState) => state.userModel.userInfo,
-  )
-  const dispatch = useDispatch<Dispatch>()
+  const {
+    userInfo: { username },
+    logout,
+  } = useUserStore()
   const { t } = useTranslation()
   const { modal, message } = App.useApp()
   const navigate = useNavigate()
@@ -69,7 +68,7 @@ const UserPanel: FC<{ onClose: () => void }> = ({ onClose }) => {
                   title: t('退出登录'),
                   content: t('确定要退出登录吗？'),
                   onOk: async () => {
-                    const { success, msg } = await dispatch.userModel.logout()
+                    const { success, msg } = await logout()
                     if (success) {
                       message.success(msg)
                       navigate('/user/login')

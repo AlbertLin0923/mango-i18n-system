@@ -1,17 +1,15 @@
-import { useSelector, useDispatch } from 'react-redux'
 import { Dropdown, App } from 'antd'
 import { TranslationOutlined } from '@ant-design/icons'
 
-import { localeDict } from '@/locales/index'
+import { localeDict } from '@/locales'
+import { useAppStore } from '@/store'
 
 import styles from './style.module.scss'
 
 import type { MenuProps } from 'antd'
-import type { RootState, Dispatch } from '@/store/index'
 
 const SelectLang: FC = () => {
-  const language = useSelector((state: RootState) => state.appModel.language)
-  const dispatch = useDispatch<Dispatch>()
+  const { language, changeLanguage } = useAppStore()
 
   const { message } = App.useApp()
 
@@ -28,7 +26,7 @@ const SelectLang: FC = () => {
   }))
 
   const onClick: MenuProps['onClick'] = async ({ key }) => {
-    const { success, msg } = await dispatch.appModel.changeLanguage(key)
+    const { success, msg } = await changeLanguage(key)
     if (success) {
       message.success(msg)
     } else {

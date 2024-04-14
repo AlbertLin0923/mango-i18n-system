@@ -1,0 +1,41 @@
+{
+  "name": "mango-i18n-system-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm -r --filter './packages/**' run dev",
+    "clean": "pnpm -r --filter './packages/**' run clean",
+    "cz": "git add . && git cz",
+    "lint:eslint": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix",
+    "lint:prettier": "prettier ./ --write --check",
+    "lint:stylelint": "stylelint \"**/*.{less,scss,sass,stylus,styl,css}\" --fix",
+    "lint": "pnpm run lint:eslint && pnpm run lint:stylelint && pnpm run lint:prettier",
+    "lint-staged": "lint-staged",
+    "preinstall": "npx only-allow pnpm",
+    "prepare": "husky",
+    "test-unit": "vitest run",
+    "coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.2.1",
+    "@commitlint/config-conventional": "^19.1.0",
+    "@mango-scripts/dev-scripts": "^2.0.8",
+    "@mango-scripts/esp-config": "^2.0.7",
+    "commitizen": "^4.3.0",
+    "cross-env": "^7.0.3",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^8.56.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.1.1",
+    "prettier-plugin-tailwindcss": "^0.5.13",
+    "stylelint": "^16.1.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.5",
+    "vitest": "^1.1.1"
+  },
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=8"
+  }
+}

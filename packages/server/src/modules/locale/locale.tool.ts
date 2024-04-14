@@ -5,10 +5,10 @@ import { execa } from 'execa'
 import { glob } from 'glob'
 import getFolderSize from 'get-folder-size'
 
+import { extractChineseFieldList, formatLocaleObj } from './locale.utils.js'
+
 import { ExecTimer, logger } from '../../common/utils/index.js'
 import { Extractor } from '../../common/type/index.js'
-
-import { extractChineseFieldList, formatLocaleObj } from './locale.utils.js'
 
 export type LocaleItem = {
   'zh-CN': string

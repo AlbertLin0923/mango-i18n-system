@@ -12,8 +12,6 @@ coverage
 
 # production
 dist
-build
-out
 
 # debug
 .pnpm-debug.log*

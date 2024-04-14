@@ -33,9 +33,9 @@ const SelectCheckbox: FC<SelectCheckboxProps> = (props) => {
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <span>只显示未翻译</span>
         <Select
-          bordered={false}
           style={{ minWidth: '150px' }}
           value={_type}
+          variant="borderless"
           onChange={handleSelectChange}
         >
           {localeDictWithLabel.map((item: any) => {

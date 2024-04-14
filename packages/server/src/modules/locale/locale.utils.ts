@@ -45,7 +45,7 @@ export const transformListToMap = (list: any[], localeDict: string[]) => {
     .forEach((langItem) => {
       const k = langItem['zh-CN']
       localeDict.forEach((key) => {
-        langItem[key] ? (map[key][k] = langItem[key]) : null
+        langItem[key] && (map[key][k] = langItem[key])
       })
     })
 
@@ -195,7 +195,7 @@ export const filterLocaleItem = (
 ) => {
   const i = {}
   localeDict.forEach((key) => {
-    isLegalExcelCellValue(item[key]) ? (i[key] = item[key]) : ''
+    isLegalExcelCellValue(item[key]) && (i[key] = item[key])
   })
 
   return i

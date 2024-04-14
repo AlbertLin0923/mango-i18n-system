@@ -1,9 +1,9 @@
 import { Suspense, useMemo } from 'react'
 import { useNavigate, Outlet } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 import { Layout, Spin } from 'antd'
 import { SvgIcon } from '@mango-kit/components'
 
+import { useUserStore, useAppStore } from '@/store'
 import PageLoading from '@/components/PageLoading'
 import { createMenu, filterAccessedRoute } from '@/router'
 
@@ -16,21 +16,17 @@ import Helmet from '../components/Helmet'
 import Breadcrumb from '../components/Breadcrumb'
 import Footer from '../components/Footer'
 
-import type { RootState } from '@/store'
-
 const { Sider, Header, Content } = Layout
 
 const BasicLayout: FC = () => {
   const navigate = useNavigate()
 
-  const { userAllowedAuthList, role } = useSelector(
-    (state: RootState) => state.userModel.userInfo,
-  )
+  const { userAllowedAuthList, role } = useUserStore((state) => state.userInfo)
 
   const {
     siderCollapsed,
     publicSystemSetting: { systemTitle },
-  } = useSelector((state: RootState) => state.appModel)
+  } = useAppStore()
 
   const menuConfig = useMemo(() => {
     return createMenu(filterAccessedRoute(userAllowedAuthList, role))

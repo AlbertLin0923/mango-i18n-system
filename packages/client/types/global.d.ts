@@ -12,12 +12,8 @@ declare module '*.jpeg'
 declare module '*.gif'
 declare module '*.bmp'
 declare module '*.tiff'
-declare module 'omit.js'
-declare module 'numeral'
-declare module '@antv/data-set'
-declare module 'mockjs'
-declare module 'react-fittext'
-declare module 'bizcharts-plugin-slider'
+
+declare module 'i18next'
 
 declare type BROWSER_SUPPORT_DETECTER = {
   AVIF: boolean
@@ -29,8 +25,8 @@ declare interface Window {
 }
 
 declare type TablePaginationType = {
-  pageNum: number
-  pageSize: number
+  page: number
+  pageSize?: number
 }
 
 declare type ReturnResponse<T> = Promise<{

@@ -1,26 +1,21 @@
 import { Injectable, BadRequestException } from '@nestjs/common'
 import { validate } from 'class-validator'
 import { plainToClass } from 'class-transformer'
-
 import { PipeTransform, ArgumentMetadata } from '@nestjs/common'
 
 @Injectable()
 export class ValidationPipe implements PipeTransform<any> {
   async transform(value: any, metadata: ArgumentMetadata) {
     // Account for an empty request body
-    if (value == null) {
-      value = {}
-    }
+    const _value = value === null ? {} : value
 
     const { metatype } = metadata
     if (!metatype || !this.toValidate(metatype)) {
-      return value
+      return _value
     }
 
-    // console.log('value', value);
-
     // 将对象转换为 Class 来验证
-    const object = plainToClass(metatype, value)
+    const object = plainToClass(metatype, _value)
     const errors = await validate(object)
 
     if (errors.length > 0) {
@@ -52,7 +47,7 @@ export class ValidationPipe implements PipeTransform<any> {
       })
     }
 
-    return value
+    return _value
   }
 
   private toValidate(metatype: any): boolean {

@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import { Cron } from '@nestjs/schedule'
 import { InjectRepository } from '@nestjs/typeorm'
+import { Repository } from 'typeorm'
 
 import { RecordEntity } from '../record/record.entity.js'
-
-import { Repository } from 'typeorm'
 
 @Injectable()
 export class TaskService {

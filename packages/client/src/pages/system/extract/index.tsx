@@ -209,16 +209,23 @@ const Page: FC = () => {
     <div className="page-container">
       <Spin spinning={pageLoading} tip="正在加载配置，请稍候。。。">
         <Card className="card">
-          <Collapse defaultActiveKey={['1']}>
-            <Collapse.Panel header={t('文案解析器操作日志')} key="1">
-              <Timeline
-                items={repositoryActionMessages.map((i) => ({
-                  children: renderMessage(i),
-                }))}
-                mode="left"
-              />
-            </Collapse.Panel>
-          </Collapse>
+          <Collapse
+            defaultActiveKey={['1']}
+            items={[
+              {
+                key: '1',
+                label: t('文案解析器操作日志'),
+                children: (
+                  <Timeline
+                    items={repositoryActionMessages.map((i) => ({
+                      children: renderMessage(i),
+                    }))}
+                    mode="left"
+                  />
+                ),
+              },
+            ]}
+          />
         </Card>
 
         <Card

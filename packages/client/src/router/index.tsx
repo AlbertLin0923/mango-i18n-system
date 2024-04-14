@@ -1,8 +1,4 @@
-import {
-  unstable_HistoryRouter as BrowserRouter,
-  Routes,
-  Route,
-} from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { createBrowserHistory } from 'history'
 import { Modal } from 'antd'
 import { cloneDeep, pick } from 'lodash'
@@ -29,6 +25,7 @@ export type RouterConfigTreeItem = {
   children?: RouterConfigTreeItem[]
   [key: string]: any
 }
+
 const hasPermission = (
   userAllowedAuthList: UserAllowedAuthList,
   userRole: UserRole,
@@ -38,6 +35,15 @@ const hasPermission = (
     (!route.auth || userAllowedAuthList.includes(route.auth)) &&
     (!route.role || route.role.includes(userRole))
   )
+}
+
+function dig<T>(arr: T[], parent: T[] = []): (T & { parent: T[] })[] {
+  return arr
+    .map((item: any) => [
+      { ...item, parent },
+      ...(item?.children?.length ? dig(item?.children, [item, ...parent]) : []),
+    ])
+    .flat(Infinity)
 }
 
 export const createRouterConfigTree = (
@@ -143,15 +149,6 @@ export const createBreadcrumb = () => {
   )
 }
 
-function dig<T>(arr: T[], parent: T[] = []): (T & { parent: T[] })[] {
-  return arr
-    .map((item: any) => [
-      { ...item, parent },
-      ...(item?.children?.length ? dig(item?.children, [item, ...parent]) : []),
-    ])
-    .flat(Infinity)
-}
-
 export const getFullRoutePath = (pathname: string, withCurrent = false) => {
   const tree = createRouterConfigTree([
     ...constantRouterConfig,
@@ -180,7 +177,7 @@ const generateRouteFromConfig = (config: RouterItem[]): ReactNode[] => {
       const { component: Component } = r
       return (
         <Route element={<Component />} key={r.path} path={r.path}>
-          {r.children && r.children.length > 0 ? loop(r.children) : null}
+          {r?.children?.length ? loop(r.children) : null}
         </Route>
       )
     })
@@ -196,7 +193,7 @@ export const createRouter = (
   const asyncRoutes = generateRouteFromConfig(_accessedRouteConfig)
 
   return (
-    <BrowserRouter history={history}>
+    <BrowserRouter>
       <Routes>
         <Route element={<NotRequireLogin />}>{constantRoutes}</Route>
         <Route element={<RequireLogin />}>

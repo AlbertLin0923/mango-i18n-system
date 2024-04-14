@@ -8,7 +8,6 @@ import {
 import { AuthGuard } from '@nestjs/passport'
 
 import { RecordListResponse, RecordSearchOptionsResponse } from './record.vo.js'
-
 import { RecordService } from './record.service.js'
 import { QueryRecordDTO } from './record.dto.js'
 import { RecordListVO, RecordSearchOptionsVO } from './record.vo.js'

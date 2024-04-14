@@ -1,5 +1,4 @@
 import { useState, useMemo } from 'react'
-import { useSelector, useDispatch, Provider } from 'react-redux'
 import { useAsyncEffect } from 'ahooks'
 import { HelmetProvider } from 'react-helmet-async'
 import { ConfigProvider, App as AntdApp } from 'antd'
@@ -18,14 +17,13 @@ import it_IT from 'antd/es/locale/it_IT'
 import pl_PL from 'antd/es/locale/pl_PL'
 import de_DE from 'antd/es/locale/de_DE'
 
-import store from '@/store'
+import { useAppStore, useUserStore } from '@/store'
 import {
   constantRouterConfig,
   createRouter,
   filterAccessedRoute,
 } from '@/router'
 
-import type { RootState, Dispatch } from '@/store'
 import type { MessageInstance } from 'antd/es/message/interface'
 import type { ModalStaticFunctions } from 'antd/es/modal/confirm'
 import type { NotificationInstance } from 'antd/es/notification/interface'
@@ -34,12 +32,11 @@ let message: MessageInstance
 let notification: NotificationInstance
 let modal: Omit<ModalStaticFunctions, 'warn'>
 
-const AppRouter: FC = () => {
-  const { userAllowedAuthList, role } = useSelector(
-    (state: RootState) => state.userModel.userInfo,
-  )
-  const language = useSelector((state: RootState) => state.appModel.language)
-  const dispatch = useDispatch<Dispatch>()
+const App: FC = () => {
+  const {
+    userInfo: { userAllowedAuthList, role },
+  } = useUserStore()
+  const { language, getPublicSetting } = useAppStore()
 
   const [isbrowserSupportDetecterDone, setIsBrowserSupportDetecterDone] =
     useState<boolean>()
@@ -79,30 +76,22 @@ const AppRouter: FC = () => {
 
   useAsyncEffect(async () => {
     await browserSupportDetecter()
-    await dispatch.appModel.getPublicSetting()
+    await getPublicSetting()
     setIsBrowserSupportDetecterDone(true)
   }, [])
 
   return (
-    isbrowserSupportDetecterDone && (
-      <ConfigProvider locale={locale}>
-        <AntdApp>
-          <FeedbackWrapper>
-            {createRouter(constantRouterConfig, accessedRouteConfig)}
-          </FeedbackWrapper>
-        </AntdApp>
-      </ConfigProvider>
-    )
-  )
-}
-
-const App: FC = () => {
-  return (
-    <Provider store={store}>
-      <HelmetProvider>
-        <AppRouter />
-      </HelmetProvider>
-    </Provider>
+    <HelmetProvider>
+      {isbrowserSupportDetecterDone && (
+        <ConfigProvider locale={locale}>
+          <AntdApp>
+            <FeedbackWrapper>
+              {createRouter(constantRouterConfig, accessedRouteConfig)}
+            </FeedbackWrapper>
+          </AntdApp>
+        </ConfigProvider>
+      )}
+    </HelmetProvider>
   )
 }
 

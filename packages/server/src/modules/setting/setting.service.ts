@@ -1,7 +1,19 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { Repository } from 'typeorm'
 
 import { SettingEntity } from './setting.entity.js'
+import {
+  SettingSearchOptionsVO,
+  SettingVO,
+  UpdateSettingVO,
+} from './setting.vo.js'
+import { Setting, UpdateSettingDTO } from './setting.dto.js'
+import {
+  localeDictMap,
+  filterExtNameMap,
+  extractorMap,
+} from './setting.dict.js'
 
 import { Extractor } from '../../common/type/index.js'
 import {
@@ -9,19 +21,6 @@ import {
   reActionResource,
 } from '../locale/locale.tool.js'
 import { BusinessException } from '../../common/exception/business.exception.js'
-
-import {
-  SettingSearchOptionsVO,
-  SettingVO,
-  UpdateSettingVO,
-} from './setting.vo.js'
-import { Repository } from 'typeorm'
-import { Setting, UpdateSettingDTO } from './setting.dto.js'
-import {
-  localeDictMap,
-  filterExtNameMap,
-  extractorMap,
-} from './setting.dict.js'
 
 @Injectable()
 export class SettingService {

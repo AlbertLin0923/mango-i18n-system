@@ -1,19 +1,15 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 import { Helmet as ReactHelmetAsync } from 'react-helmet-async'
 
 import { getFullRoutePath } from '@/router'
-
-import type { RootState } from '@/store'
+import { useAppStore } from '@/store'
 
 const Helmet: FC = () => {
   const { t } = useTranslation()
   const { pathname } = useLocation()
-  const {
-    publicSystemSetting: { systemTitle },
-  } = useSelector((state: RootState) => state.appModel)
+  const { systemTitle } = useAppStore((state) => state.publicSystemSetting)
 
   const pageTitle = useMemo(() => {
     const items = getFullRoutePath(pathname, true).reverse()

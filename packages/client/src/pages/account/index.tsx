@@ -1,5 +1,4 @@
 import { useRef } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { EditOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, App, Avatar, Typography, Card } from 'antd'
@@ -7,23 +6,25 @@ import md5 from 'md5'
 import { getLabel } from '@mango-kit/utils'
 
 import { roleMap } from '@/dict/user'
+import { useUserStore } from '@/store'
 
 import ChangeEmailForm from './components/ChangeEmailForm'
 import ChangePasswordForm from './components/ChangePasswordForm'
 import './index.module.scss'
 
-import type { RootState, Dispatch } from '@/store'
 import type { ChangeEmailFormHandle } from './components/ChangeEmailForm'
 import type { ChangePasswordFormHandle } from './components/ChangePasswordForm'
 
 const { Paragraph } = Typography
 
 const Page: FC = () => {
-  const { username, role, email, userId } = useSelector(
-    (state: RootState) => state.userModel.userInfo,
-  )
+  const {
+    userInfo: { username, role, email, userId },
+    getUserInfo,
+    updateMyUserInfo,
+    updateMyPassword,
+  } = useUserStore()
 
-  const dispatch = useDispatch<Dispatch>()
   const { t } = useTranslation()
   const { message, modal } = App.useApp()
 
@@ -44,12 +45,12 @@ const Page: FC = () => {
         if (changeEmailFormRef.current) {
           const [error, values] = await changeEmailFormRef.current.getValues()
           if (!error) {
-            const { success, msg } = await dispatch.userModel.updateMyUserInfo({
+            const { success, msg } = await updateMyUserInfo({
               email: values.email,
             })
             if (success) {
               message.success(msg)
-              await dispatch.userModel.getUserInfo()
+              await getUserInfo()
               return Promise.resolve()
             } else {
               return Promise.reject()
@@ -74,13 +75,13 @@ const Page: FC = () => {
             await changePasswordFormRef.current.getValues()
           if (!error) {
             const { oldPassword, password } = values
-            const { success, msg } = await dispatch.userModel.updateMyPassword({
+            const { success, msg } = await updateMyPassword({
               oldPassword: md5(oldPassword),
               password: md5(password),
             })
             if (success) {
               message.success(msg)
-              await dispatch.userModel.getUserInfo()
+              await getUserInfo()
               return Promise.resolve()
             } else {
               return Promise.reject()

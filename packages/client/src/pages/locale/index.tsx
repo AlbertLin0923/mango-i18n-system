@@ -54,11 +54,6 @@ export interface TableListItem {
   [key: string]: string | Date
 }
 
-export interface TablePaginationType {
-  page: number
-  pageSize?: number
-}
-
 const getFilterTableDataFromTableData = (
   searchOptions: SearchOptionsType,
   list: any[],
@@ -392,11 +387,10 @@ const Page: FC = () => {
           </Space>
           {repositoryActionMessagesBoxVisible ? (
             <Card style={{ marginBottom: '20px' }} title={t('解析器操作日志')}>
-              <Timeline mode="left">
-                {repositoryActionMessages.map((i) => {
-                  return <Timeline.Item key={i}>{i}</Timeline.Item>
-                })}
-              </Timeline>
+              <Timeline
+                items={repositoryActionMessages.map((i) => ({ children: i }))}
+                mode="left"
+              />
             </Card>
           ) : null}
         </Igroup>

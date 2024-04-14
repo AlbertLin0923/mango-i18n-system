@@ -6,7 +6,7 @@ import { extend } from 'umi-request'
 
 import i18n from '@/locales'
 import { history } from '@/router'
-import store from '@/store'
+import { useUserStore } from '@/store'
 import { modal, notification } from '@/app'
 
 import type { ResponseError } from 'umi-request'
@@ -35,7 +35,7 @@ export const handleLoginOverdue = async () => {
       okText: i18n.t('重新登录'),
       onOk: () => {
         modalInstance._handleLoginOverdueInstance = null
-        store.dispatch.userModel.logout()
+        useUserStore.getState().logout()
         const redirect = encodeURIComponent(window.location.href)
 
         history.replace({
@@ -107,7 +107,7 @@ const request = extend({
 
 // request拦截器, 改变url 或 options.
 request.interceptors.request.use((url, options) => {
-  const { accessToken } = store.getState().userModel.tokenPair
+  const { accessToken } = useUserStore.getState().tokenPair
   return {
     url,
     options: {

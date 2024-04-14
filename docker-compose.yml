@@ -1,24 +1,24 @@
-version: "3.8"
+version: '3.8'
 services:
   server:
     build: ./packages/server/
-    container_name: "mango-i18n-system-server"
+    container_name: 'mango-i18n-system-server'
     environment:
       TZ: Asia/Shanghai
     volumes:
       - ./packages/server/database:/home/app/server/database
     ports:
-      - "5006:5006"
+      - '5006:5006'
     networks:
       - backend
 
   client:
     build: ./packages/client/
-    container_name: "mango-i18n-system-client"
+    container_name: 'mango-i18n-system-client'
     depends_on:
       - server
     ports:
-      - "5005:5005"
+      - '5005:5005'
     networks:
       - backend
 

@@ -1,37 +1,34 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Form, Input, Button, App } from 'antd'
 import md5 from 'md5'
 
+import { useUserStore } from '@/store'
 import { getRedirect } from '@/utils'
 
 import FormMessage from '../components/FormMessage'
 import '../index.module.scss'
 
-import type { RootState, Dispatch } from '@/store'
-
 const AccountLogin: FC = () => {
-  const loading = useSelector(
-    (state: RootState) => state.loading.effects.userModel.login,
-  )
-  const dispatch = useDispatch<Dispatch>()
+  const { login } = useUserStore()
   const { t } = useTranslation()
   const [form] = Form.useForm()
   const navigate = useNavigate()
   const { message } = App.useApp()
   const [formMessage, setFormMessage] = useState<string>('')
+  const [loading, setLoading] = useState<boolean>(false)
 
   const handleSubmit = async () => {
     const { username, password } = await form.validateFields()
 
     setFormMessage('')
-
-    const { success, msg } = await dispatch.userModel.login({
+    setLoading(true)
+    const { success, msg } = await login({
       username,
       password: md5(password),
     })
+    setLoading(false)
 
     if (success) {
       message.success(msg)

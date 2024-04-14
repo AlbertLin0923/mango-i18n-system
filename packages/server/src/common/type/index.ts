@@ -1,7 +1,6 @@
 import { applyDecorators } from '@nestjs/common'
 import { ApiOkResponse, ApiOperation, ApiProperty } from '@nestjs/swagger'
 import { IsInt } from 'class-validator'
-
 import { Type } from '@nestjs/common'
 export type ObjectLiteral = Record<string, any>
 

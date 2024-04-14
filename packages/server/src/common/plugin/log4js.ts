@@ -116,6 +116,7 @@ log4js.addLayout('Awesome-nest', (logConfig: any) => {
       }
 
       if (typeof value !== 'string') {
+        // eslint-disable-next-line no-param-reassign
         value = util.inspect(value, false, 3, true)
       }
 

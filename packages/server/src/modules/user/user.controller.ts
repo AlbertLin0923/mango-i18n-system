@@ -10,9 +10,6 @@ import {
   UserListResponse,
   UserSearchOptionsResponse,
 } from './user.vo.js'
-
-import { User } from '../../common/decorator/user.js'
-
 import { UserService } from './user.service.js'
 import {
   LoginDTO,
@@ -33,6 +30,8 @@ import {
   UserListVO,
   UserSearchOptionsVO,
 } from './user.vo.js'
+
+import { User } from '../../common/decorator/user.js'
 
 @ApiTags('user')
 @Controller('user')

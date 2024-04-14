@@ -1,15 +1,14 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { isEqual } from 'lodash-es'
-
-import { BusinessException } from '../../common/exception/business.exception.js'
+import { Repository, DeleteResult } from 'typeorm'
 
 import { LocaleEntity } from './locale.entity.js'
 import { transformListToObj, completeLocaleItem } from './locale.utils.js'
-
-import { Repository, DeleteResult } from 'typeorm'
 import { AddLocaleDTO, UpdateLocaleDTO, DeleteLocaleDTO } from './locale.dto.js'
 import { LocaleListVO, LocaleVO } from './locale.vo.js'
+
+import { BusinessException } from '../../common/exception/business.exception.js'
 import { RecordService } from '../record/record.service.js'
 import { SettingService } from '../setting/setting.service.js'
 

@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger'
 
-import { BaseOkResponse } from '../../common/type/index.js'
-
 import { RoleType, AccountStatusType } from './user.entity.js'
+
+import { BaseOkResponse } from '../../common/type/index.js'
 
 export class TokenPairVO {
   @ApiProperty({

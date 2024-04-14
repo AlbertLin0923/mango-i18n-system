@@ -1,22 +1,18 @@
-import { useSelector } from 'react-redux'
 import { Outlet } from 'react-router-dom'
 import { SvgIcon } from '@mango-kit/components'
 import { useTranslation } from 'react-i18next'
 
 import SelectLang from '@/components/SelectLang'
+import { useAppStore } from '@/store'
 
 import './index.module.scss'
 
 import Helmet from '../components/Helmet'
 
-import type { RootState } from '@/store'
-
 const User: FC = () => {
   const { t } = useTranslation()
+  const { systemTitle } = useAppStore((state) => state.publicSystemSetting)
 
-  const {
-    publicSystemSetting: { systemTitle },
-  } = useSelector((state: RootState) => state.appModel)
   return (
     <>
       <Helmet />

@@ -1,20 +1,12 @@
-import { useSelector } from 'react-redux'
+import { useUserStore } from '@/store'
 
-import type { RootState } from '@/store/index'
-
-type RolePersmissionProps = PropsWithChildren<{
-  noMatch?: ReactNode
-  role: string[] | string
-}>
-
-const RolePersmission: FC<RolePersmissionProps> = ({
-  children,
-  noMatch,
-  role,
-}) => {
-  const { role: userRole } = useSelector(
-    (state: RootState) => state.userModel.userInfo,
-  )
+const RolePersmission: FC<
+  PropsWithChildren<{
+    noMatch?: ReactNode
+    role: string[] | string
+  }>
+> = ({ children, noMatch, role }) => {
+  const { role: userRole } = useUserStore((state) => state.userInfo)
 
   if (!role) return children as any
 

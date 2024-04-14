@@ -1,22 +1,16 @@
 import { Navigate, useLocation } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 
-import type { RootState } from '@/store'
+import { useUserStore } from '@/store'
 
-type RequireAuthProps = PropsWithChildren<{
-  auth?: number | string
-  role?: string | string[]
-  redirect?: string
-}>
-
-const RequireAuth: FC<RequireAuthProps> = ({
-  auth,
-  role,
-  redirect,
-  children,
-}) => {
-  const { userAllowedAuthList = [], role: userRole } = useSelector(
-    (state: RootState) => state.userModel.userInfo,
+const RequireAuth: FC<
+  PropsWithChildren<{
+    auth?: number | string
+    role?: string | string[]
+    redirect?: string
+  }>
+> = ({ auth, role, redirect, children }) => {
+  const { userAllowedAuthList = [], role: userRole } = useUserStore(
+    (state) => state.userInfo,
   )
   const { pathname } = useLocation()
 

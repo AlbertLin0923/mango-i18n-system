@@ -3,14 +3,14 @@ import { join } from 'node:path'
 import { NestFactory } from '@nestjs/core'
 import cookieParser from 'cookie-parser'
 import { ConfigService } from '@nestjs/config'
+import { NestExpressApplication } from '@nestjs/platform-express'
+
 import { AppModule } from './app.module.js'
 import { ResponseInterceptor } from './common/interceptor/response.interceptor.js'
 import { LoggingInterceptor } from './common/interceptor/logging.interceptor.js'
 import { AllExceptionFilter } from './common/filter/all-exception.filter.js'
 import { ValidationPipe } from './common/pipe/validation.pipe.js'
 import { setupSwagger } from './common/plugin/swagger.js'
-
-import { NestExpressApplication } from '@nestjs/platform-express'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
