@@ -1,10 +1,8 @@
 import { Outlet } from 'react-router-dom'
 
-import './index.module.scss'
-
 const BasicLayout: FC = () => {
   return (
-    <div className="layout-container">
+    <div className="h-full w-full">
       <Outlet />
     </div>
   )

@@ -6,11 +6,11 @@ export const AuthPermission: FC<
     auth: number | string
   }>
 > = ({ children, noMatch, auth }) => {
-  const { userAllowedAuthList } = useUserStore((state) => state.userInfo)
+  const { authList } = useUserStore((state) => state.userInfo)
 
   if (!auth) return children as any
 
-  if (userAllowedAuthList.includes(auth)) return children as any
+  if (authList.includes(auth)) return children as any
 
   return noMatch ?? null
 }

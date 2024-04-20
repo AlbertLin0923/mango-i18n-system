@@ -9,7 +9,7 @@ import NoFoundPage from '@/pages/error-page/no-found-page'
 
 import { constantRouterConfig, asyncRouterConfig } from './routerConfig'
 
-import type { UserAllowedAuthList, UserRole, RouterItem } from './routerConfig'
+import type { AuthList, UserRole, RouterItem } from './routerConfig'
 import type { ReactNode } from 'react'
 
 export const history = createBrowserHistory()
@@ -27,12 +27,12 @@ export type RouterConfigTreeItem = {
 }
 
 const hasPermission = (
-  userAllowedAuthList: UserAllowedAuthList,
+  authList: AuthList,
   userRole: UserRole,
   route: RouterItem,
 ): boolean => {
   return (
-    (!route.auth || userAllowedAuthList.includes(route.auth)) &&
+    (!route.auth || authList.includes(route.auth)) &&
     (!route.role || route.role.includes(userRole))
   )
 }
@@ -94,13 +94,13 @@ export const createRouterConfigTree = (
 }
 
 export const filterAccessedRoute = (
-  userAllowedAuthList: UserAllowedAuthList,
+  authList: AuthList,
   userRole: UserRole,
 ): RouterItem[] => {
   const loop = (_routerConfig: RouterItem[]): RouterItem[] => {
     const res: RouterItem[] = []
     _routerConfig.forEach((route: RouterItem) => {
-      if (hasPermission(userAllowedAuthList, userRole, route)) {
+      if (hasPermission(authList, userRole, route)) {
         if (route.children) {
           route.children = loop(route.children)
         }

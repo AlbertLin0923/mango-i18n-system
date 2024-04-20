@@ -5,8 +5,6 @@ import { RedoOutlined } from '@ant-design/icons'
 
 import * as API from '@/services/locale'
 
-import styles from './index.module.scss'
-
 const Page: FC = () => {
   const { t } = useTranslation()
   const { message } = App.useApp()
@@ -14,7 +12,7 @@ const Page: FC = () => {
 
   return (
     <div className="page-container">
-      <Card className={styles.card} type="inner">
+      <Card className="mb-6 w-full" type="inner">
         <Popconfirm
           title="此操作将自动提取仓库的语言包,提取后将覆盖现有的数据,是否继续?"
           onConfirm={async () => {
@@ -27,7 +25,7 @@ const Page: FC = () => {
           }}
         >
           <Button
-            className={styles.btn}
+            className="h-28 w-full"
             icon={<RedoOutlined />}
             loading={loading}
           >

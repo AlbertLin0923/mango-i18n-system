@@ -16,7 +16,7 @@ import Home from '@/pages/home'
 import Login from '@/pages/user/login'
 import Register from '@/pages/user/register'
 
-export type UserAllowedAuthList = (string | number)[]
+export type AuthList = (string | number)[]
 
 export type UserRole = string
 

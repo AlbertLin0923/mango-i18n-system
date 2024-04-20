@@ -1,19 +1,19 @@
-/* stylelint-disable selector-class-pattern */
+/* stylelint-disable */
 @import 'antd/dist/reset.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .page-container {
+    @apply flex min-h-full w-full flex-col rounded-md;
+  }
+}
 
 #root,
 .ant-app {
   height: 100vh;
-}
-
-ul,
-li {
-  margin: 0;
-  padding: 0;
-}
-
-li {
-  list-style: none;
 }
 
 .ant-modal-header {
@@ -28,6 +28,10 @@ li {
 
 .ant-modal-confirm-content {
   max-width: 100% !important;
+}
+
+.ant-layout-sider-children {
+  overflow-y: auto !important;
 }
 
 // 滚动条样式
@@ -57,22 +61,4 @@ li {
     border-radius: 6px;
     transition: background-color 0.2s;
   }
-}
-
-.mango-tip-text {
-  padding: 5px 10px;
-  color: $mango-text-slight-color;
-}
-
-.mango-primary-tips-icon {
-  margin-right: 10px;
-  color: $mango-primary-color;
-}
-
-.mango-tips-text {
-  color: $mango-text-slight-color;
-}
-
-.no-margin-bottom {
-  margin-bottom: 0 !important;
 }

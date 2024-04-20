@@ -2,13 +2,13 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Form, Input, Button, App } from 'antd'
+import { useRequest } from 'ahooks'
 import md5 from 'md5'
 
 import { useUserStore } from '@/store'
 import { getRedirect } from '@/utils'
 
 import FormMessage from '../components/FormMessage'
-import '../index.module.scss'
 
 const AccountLogin: FC = () => {
   const { login } = useUserStore()
@@ -17,29 +17,35 @@ const AccountLogin: FC = () => {
   const navigate = useNavigate()
   const { message } = App.useApp()
   const [formMessage, setFormMessage] = useState<string>('')
-  const [loading, setLoading] = useState<boolean>(false)
+
+  const { loading, run } = useRequest(
+    async ({ username, password }) =>
+      await login({
+        username,
+        password: md5(password),
+      }),
+    {
+      manual: true,
+      onBefore: () => {
+        setFormMessage('')
+      },
+      onSuccess: ({ success, msg }) => {
+        if (success) {
+          message.success(msg)
+          navigate(getRedirect() || '/locale', { replace: true })
+        } else {
+          setFormMessage(msg)
+        }
+      },
+    },
+  )
 
   const handleSubmit = async () => {
-    const { username, password } = await form.validateFields()
-
-    setFormMessage('')
-    setLoading(true)
-    const { success, msg } = await login({
-      username,
-      password: md5(password),
-    })
-    setLoading(false)
-
-    if (success) {
-      message.success(msg)
-      navigate(getRedirect() || '/locale', { replace: true })
-    } else {
-      setFormMessage(msg)
-    }
+    run(await form.validateFields())
   }
 
   return (
-    <div className="form-container">
+    <div>
       {formMessage && !loading && <FormMessage content={formMessage} />}
       <Form form={form} size="large">
         <Form.Item
@@ -74,7 +80,6 @@ const AccountLogin: FC = () => {
 
         <Form.Item>
           <Button
-            className="control-btn"
             htmlType="submit"
             loading={loading}
             type="primary"
@@ -86,10 +91,11 @@ const AccountLogin: FC = () => {
         </Form.Item>
 
         <Form.Item>
-          <div className="form-item-other">
+          <div className="flex w-full items-center justify-center">
             <div>
-              <span className="form-text">{t('还没有账号，')}</span>
+              <span className="text-sm">{t('还没有账号，')}</span>
               <Button
+                size="small"
                 type="link"
                 onClick={() => {
                   navigate('/user/register')
@@ -108,8 +114,10 @@ const AccountLogin: FC = () => {
 const Login: FC = () => {
   const { t } = useTranslation()
   return (
-    <div className="page-container">
-      <h3 className="form-title">{t('登录')}</h3>
+    <div className="w-full">
+      <h3 className="my-6 text-center text-xl font-medium text-zinc-800">
+        {t('登录')}
+      </h3>
       <AccountLogin />
     </div>
   )

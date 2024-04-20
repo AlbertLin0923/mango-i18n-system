@@ -11,8 +11,6 @@ import {
 
 import { useUserStore } from '@/store'
 
-import styles from './index.module.scss'
-
 const UserPanel: FC<{ onClose: () => void }> = ({ onClose }) => {
   const {
     userInfo: { username },
@@ -50,54 +48,50 @@ const UserPanel: FC<{ onClose: () => void }> = ({ onClose }) => {
   ]
 
   return (
-    <div className={styles['card-container']}>
-      <div>
-        <div className={styles['card-header']}>
-          <div className="user-info">
-            <Avatar className={styles['avatar']} icon={<UserOutlined />} />
-            <div className={styles['phone']}>{username}</div>
-          </div>
-
-          <div className={styles['logout']}>
-            <Button
-              icon={<PoweroffOutlined />}
-              type="link"
-              onClick={() => {
-                onClose()
-                modal.confirm({
-                  title: t('退出登录'),
-                  content: t('确定要退出登录吗？'),
-                  onOk: async () => {
-                    const { success, msg } = await logout()
-                    if (success) {
-                      message.success(msg)
-                      navigate('/user/login')
-                    }
-                  },
-                  onCancel() {},
-                })
-              }}
-            >
-              {t('退出登录')}
-            </Button>
-          </div>
+    <div className="w-[400px] ">
+      <div className="flex w-full items-center justify-between p-4">
+        <div className="flex items-center pl-4">
+          <Avatar icon={<UserOutlined />} />
+          <div className="ml-2">{username}</div>
         </div>
-        <Row className={styles['card-content']}>
-          {actionList.map((i) => {
-            return (
-              <Col
-                className={styles['action-item']}
-                key={i.text}
-                span={8}
-                onClick={i.action}
-              >
-                <div className={styles['action-icon']}>{i.icon}</div>
-                <div className={styles['action-text']}>{i.text}</div>
-              </Col>
-            )
-          })}
-        </Row>
+
+        <Button
+          icon={<PoweroffOutlined />}
+          type="link"
+          onClick={() => {
+            onClose()
+            modal.confirm({
+              title: t('退出登录'),
+              content: t('确定要退出登录吗？'),
+              onOk: async () => {
+                const { success, msg } = await logout()
+                if (success) {
+                  message.success(msg)
+                  navigate('/user/login')
+                }
+              },
+              onCancel() {},
+            })
+          }}
+        >
+          {t('退出登录')}
+        </Button>
       </div>
+      <Row className="pb-4">
+        {actionList.map((i) => {
+          return (
+            <Col
+              className="hover:text-primary flex h-20 cursor-pointer flex-col items-center justify-center"
+              key={i.text}
+              span={8}
+              onClick={i.action}
+            >
+              <div className="text-base">{i.icon}</div>
+              <div>{i.text}</div>
+            </Col>
+          )
+        })}
+      </Row>
     </div>
   )
 }
@@ -108,18 +102,16 @@ const User: FC = () => {
     setPopoverVisible(open)
   }
   return (
-    <>
-      <Popover
-        content={<UserPanel onClose={() => handleOpenChange(false)} />}
-        open={popoverVisible}
-        overlayClassName={styles['popover-container']}
-        onOpenChange={handleOpenChange}
-      >
-        <div className={styles['user-container']}>
-          <Avatar className={styles['user-avatar']} icon={<UserOutlined />} />
-        </div>
-      </Popover>
-    </>
+    <Popover
+      content={<UserPanel onClose={() => handleOpenChange(false)} />}
+      open={popoverVisible}
+      overlayClassName={'popover-container'}
+      onOpenChange={handleOpenChange}
+    >
+      <div className="flex h-16 w-20 cursor-pointer items-center justify-center hover:bg-zinc-100">
+        <Avatar className="bg-primary" icon={<UserOutlined />} />
+      </div>
+    </Popover>
   )
 }
 

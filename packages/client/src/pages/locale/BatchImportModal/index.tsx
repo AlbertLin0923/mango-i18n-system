@@ -13,8 +13,6 @@ import { getFileExtName } from '@mango-kit/utils'
 import { exportExcel } from '@/utils/exportExcel'
 import * as API from '@/services/locale'
 
-import styles from './index.module.scss'
-
 import type { ColumnsType } from 'antd/es/table'
 import type { UploadProps, RcFile } from 'antd/es/upload'
 
@@ -46,6 +44,23 @@ export type StatColumnType = {
   modifyNumber: number
   deleteNumber: number
   sameNumber: number
+}
+
+const StepView: FC<{
+  icon: ReactNode
+  title: string
+  content: ReactNode
+}> = ({ icon, title, content }) => {
+  return (
+    <div className="relative mb-4 flex items-start">
+      <div className="absolute left-3 top-3 h-full w-[1px] bg-zinc-300" />
+      <div className="mr-8 flex flex-none items-center break-words">
+        <div className="z-10 mr-1 bg-white text-2xl">{icon}</div>
+        <span>{title}</span>
+      </div>
+      <div className="flex-auto">{content}</div>
+    </div>
+  )
 }
 
 const BatchImportModal: FC<BatchImportModalProps> = ({
@@ -207,62 +222,48 @@ const BatchImportModal: FC<BatchImportModalProps> = ({
 
   const renderDownloadStepView = () => {
     return (
-      <div className={styles['step-content']}>
-        <div className={styles['step-line']} />
-        <div className={styles['step-label']}>
+      <StepView
+        content={
+          <div className="w-full">
+            <Button
+              className="pl-0 underline"
+              type="link"
+              onClick={downloadTemplate}
+            >
+              翻译.xlsx
+            </Button>
+            <div className="mt-4">
+              <p>{t('导入规则')} :</p>
+              <p>1. {t('文件支持xls/xlsx/json格式')}</p>
+              <p>2. {t('需按模板上传文件，字段类型需符合规范')}</p>
+              <p>
+                3.
+                {t(
+                  '字段的 modules 属性需要单个进行配置,批量上传默认不支持该属性变更',
+                )}
+              </p>
+            </div>
+          </div>
+        }
+        icon={
           <DownloadOutlined
-            className={cx('step-icon', {
-              none: uploadConfig.downloadExcelStatus === 'none',
-              success: uploadConfig.downloadExcelStatus === 'success',
-              fail: uploadConfig.downloadExcelStatus === 'fail',
+            className={cx({
+              'text-primary': uploadConfig.downloadExcelStatus === 'none',
+              'text-green-500': uploadConfig.downloadExcelStatus === 'success',
+              'text-red-500': uploadConfig.downloadExcelStatus === 'fail',
             })}
           />
-          <span>{t('下载模板')}</span>
-        </div>
-        <div className={styles['step-value']}>
-          <p className={styles['download-link']} onClick={downloadTemplate}>
-            翻译.xlsx
-          </p>
-          <div className={styles['tips']}>
-            <p>{t('导入规则')} :</p>
-            <p>1. {t('文件支持xls/xlsx/json格式')}</p>
-            <p>2. {t('需按模板上传文件，字段类型需符合规范')}</p>
-            <p>
-              3.{' '}
-              {t(
-                '字段的 modules 属性需要单个进行配置,批量上传默认不支持该属性变更',
-              )}
-            </p>
-          </div>
-        </div>
-      </div>
+        }
+        title={t('下载模板')}
+      />
     )
   }
 
   const renderLoadStepView = () => {
     return (
-      <div className={styles['step-content']}>
-        <div className={styles['step-line']} />
-        <div className={styles['step-label']}>
-          <FileAddOutlined
-            className={cx('step-icon', {
-              none: uploadConfig.loadExcelStatus === 'none',
-              success: uploadConfig.loadExcelStatus === 'success',
-              fail: uploadConfig.loadExcelStatus === 'fail',
-            })}
-          />
-          <span>
-            {t(
-              {
-                none: '加载文件',
-                success: '加载文件成功',
-                fail: '加载文件失败',
-              }[uploadConfig.loadExcelStatus],
-            )}
-          </span>
-        </div>
-        <div className={styles['step-value']}>
-          <div className={styles['upload-box']}>
+      <StepView
+        content={
+          <div className="w-full">
             <Dragger {...uploadProps}>
               <p className="ant-upload-drag-icon">
                 <CloudUploadOutlined />
@@ -272,194 +273,202 @@ const BatchImportModal: FC<BatchImportModalProps> = ({
               </p>
             </Dragger>
           </div>
-        </div>
-      </div>
+        }
+        icon={
+          <FileAddOutlined
+            className={cx({
+              'text-primary': uploadConfig.loadExcelStatus === 'none',
+              'text-green-500': uploadConfig.loadExcelStatus === 'success',
+              'text-red-500': uploadConfig.loadExcelStatus === 'fail',
+            })}
+          />
+        }
+        title={t(
+          {
+            none: '加载文件',
+            success: '加载文件成功',
+            fail: '加载文件失败',
+          }[uploadConfig.loadExcelStatus],
+        )}
+      />
     )
   }
 
   const renderAnalyzeStepView = () => {
     return (
-      <div className={styles['step-content']}>
-        <div className={styles['step-line']} />
-        <div className={styles['step-label']}>
-          <ContainerOutlined
-            className={cx('step-icon', {
-              none: uploadConfig.analyzeExcelStatus === 'none',
-              success: uploadConfig.analyzeExcelStatus === 'success',
-              fail: uploadConfig.analyzeExcelStatus === 'fail',
-            })}
-          />
-          <span className={styles['text']}>
-            {t(
-              {
-                none: '分析文件',
-                success: '分析文件成功',
-                fail: '分析文件失败',
-              }[uploadConfig.analyzeExcelStatus],
-            )}
-          </span>
-        </div>
-        <div className={styles['step-value']}>
-          {uploadConfig.analyzeExcelStatus !== 'none' ? (
-            uploadConfig.analyzeExcelStatus === 'success' ? (
-              <div>
-                {uploadConfig?.analyzeExcelStubStat?.length > 0 ? (
-                  <div style={{ margin: '10px 0px' }}>
-                    <Alert
-                      message={
-                        <div className={styles['alert-wrapper']}>
-                          <div className={styles['alert-content']}>
-                            注意:
-                            系统检测到部分词条中含有占位符，翻译时，无须翻译占位符内容，保持原样即可
-                          </div>
-                          <div className={styles['alert-content']}>
-                            例如: 中文词条:{' '}
-                            <span
-                              style={{
-                                padding: '5px 10px',
-                                border: '1px solid #fff',
-                                backgroundColor: '#108ee9',
-                                color: '#fff',
-                                marginRight: '5px',
-                                borderRadius: '5px',
-                              }}
-                            >
-                              你好，{'{{name}}'}
-                            </span>
-                            只需翻译为 :
-                            <span
-                              style={{
-                                padding: '5px 10px',
-                                border: '1px solid #fff',
-                                backgroundColor: '#108ee9',
-                                color: '#fff',
-                                marginRight: '5px',
-                                borderRadius: '5px',
-                              }}
-                            >
-                              Hello,{'{{name}}'}
-                            </span>
-                          </div>
-                          <div className={styles['alert-content']}>
-                            <span
-                              style={{
-                                padding: '5px 10px',
-                                border: '1px solid #fff',
-                                backgroundColor: '#ff4d4f',
-                                color: '#fff',
-                                marginRight: '5px',
-                                borderRadius: '5px',
-                              }}
-                            >
-                              以下词条可能翻译有误，请检查修改后再提交 ：
-                            </span>
-                          </div>
-                          <div className={cx('error-locale-box')}>
-                            {uploadConfig?.analyzeExcelStubStat.map((i) => (
+      <StepView
+        content={
+          <div>
+            {uploadConfig.analyzeExcelStatus !== 'none' ? (
+              uploadConfig.analyzeExcelStatus === 'success' ? (
+                <div>
+                  {uploadConfig?.analyzeExcelStubStat?.length > 0 ? (
+                    <div className="my-2">
+                      <Alert
+                        message={
+                          <div className="px-6 py-3">
+                            <div className="h-10 leading-loose">
+                              注意:
+                              系统检测到部分词条中含有占位符，翻译时，无须翻译占位符内容，保持原样即可
+                            </div>
+                            <div className="h-10 leading-loose">
+                              例如: 中文词条:{' '}
                               <span
-                                key={i.key}
                                 style={{
                                   padding: '5px 10px',
                                   border: '1px solid #fff',
-                                  backgroundColor: '#5ed534',
+                                  backgroundColor: '#108ee9',
                                   color: '#fff',
-                                  margin: '2px 5px 2px 0',
-                                  borderRadius: '6px',
-                                  lineHeight: 2,
+                                  marginRight: '5px',
+                                  borderRadius: '5px',
                                 }}
                               >
-                                {i.key}
+                                你好，{'{{name}}'}
                               </span>
-                            ))}
+                              只需翻译为 :
+                              <span
+                                style={{
+                                  padding: '5px 10px',
+                                  border: '1px solid #fff',
+                                  backgroundColor: '#108ee9',
+                                  color: '#fff',
+                                  marginRight: '5px',
+                                  borderRadius: '5px',
+                                }}
+                              >
+                                Hello,{'{{name}}'}
+                              </span>
+                            </div>
+                            <div className="h-10 leading-loose">
+                              <span
+                                style={{
+                                  padding: '5px 10px',
+                                  border: '1px solid #fff',
+                                  backgroundColor: '#ff4d4f',
+                                  color: '#fff',
+                                  marginRight: '5px',
+                                  borderRadius: '5px',
+                                }}
+                              >
+                                以下词条可能翻译有误，请检查修改后再提交 ：
+                              </span>
+                            </div>
+                            <div className="flex flex-wrap items-center">
+                              {uploadConfig?.analyzeExcelStubStat.map((i) => (
+                                <span
+                                  key={i.key}
+                                  style={{
+                                    padding: '5px 10px',
+                                    border: '1px solid #fff',
+                                    backgroundColor: '#5ed534',
+                                    color: '#fff',
+                                    margin: '2px 5px 2px 0',
+                                    borderRadius: '6px',
+                                    lineHeight: 2,
+                                  }}
+                                >
+                                  {i.key}
+                                </span>
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      }
-                      type="error"
-                      showIcon
-                    />
-                  </div>
-                ) : null}
-                <Table
-                  columns={columns}
-                  dataSource={uploadConfig.analyzeExcelStat}
-                  pagination={false}
-                  rowKey={(record) => record['locale']}
-                  bordered
-                />
-              </div>
-            ) : uploadConfig.analyzeExcelStatus === 'fail' ? (
-              <div className={styles['step-value']}>
-                <div className={cx('step-value-text', 'fail')}>
+                        }
+                        type="error"
+                        showIcon
+                      />
+                    </div>
+                  ) : null}
+                  <Table
+                    columns={columns}
+                    dataSource={uploadConfig.analyzeExcelStat}
+                    pagination={false}
+                    rowKey={(record) => record['locale']}
+                    bordered
+                  />
+                </div>
+              ) : uploadConfig.analyzeExcelStatus === 'fail' ? (
+                <div className="text-lg text-red-500">
                   {uploadConfig.errorMsg}
                 </div>
-              </div>
-            ) : null
-          ) : (
-            <Table
-              columns={columns}
-              dataSource={[]}
-              pagination={false}
-              rowKey={(record) => record['locale']}
-              bordered
-            />
-          )}
-        </div>
-      </div>
+              ) : null
+            ) : (
+              <Table
+                columns={columns}
+                dataSource={[]}
+                pagination={false}
+                rowKey={(record) => record['locale']}
+                bordered
+              />
+            )}
+          </div>
+        }
+        icon={
+          <ContainerOutlined
+            className={cx({
+              'text-primary': uploadConfig.analyzeExcelStatus === 'none',
+              'text-green-500': uploadConfig.analyzeExcelStatus === 'success',
+              'text-red-500': uploadConfig.analyzeExcelStatus === 'fail',
+            })}
+          />
+        }
+        title={t(
+          {
+            none: '分析文件',
+            success: '分析文件成功',
+            fail: '分析文件失败',
+          }[uploadConfig.analyzeExcelStatus],
+        )}
+      />
     )
   }
 
   const renderUploadStepView = () => {
     return (
-      <div className={styles['step-content']}>
-        <div className={styles['step-line']} />
-        <div className={styles['step-label']}>
-          <CloudUploadOutlined
-            className={cx('step-icon', {
-              none: uploadConfig.uploadExcelStatus === 'none',
-              success: uploadConfig.uploadExcelStatus === 'success',
-              fail: uploadConfig.uploadExcelStatus === 'fail',
-            })}
-          />
-          <span className={styles['text']}>
-            {t(
-              {
-                none: '上传文件',
-                success: '上传文件成功',
-                fail: '上传文件失败',
-              }[uploadConfig.uploadExcelStatus],
-            )}
-          </span>
-        </div>
-        <div className={styles['step-value']}>
-          {uploadConfig.uploadExcelStatus !== 'none' ? (
-            uploadConfig.uploadExcelStatus === 'success' ? (
-              <div className={styles['step-value']}>
-                <div className={cx('step-value-text', 'success')}>
+      <StepView
+        content={
+          <div>
+            {uploadConfig.uploadExcelStatus !== 'none' ? (
+              uploadConfig.uploadExcelStatus === 'success' ? (
+                <div className="text-lg text-green-500">
                   {t('上传文件成功')}
                 </div>
-              </div>
-            ) : uploadConfig.uploadExcelStatus === 'fail' ? (
-              <div className={styles['step-value']}>
-                <div className={cx('step-value-text', 'fail')}>
+              ) : uploadConfig.uploadExcelStatus === 'fail' ? (
+                <div className="text-lg text-red-500">
                   {uploadConfig.errorMsg}
                 </div>
+              ) : null
+            ) : (
+              <div className="mb-4 flex w-full items-center justify-end">
+                <Button
+                  disabled={!(uploadConfig.analyzeExcelStatus === 'success')}
+                  icon={<CloudUploadOutlined />}
+                  type="primary"
+                  block
+                  onClick={handleSubmit}
+                >
+                  {t('确认上传')}
+                </Button>
               </div>
-            ) : null
-          ) : (
-            <div className={styles['upload-submit']}>
-              <Button
-                disabled={!(uploadConfig.analyzeExcelStatus === 'success')}
-                icon={<CloudUploadOutlined />}
-                style={{ width: '100%' }}
-                type="primary"
-                onClick={handleSubmit}
-              >
-                {t('确认上传')}
-              </Button>
-            </div>
-          )}
-        </div>
-      </div>
+            )}
+          </div>
+        }
+        icon={
+          <CloudUploadOutlined
+            className={cx({
+              'text-primary': uploadConfig.uploadExcelStatus === 'none',
+              'text-green-500': uploadConfig.uploadExcelStatus === 'success',
+              'text-red-500': uploadConfig.uploadExcelStatus === 'fail',
+            })}
+          />
+        }
+        title={t(
+          {
+            none: '上传文件',
+            success: '上传文件成功',
+            fail: '上传文件失败',
+          }[uploadConfig.uploadExcelStatus],
+        )}
+      />
     )
   }
 
@@ -487,7 +496,7 @@ const BatchImportModal: FC<BatchImportModalProps> = ({
       }}
     >
       <Spin spinning={uploadConfig.loading}>
-        <div className={styles['step-content-wrapper']}>
+        <div>
           {renderDownloadStepView()}
           {renderLoadStepView()}
           {renderAnalyzeStepView()}

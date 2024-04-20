@@ -5,9 +5,8 @@ import { useTranslation } from 'react-i18next'
 import SelectLang from '@/components/SelectLang'
 import { useAppStore } from '@/store'
 
-import './index.module.scss'
-
 import Helmet from '../components/Helmet'
+import Footer from '../components/Footer'
 
 const User: FC = () => {
   const { t } = useTranslation()
@@ -16,34 +15,33 @@ const User: FC = () => {
   return (
     <>
       <Helmet />
-      <div className="layout-container">
-        <div className="layout-header">
-          <div className="logo-wrapper">
+      <div className="flex h-screen w-screen flex-col overflow-hidden bg-[#f8fafd]">
+        <div className="flex h-16 w-screen items-center justify-between border border-solid border-zinc-200 bg-white px-12 py-0">
+          <div className="flex cursor-pointer items-center">
             {systemTitle ? (
               systemTitle
             ) : (
-              <SvgIcon className="logo" iconClass="logo" />
+              <SvgIcon
+                className="mr-4 block h-[30px] w-[200px]"
+                iconClass="logo"
+              />
             )}
           </div>
-          <div className="select-lang-wrapper">
+          <div>
             <SelectLang />
           </div>
         </div>
 
-        <div className="layout-wrapper">
-          <div className="layout-content">
-            <h2 className="title">
+        <div className="flex h-full w-full items-center justify-center">
+          <div className="flex h-[400px] w-[400px] flex-col items-center">
+            <h2 className="text-2xl font-bold">
               {systemTitle ? t(systemTitle) : t('自动国际化文案配置系统')}
             </h2>
             <Outlet />
           </div>
         </div>
 
-        <div className="layout-footer">
-          <div className="copyright-info">
-            Open-source MIT Licensed | Copyright © 2022-present AlbertLin
-          </div>
-        </div>
+        <Footer />
       </div>
     </>
   )

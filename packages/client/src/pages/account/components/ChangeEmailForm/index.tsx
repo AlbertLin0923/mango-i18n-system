@@ -4,8 +4,6 @@ import { Form, Input } from 'antd'
 
 import { MangoRegExp } from '@/utils'
 
-import './index.module.scss'
-
 export type ChangeEmailFormProps = {
   email: string
 }
@@ -31,44 +29,42 @@ const ChangeEmailForm = forwardRef<ChangeEmailFormHandle, ChangeEmailFormProps>(
     }))
 
     return (
-      <div className="form-container">
-        <Form form={form}>
-          <Form.Item
-            initialValue={email}
-            label={t('邮箱')}
-            name="email"
-            normalize={(value: any) => {
-              return value.trim()
-            }}
-            rules={[
-              {
-                required: true,
-                message: t('请输入邮箱'),
-              },
-              () => ({
-                validator(_, value) {
-                  if (!value) {
-                    return Promise.resolve()
-                  }
+      <Form form={form}>
+        <Form.Item
+          initialValue={email}
+          label={t('邮箱')}
+          name="email"
+          normalize={(value: any) => {
+            return value.trim()
+          }}
+          rules={[
+            {
+              required: true,
+              message: t('请输入邮箱'),
+            },
+            () => ({
+              validator(_, value) {
+                if (!value) {
+                  return Promise.resolve()
+                }
 
-                  if (!MangoRegExp.isEmail(value)) {
-                    return Promise.reject(new Error(t('请输入正确的邮箱')))
-                  } else {
-                    return Promise.resolve()
-                  }
-                },
-              }),
-            ]}
-          >
-            <Input
-              maxLength={50}
-              placeholder={t('请输入邮箱')}
-              allowClear
-              showCount
-            />
-          </Form.Item>
-        </Form>
-      </div>
+                if (!MangoRegExp.isEmail(value)) {
+                  return Promise.reject(new Error(t('请输入正确的邮箱')))
+                } else {
+                  return Promise.resolve()
+                }
+              },
+            }),
+          ]}
+        >
+          <Input
+            maxLength={50}
+            placeholder={t('请输入邮箱')}
+            allowClear
+            showCount
+          />
+        </Form.Item>
+      </Form>
     )
   },
 )

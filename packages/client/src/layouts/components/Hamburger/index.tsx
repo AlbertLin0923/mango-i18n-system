@@ -2,14 +2,12 @@ import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons'
 
 import { useAppStore } from '@/store'
 
-import './index.module.scss'
-
 const Hamburger: FC = () => {
   const { siderCollapsed, changeSiderCollapsed } = useAppStore()
 
   return (
     <div
-      className="hamburger-container"
+      className="cursor-pointer text-lg text-zinc-700 transition-all "
       onClick={() => {
         changeSiderCollapsed(!siderCollapsed)
       }}

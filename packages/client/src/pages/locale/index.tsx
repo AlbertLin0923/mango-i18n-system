@@ -32,7 +32,6 @@ import BatchExportModal from './BatchExportModal/index'
 import DownloadLocaleModal from './DownloadLocaleModal/index'
 import AnalysisModal from './AnalysisModal/index'
 import useDict from './useDict'
-import './index.module.scss'
 
 import type { SearchOptionsType } from './SearchForm/SearchForm'
 import type { ColumnsType } from 'antd/es/table'
@@ -395,9 +394,9 @@ const Page: FC = () => {
           ) : null}
         </Igroup>
 
-        <div className="table-container">
+        <div className="w-full flex-auto rounded-md bg-white p-4">
           <Table
-            className="table"
+            className="w-full"
             columns={columns}
             dataSource={filterTableData}
             loading={tableLoading}

@@ -4,48 +4,55 @@ import { useNavigate } from 'react-router-dom'
 import { Form, Input, Button, App } from 'antd'
 import { MangoFormPassword } from '@mango-kit/components'
 import md5 from 'md5'
+import { useRequest } from 'ahooks'
 
 import { useUserStore } from '@/store'
 import { getRedirect, MangoRegExp } from '@/utils'
 
-import '../index.module.scss'
 import FormMessage from '../components/FormMessage'
 
 const Register: FC = () => {
   const { register } = useUserStore()
-
   const { t } = useTranslation()
   const [form] = Form.useForm()
   const { message } = App.useApp()
   const navigate = useNavigate()
   const [formMessage, setFormMessage] = useState<string>('')
-  const [loading, setLoading] = useState<boolean>(false)
+
+  const { loading, run } = useRequest(
+    async ({ username, password, email, invitationCode }) =>
+      await register({
+        username,
+        password: md5(password),
+        email,
+        invitationCode,
+      }),
+    {
+      manual: true,
+      onBefore: () => {
+        setFormMessage('')
+      },
+      onSuccess: ({ success, msg }) => {
+        if (success) {
+          message.success(msg)
+          navigate(getRedirect() || '/locale', { replace: true })
+        } else {
+          setFormMessage(msg)
+        }
+      },
+    },
+  )
 
   const handleSubmit = async () => {
-    const { username, password, email, invitationCode } =
-      form.getFieldsValue(true)
-
-    setFormMessage('')
-    setLoading(true)
-    const { success, msg } = await register({
-      username,
-      password: md5(password),
-      email,
-      invitationCode,
-    })
-    setLoading(false)
-    if (success) {
-      message.success(msg)
-      navigate(getRedirect() || '/locale', { replace: true })
-    } else {
-      setFormMessage(msg)
-    }
+    run(form.getFieldsValue(true))
   }
 
   return (
-    <div className="page-container">
-      <h3 className="form-title">{t('注册')}</h3>
-      <div className="form-container">
+    <div className="w-full">
+      <h3 className="my-6 text-center text-xl font-medium text-zinc-800">
+        {t('注册')}
+      </h3>
+      <div>
         {formMessage && !loading && <FormMessage content={formMessage} />}
 
         <Form
@@ -115,20 +122,15 @@ const Register: FC = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button
-              className="control-btn"
-              htmlType="submit"
-              loading={loading}
-              type="primary"
-              block
-            >
+            <Button htmlType="submit" loading={loading} type="primary" block>
               {t('注册')}
             </Button>
           </Form.Item>
 
           <Form.Item>
-            <div className="form-item-other">
+            <div className="flex w-full items-center justify-center">
               <Button
+                size="small"
                 type="link"
                 onClick={() => {
                   navigate('/user/login')

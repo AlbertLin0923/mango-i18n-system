@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import {
   Form,
   Space,
@@ -14,11 +13,16 @@ import {
 } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { InfoCircleOutlined } from '@ant-design/icons'
-import { useMount } from 'ahooks'
+import { useRequest } from 'ahooks'
 
 import * as API from '@/services/system'
 
-import './index.module.scss'
+type SearchOptionsType = {
+  filterExtNameMap: { label: string; value: string }[]
+  extractorMap: { label: string; value: string }[]
+  resolveDirPathMap: { label: string; value: string }[]
+  localeDictMap: { label: string; value: string }[]
+}
 
 type RepositoryFormSettingType = {
   gitRepositoryUrl: string
@@ -35,76 +39,58 @@ type ExtractorFormSettingType = {
   extractor: string
 }
 
-export type SearchOptionsType = {
-  already: boolean
-  data: {
-    filterExtNameMap: { label: string; value: string }[]
-    extractorMap: { label: string; value: string }[]
-    resolveDirPathMap: { label: string; value: string }[]
-    localeDictMap: { label: string; value: string }[]
+const renderMessage = (str: string) => {
+  if (!str.includes('获取仓库最近一次提交记录')) {
+    return str
   }
+  return str.split('\n').map((it) => <p key={it}>{it}</p>)
 }
 
 const Page: FC = () => {
   const { t } = useTranslation()
   const [repositoryForm] = Form.useForm()
   const [extractorForm] = Form.useForm()
-
   const { message } = App.useApp()
 
-  const [pageLoading, setPageLoading] = useState(false)
-
-  const [extractorFormDisable, setExtractorFormDisable] = useState(true)
-
-  const [searchOptions, setSearchOptions] = useState<SearchOptionsType>({
-    already: false,
+  const {
     data: {
-      filterExtNameMap: [],
-      extractorMap: [],
-      resolveDirPathMap: [],
-      localeDictMap: [],
+      searchOptions = {
+        filterExtNameMap: [],
+        extractorMap: [],
+        resolveDirPathMap: [],
+        localeDictMap: [],
+      },
+      repositoryActionMessages = [],
+    } = {},
+    loading: getSearchOptionsLoading,
+    run: getSearchOptions,
+  } = useRequest<
+    {
+      searchOptions: SearchOptionsType
+      repositoryActionMessages: string[]
     },
-  })
+    any
+  >(
+    async () =>
+      await API.getSearchOptions().then((res) => {
+        return {
+          searchOptions: res?.data?.searchOptions,
+          repositoryActionMessages: res?.data?.message ?? [],
+        }
+      }),
+  )
 
-  const [repositoryActionMessages, setRepositoryActionMessages] = useState<
-    string[]
-  >([])
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [repositoryFormSetting, setRepositoryFormSetting] =
-    useState<RepositoryFormSettingType>({
-      gitRepositoryUrl: '',
-      gitAccessUserName: '',
-      gitAccessToken: '',
-      resolveGitBranchName: '',
-      projectDirName: '',
-    })
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [extractorFormSetting, setExtractorFormSetting] =
-    useState<ExtractorFormSettingType>({
-      filterExtNameList: [],
-      localeDict: [],
-      extractor: '',
-      resolveDirPathList: [],
-    })
-
-  const getSearchOptions = async () => {
-    const { data } = await API.getSearchOptions()
-    if (data) {
-      setSearchOptions(() => ({
-        data: data?.searchOptions,
-        already: true,
-      }))
-      setRepositoryActionMessages(() => [...(data?.message ?? [])])
-    }
-  }
-
-  const getSetting = async () => {
-    const { data, success } = await API.getSetting()
-    if (success) {
-      const {
-        setting: {
+  const { loading: getSettingLoading } = useRequest<
+    RepositoryFormSettingType & ExtractorFormSettingType,
+    any
+  >(
+    async () =>
+      await API.getSetting().then((res) => {
+        return res?.data?.setting
+      }),
+    {
+      onSuccess: (data) => {
+        const {
           gitRepositoryUrl,
           gitAccessUserName,
           gitAccessToken,
@@ -114,101 +100,44 @@ const Page: FC = () => {
           localeDict,
           extractor,
           resolveDirPathList,
-        },
-      } = data
-
-      const _repositoryFormSetting = {
-        gitRepositoryUrl,
-        gitAccessUserName,
-        gitAccessToken,
-        resolveGitBranchName,
-        projectDirName,
-      }
-
-      const _extractorFormSetting = {
-        filterExtNameList,
-        localeDict,
-        extractor,
-        resolveDirPathList,
-      }
-
-      setRepositoryFormSetting(() => _repositoryFormSetting)
-      repositoryForm.setFieldsValue(_repositoryFormSetting)
-
-      setExtractorFormSetting(() => _extractorFormSetting)
-      extractorForm.setFieldsValue(_extractorFormSetting)
-
-      // 如果代码仓库配置已经完善,则放开项目解析配置
-      if (
-        Object.values(_repositoryFormSetting).every((i) => {
-          if (i) {
-            return true
-          } else {
-            return false
-          }
+        } = data
+        repositoryForm.setFieldsValue({
+          gitRepositoryUrl,
+          gitAccessUserName,
+          gitAccessToken,
+          resolveGitBranchName,
+          projectDirName,
         })
-      ) {
-        setExtractorFormDisable(false)
-      }
-    }
-  }
+        extractorForm.setFieldsValue({
+          filterExtNameList,
+          localeDict,
+          extractor,
+          resolveDirPathList,
+        })
+      },
+    },
+  )
 
-  useMount(async () => {
-    setPageLoading(true)
-    await getSearchOptions()
-    await getSetting()
-    setPageLoading(false)
+  const { loading: editLoading, run } = useRequest<
+    any,
+    [RepositoryFormSettingType | ExtractorFormSettingType]
+  >(async (v) => await API.updateSetting({ setting: v }), {
+    manual: true,
+    onSuccess: async ({ success }) => {
+      if (success) {
+        message.success(t('设置成功'))
+        await getSearchOptions()
+      }
+    },
   })
-
-  const handleRepositoryFormFinish = async (
-    values: RepositoryFormSettingType,
-  ) => {
-    setPageLoading(true)
-    const { success, data } = await API.updateSetting({
-      setting: values,
-    })
-    setPageLoading(false)
-    if (success) {
-      if (data?.message?.length > 0) {
-        message.success(data?.message.join(','))
-        setRepositoryActionMessages(() => [...data.message])
-      }
-      message.success(t('代码仓库配置设置成功'))
-      await getSearchOptions()
-      setExtractorFormDisable(false)
-    }
-  }
-
-  const handleExtractorFormFinish = async (
-    values: ExtractorFormSettingType,
-  ) => {
-    setPageLoading(true)
-    const { success, data } = await API.updateSetting({
-      setting: values,
-    })
-    setPageLoading(false)
-    if (success) {
-      if (data?.message?.length > 0) {
-        message.success(data?.message.join(','))
-      }
-      message.success(t('项目解析配置设置成功'))
-    }
-  }
-
-  const renderMessage = (str: string) => {
-    if (str.includes('获取仓库最近一次提交记录')) {
-      return str.split('\n').map((it, index) => {
-        return <p key={it}>{it}</p>
-      })
-    } else {
-      return str
-    }
-  }
 
   return (
     <div className="page-container">
-      <Spin spinning={pageLoading} tip="正在加载配置，请稍候。。。">
-        <Card className="card">
+      <Spin
+        spinning={getSearchOptionsLoading || getSettingLoading}
+        tip="正在加载配置，请稍候。。。"
+      >
+        <Card className="mb-6">
           <Collapse
             defaultActiveKey={['1']}
             items={[
@@ -229,10 +158,10 @@ const Page: FC = () => {
         </Card>
 
         <Card
-          className="card"
+          className="mb-6"
           title={
-            <div className="card-title">
-              <span className="card-title-text">{t('代码仓库配置')}</span>
+            <div className="flex items-center">
+              <span className="mr-2">{t('代码仓库配置')}</span>
               <Tooltip title="修改该配置任一个子项都会重新下载仓库仓库">
                 <InfoCircleOutlined style={{ color: '#1890ff' }} />
               </Tooltip>
@@ -243,7 +172,7 @@ const Page: FC = () => {
             form={repositoryForm}
             labelAlign="left"
             name="repositorySettingForm"
-            onFinish={handleRepositoryFormFinish}
+            onFinish={(v: RepositoryFormSettingType) => run(v)}
           >
             <Form.Item
               label="git仓库地址"
@@ -340,7 +269,7 @@ const Page: FC = () => {
                 >
                   重置
                 </Button>
-                <Button htmlType="submit" type="primary">
+                <Button htmlType="submit" loading={editLoading} type="primary">
                   确定
                 </Button>
               </Space>
@@ -348,12 +277,12 @@ const Page: FC = () => {
           </Form>
         </Card>
 
-        <Card className="card" title="项目解析配置">
+        <Card className="mb-6" title="项目解析配置">
           <Form
             form={extractorForm}
             labelAlign="left"
             name="extractorForm"
-            onFinish={handleExtractorFormFinish}
+            onFinish={(v: ExtractorFormSettingType) => run(v)}
           >
             <Form.Item
               label="解析的文件后缀名"
@@ -361,7 +290,6 @@ const Page: FC = () => {
               rules={[{ required: true }]}
             >
               <Select
-                disabled={extractorFormDisable}
                 filterOption={(input, option) =>
                   String(option?.children)
                     .toLowerCase()
@@ -372,7 +300,7 @@ const Page: FC = () => {
                 allowClear
                 showSearch
               >
-                {searchOptions?.data?.filterExtNameMap.map((i: any) => (
+                {searchOptions?.filterExtNameMap?.map((i: any) => (
                   <Select.Option key={i.value} value={i.value}>
                     {i.label}
                   </Select.Option>
@@ -386,7 +314,6 @@ const Page: FC = () => {
               rules={[{ required: true }]}
             >
               <Select
-                disabled={extractorFormDisable}
                 filterOption={(input, option) =>
                   String(option?.children)
                     .toLowerCase()
@@ -397,7 +324,7 @@ const Page: FC = () => {
                 allowClear
                 showSearch
               >
-                {searchOptions?.data?.localeDictMap.map((i) => (
+                {searchOptions?.localeDictMap?.map((i) => (
                   <Select.Option key={i.value} value={i.value}>
                     {i.label}
                   </Select.Option>
@@ -411,7 +338,6 @@ const Page: FC = () => {
               rules={[{ required: true }]}
             >
               <Select
-                disabled={extractorFormDisable}
                 filterOption={(input, option) =>
                   String(option?.children)
                     .toLowerCase()
@@ -421,7 +347,7 @@ const Page: FC = () => {
                 allowClear
                 showSearch
               >
-                {searchOptions?.data?.extractorMap.map((i) => (
+                {searchOptions?.extractorMap?.map((i) => (
                   <Select.Option key={i.value} value={i.value}>
                     {i.label}
                   </Select.Option>
@@ -435,7 +361,6 @@ const Page: FC = () => {
               rules={[{ required: true }]}
             >
               <Select
-                disabled={extractorFormDisable}
                 filterOption={(input, option) =>
                   String(option?.children)
                     .toLowerCase()
@@ -446,7 +371,7 @@ const Page: FC = () => {
                 allowClear
                 showSearch
               >
-                {searchOptions?.data?.resolveDirPathMap.map((i) => (
+                {searchOptions?.resolveDirPathMap?.map((i) => (
                   <Select.Option key={i.value} value={i.value}>
                     {i.label}
                   </Select.Option>
@@ -457,7 +382,6 @@ const Page: FC = () => {
             <Form.Item style={{ textAlign: 'right' }}>
               <Space>
                 <Button
-                  disabled={extractorFormDisable}
                   htmlType="button"
                   onClick={() => {
                     extractorForm.resetFields()
@@ -465,11 +389,7 @@ const Page: FC = () => {
                 >
                   重置
                 </Button>
-                <Button
-                  disabled={extractorFormDisable}
-                  htmlType="submit"
-                  type="primary"
-                >
+                <Button htmlType="submit" loading={editLoading} type="primary">
                   确定
                 </Button>
               </Space>

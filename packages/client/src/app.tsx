@@ -34,7 +34,7 @@ let modal: Omit<ModalStaticFunctions, 'warn'>
 
 const App: FC = () => {
   const {
-    userInfo: { userAllowedAuthList, role },
+    userInfo: { authList, role },
   } = useUserStore()
   const { language, getPublicSetting } = useAppStore()
 
@@ -71,8 +71,8 @@ const App: FC = () => {
   }, [language])
 
   const accessedRouteConfig = useMemo(() => {
-    return filterAccessedRoute(userAllowedAuthList, role)
-  }, [userAllowedAuthList, role])
+    return filterAccessedRoute(authList, role)
+  }, [authList, role])
 
   useAsyncEffect(async () => {
     await browserSupportDetecter()

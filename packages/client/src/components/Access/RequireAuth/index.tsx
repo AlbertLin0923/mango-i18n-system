@@ -9,7 +9,7 @@ const RequireAuth: FC<
     redirect?: string
   }>
 > = ({ auth, role, redirect, children }) => {
-  const { userAllowedAuthList = [], role: userRole } = useUserStore(
+  const { authList = [], role: userRole } = useUserStore(
     (state) => state.userInfo,
   )
   const { pathname } = useLocation()
@@ -19,7 +19,7 @@ const RequireAuth: FC<
   }
 
   const hasPermission =
-    (!auth || userAllowedAuthList.includes(Number(auth))) &&
+    (!auth || authList.includes(Number(auth))) &&
     (!role || role.includes(userRole))
 
   if (!hasPermission) {

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { Spin } from 'antd'
 import { useMount } from 'ahooks'
 
+import PageLoading from '@/components/PageLoading'
 import { useUserStore } from '@/store'
 
 const RequireLogin: FC<PropsWithChildren> = () => {
@@ -16,9 +16,9 @@ const RequireLogin: FC<PropsWithChildren> = () => {
 
   const [isReady, setIsReady] = useState<boolean>(false)
 
-  useMount(() => {
+  useMount(async () => {
+    accessToken && (await getUserInfo())
     setIsReady(true)
-    accessToken && getUserInfo()
   })
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const RequireLogin: FC<PropsWithChildren> = () => {
   }, [pathname])
 
   if (!isReady) {
-    return <Spin spinning={true} />
+    return <PageLoading spinning={true} />
   }
 
   return <Outlet />

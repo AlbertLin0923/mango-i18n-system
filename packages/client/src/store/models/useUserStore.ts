@@ -11,6 +11,7 @@ import type {
   UpdateMyUserInfoParamsType,
   UpdateMyPasswordParamsType,
 } from '@/services/user'
+
 type TokenPair = {
   accessToken: string
   refreshToken: string
@@ -18,7 +19,7 @@ type TokenPair = {
 
 type UserInfo = {
   role: string
-  userAllowedAuthList: (string | number)[]
+  authList: (string | number)[]
   userId: string
   username: string
   email: string
@@ -56,7 +57,7 @@ const useUserStore = create<UserStore>()(
     }),
     userInfo: {
       role: '', // 用户的角色，用于权限系统
-      userAllowedAuthList: [], // 用户的具体权限列表，用于权限系统
+      authList: [], // 用户的具体权限列表，用于权限系统
       userId: '',
       username: '',
       email: '',

@@ -4,26 +4,11 @@ import { TranslationOutlined } from '@ant-design/icons'
 import { localeDict } from '@/locales'
 import { useAppStore } from '@/store'
 
-import styles from './style.module.scss'
-
 import type { MenuProps } from 'antd'
 
 const SelectLang: FC = () => {
   const { language, changeLanguage } = useAppStore()
-
   const { message } = App.useApp()
-
-  const items: MenuProps['items'] = localeDict.map((i) => ({
-    key: i.fileName,
-    label: (
-      <div className={styles['item-wrapper']}>
-        <div className={styles['icon']}>
-          <i.countryFlagIcons className={styles['country-flag-icons']} />
-        </div>
-        <div className={styles['text']}>{i.name}</div>
-      </div>
-    ),
-  }))
 
   const onClick: MenuProps['onClick'] = async ({ key }) => {
     const { success, msg } = await changeLanguage(key)
@@ -37,14 +22,26 @@ const SelectLang: FC = () => {
   if (!language) {
     return null
   }
+
   return (
     <Dropdown
-      menu={{ items, onClick }}
+      menu={{
+        items: localeDict.map((i) => ({
+          key: i.fileName,
+          label: (
+            <div className="flex items-center">
+              <i.countryFlagIcons className="mr-1 block h-4 w-6" />
+              <div className="ml-2">{i.name}</div>
+            </div>
+          ),
+        })),
+        onClick,
+      }}
       placement="bottomRight"
       trigger={['click', 'hover']}
     >
-      <div className={styles['icon-btn-wrapper']}>
-        <TranslationOutlined className={styles['select-language-icon']} />
+      <div className="text-primary flex h-16 w-20 cursor-pointer items-center justify-center text-2xl hover:bg-zinc-100">
+        <TranslationOutlined />
       </div>
     </Dropdown>
   )

@@ -86,7 +86,6 @@ const LocaleModal: React.FC<LocaleModalProps> = ({
       } else {
         delivery = { ...delivery, 'zh-CN': data['zh-CN'] }
         const result = await confirmSubmit(delivery)
-        console.log('result', result)
         if (result) {
           setSubmitLoading(true)
           updateLocale(delivery as UpdateLocaleParamsType)

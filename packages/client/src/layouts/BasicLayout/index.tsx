@@ -4,10 +4,8 @@ import { Layout, Spin } from 'antd'
 import { SvgIcon } from '@mango-kit/components'
 
 import { useUserStore, useAppStore } from '@/store'
-import PageLoading from '@/components/PageLoading'
 import { createMenu, filterAccessedRoute } from '@/router'
-
-import './index.module.scss'
+import PageLoading from '@/components/PageLoading'
 
 import SideMenu from '../components/SideMenu'
 import User from '../components/User'
@@ -21,7 +19,7 @@ const { Sider, Header, Content } = Layout
 const BasicLayout: FC = () => {
   const navigate = useNavigate()
 
-  const { userAllowedAuthList, role } = useUserStore((state) => state.userInfo)
+  const { authList, role } = useUserStore((state) => state.userInfo)
 
   const {
     siderCollapsed,
@@ -29,16 +27,16 @@ const BasicLayout: FC = () => {
   } = useAppStore()
 
   const menuConfig = useMemo(() => {
-    return createMenu(filterAccessedRoute(userAllowedAuthList, role))
-  }, [userAllowedAuthList, role])
+    return createMenu(filterAccessedRoute(authList, role))
+  }, [authList, role])
 
   return (
     <>
       <Helmet />
-      <Layout className="layout-container">
-        <Header className="layout-header">
+      <Layout className="h-screen w-screen">
+        <Header className="z-3 fixed left-0 top-0 flex h-16 w-screen items-center justify-between bg-white px-6 py-0">
           <div
-            className="logo-wrapper"
+            className="block cursor-pointer"
             onClick={() => {
               navigate('/locale')
             }}
@@ -46,19 +44,20 @@ const BasicLayout: FC = () => {
             {systemTitle ? (
               systemTitle
             ) : (
-              <SvgIcon className="logo" iconClass="logo" />
+              <SvgIcon className="block h-[30px] w-[200px]" iconClass="logo" />
             )}
           </div>
-          <div className="control-wrapper">
+          <div className="flex items-center">
             <User />
           </div>
         </Header>
-        <Layout className="layout-main">
+        <Layout className="mt-16">
           <Sider
-            className="layout-sider"
+            className="rounded-md bg-white shadow-md"
             collapsed={siderCollapsed}
+            theme="light"
             trigger={
-              <div className="sider-collapse">
+              <div className="flex h-full w-full items-center border-t border-solid border-zinc-200 bg-white px-6">
                 <Hamburger />
               </div>
             }
@@ -72,9 +71,9 @@ const BasicLayout: FC = () => {
             )}
           </Sider>
 
-          <Content className="layout-wrapper">
+          <Content className="flex h-[calc(100vh-64px)] w-full flex-col overflow-y-auto px-4 py-0">
             <Breadcrumb />
-            <div className="layout-content">
+            <div className="w-full flex-auto">
               <Suspense fallback={<PageLoading spinning />}>
                 <Outlet />
               </Suspense>

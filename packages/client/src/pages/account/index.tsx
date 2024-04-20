@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { EditOutlined, UserOutlined } from '@ant-design/icons'
-import { Button, App, Avatar, Typography, Card } from 'antd'
+import { Button, App, Avatar, Typography, Card, Row, Col } from 'antd'
 import md5 from 'md5'
 import { getLabel } from '@mango-kit/utils'
 
@@ -10,7 +10,6 @@ import { useUserStore } from '@/store'
 
 import ChangeEmailForm from './components/ChangeEmailForm'
 import ChangePasswordForm from './components/ChangePasswordForm'
-import './index.module.scss'
 
 import type { ChangeEmailFormHandle } from './components/ChangeEmailForm'
 import type { ChangePasswordFormHandle } from './components/ChangePasswordForm'
@@ -24,7 +23,6 @@ const Page: FC = () => {
     updateMyUserInfo,
     updateMyPassword,
   } = useUserStore()
-
   const { t } = useTranslation()
   const { message, modal } = App.useApp()
 
@@ -97,38 +95,39 @@ const Page: FC = () => {
   return (
     <div className="page-container">
       <Card title={t('个人信息')}>
-        <div className="user-setting">
+        <div className="flex">
           <Avatar
-            className="avatar"
+            className="mr-10 flex h-20 w-20 flex-none items-center justify-center rounded-full"
             icon={<UserOutlined className="icon" />}
             size={84}
           />
-
-          <div className="content">
-            <div className="line">
-              <div className="item">
-                <div className="label">{t('用户名：')}</div>
-                <div className="value">
+          <div className="flex-auto">
+            <Row className="h-2/4">
+              <Col className="flex items-center" span={12}>
+                <div className="font-bold">{t('用户名：')}</div>
+                <div className="flex items-center">
                   <Paragraph
-                    className="text"
+                    className="text-zinc-400"
                     ellipsis={{ rows: 1, tooltip: username }}
+                    style={{ marginBottom: 0 }}
                   >
                     {username}
                   </Paragraph>
                 </div>
-              </div>
-              <div className="item">
-                <div className="label">{t('用户角色：')}</div>
-                <div className="value">{getLabel(role, roleMap)}</div>
-              </div>
-            </div>
-            <div className="line">
-              <div className="item">
-                <div className="label">{t('邮箱：')}</div>
-                <div className="value">
+              </Col>
+              <Col className="flex items-center" span={12}>
+                <div className="font-bold">{t('用户角色：')}</div>
+                <div className="text-zinc-400">{getLabel(role, roleMap)}</div>
+              </Col>
+            </Row>
+            <Row className="h-2/4">
+              <Col className="flex items-center" span={12}>
+                <div className="font-bold">{t('邮箱：')}</div>
+                <div className="flex items-center">
                   <Paragraph
-                    className="text"
+                    className="text-zinc-400"
                     ellipsis={{ rows: 1, tooltip: email }}
+                    style={{ marginBottom: 0 }}
                   >
                     {email}
                   </Paragraph>
@@ -141,21 +140,21 @@ const Page: FC = () => {
                     {t('点击修改')}
                   </Button>
                 </div>
-              </div>
-              <div className="item">
-                <div className="label">{t('用户编号：')}</div>
-                <div className="value">{userId}</div>
-              </div>
-            </div>
+              </Col>
+              <Col className="flex items-center" span={12}>
+                <div className="font-bold">{t('用户编号：')}</div>
+                <div className="text-zinc-400">{userId}</div>
+              </Col>
+            </Row>
           </div>
         </div>
       </Card>
-      <Card className="bottom-card" title={t('安全设置')}>
-        <div className="safe-setting">
-          <div className="line">
-            <div className="item">
-              <div className="label">{t('登录密码：')}</div>
-              <div className="value">
+      <Card className="mt-6" title={t('安全设置')}>
+        <div>
+          <div className="mb-10 flex">
+            <div className="w-100 flex items-center">
+              <div className="font-bold">{t('登录密码：')}</div>
+              <div className="text-zinc-400">
                 {t(
                   '定期更换登录密码会让您的账号更加安全，设置密码必须由8-20位的字母、数字或符号组成',
                 )}
