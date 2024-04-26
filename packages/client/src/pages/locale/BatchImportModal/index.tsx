@@ -230,19 +230,18 @@ const BatchImportModal: FC<BatchImportModalProps> = ({
               type="link"
               onClick={downloadTemplate}
             >
-              翻译.xlsx
+              待翻译的文案列表.xlsx
             </Button>
-            <div className="mt-4">
-              <p>{t('导入规则')} :</p>
-              <p>1. {t('文件支持xls/xlsx/json格式')}</p>
-              <p>2. {t('需按模板上传文件，字段类型需符合规范')}</p>
-              <p>
-                3.
+            <p>{t('导入规则')} :</p>
+            <ul className="list-disc pl-4">
+              <li>{t('文件支持 xls/xlsx/json 格式')}</li>
+              <li>{t('需按模板上传文件，文案类型需符合规范')}</li>
+              <li>
                 {t(
-                  '字段的 modules 属性需要单个进行配置,批量上传默认不支持该属性变更',
+                  '文案的模块属性需要单个进行配置，批量上传默认不支持该属性变更',
                 )}
-              </p>
-            </div>
+              </li>
+            </ul>
           </div>
         }
         icon={
@@ -477,7 +476,7 @@ const BatchImportModal: FC<BatchImportModalProps> = ({
       footer={null}
       maskClosable={false}
       open={open}
-      title={t('批量导入字段')}
+      title={t('批量导入文案')}
       width="1000px"
       centered
       onCancel={() => {

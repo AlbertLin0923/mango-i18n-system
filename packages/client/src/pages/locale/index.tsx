@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useMemo, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useMount } from 'ahooks'
 import {
   Table,
   Spin,
@@ -11,6 +10,7 @@ import {
   Timeline,
   App,
   Typography,
+  Form,
 } from 'antd'
 import {
   FileAddOutlined,
@@ -21,31 +21,31 @@ import {
   HistoryOutlined,
 } from '@ant-design/icons'
 import { parseDate } from '@mango-kit/utils'
+import { useRequest } from 'ahooks'
 
-import Igroup from '@/components/Igroup'
+import MangoCard from '@/components/MangoCard/index'
 import * as API from '@/services/locale'
 
-import SearchForm from './SearchForm/SearchForm'
+import SearchForm from './SearchForm/index'
 import LocaleModal from './LocaleModal/index'
 import BatchImportModal from './BatchImportModal/index'
 import BatchExportModal from './BatchExportModal/index'
 import DownloadLocaleModal from './DownloadLocaleModal/index'
 import AnalysisModal from './AnalysisModal/index'
-import useDict from './useDict'
 
-import type { SearchOptionsType } from './SearchForm/SearchForm'
+import type { SearchOptionsType } from './SearchForm'
 import type { ColumnsType } from 'antd/es/table'
+import type { Locale } from '@/services/locale'
 
-const getModuleListFromLocaleList = (list: any[]): any[] => {
-  const r = list.reduce((acc, item) => {
-    return acc.concat(item.modules.split(','))
-  }, [])
-  return Array.from(new Set(r)).filter((i) => {
-    return i !== ''
-  })
-}
+// 从 文案列表 获取 模块名字列表
+const getModuleListFromLocaleList = (list: any[]): any[] =>
+  Array.from(
+    new Set(
+      list.reduce((acc, item) => acc.concat(item.modules.split(',')), []),
+    ),
+  ).filter((i) => i !== '')
 
-export interface TableListItem {
+export type TableListItem = {
   'zh-CN': string
   modules: string
   create_time: Date
@@ -53,9 +53,9 @@ export interface TableListItem {
   [key: string]: string | Date
 }
 
-const getFilterTableDataFromTableData = (
+const filterTableDataFromTableData = (
   searchOptions: SearchOptionsType,
-  list: any[],
+  list: Locale[],
 ) => {
   let _filter: any[] = list
   const { textType, text, modules, filter } = searchOptions
@@ -70,11 +70,7 @@ const getFilterTableDataFromTableData = (
     _filter = _filter.filter((it) => {
       const m = it['modules'].split(',')
       if (Array.isArray(m) && m[0] !== '') {
-        if (m.some((i: any) => modules.includes(i))) {
-          return true
-        } else {
-          return false
-        }
+        return m.some((i: any) => modules.includes(i))
       } else {
         return false
       }
@@ -94,9 +90,22 @@ const Page: FC = () => {
   const { t } = useTranslation()
   const { message } = App.useApp()
 
-  const [dict, dictAlready] = useDict()
+  const { data: localeDictWithLabel = [], loading: getDictLoading } =
+    useRequest<{ label: string; value: string }[], never>(
+      async () => await API.getDict().then((res) => res?.data ?? []),
+    )
 
-  const { localeDictWithLabel } = dict
+  const localeColumns = useMemo(() => {
+    return (
+      localeDictWithLabel
+        ?.filter(({ value }) => value !== 'zh-CN')
+        ?.map(({ label, value }) => ({
+          title: label,
+          dataIndex: value,
+          width: 200,
+        })) ?? []
+    )
+  }, [localeDictWithLabel])
 
   const [localeModalConfig, setLocaleModalConfig] = useState<{
     open: boolean
@@ -137,9 +146,8 @@ const Page: FC = () => {
     page: 1,
   })
 
-  const [tableData, setTableData] = useState<any[]>([])
+  const [tableData, setTableData] = useState<Locale[]>([])
   const [filterTableData, setFilterTableData] = useState<any[]>([])
-  const [tableLoading, setTableLoading] = useState<boolean>(false)
   const [moduleList, setModuleList] = useState<string[]>([])
 
   const [searchOptions, setSearchOptions] = useState<SearchOptionsType>({
@@ -149,40 +157,43 @@ const Page: FC = () => {
     filter: [false, 'en-US'],
   })
 
-  const [repositoryActionMessages, setRepositoryActionMessages] = useState<
-    string[]
-  >([])
   const [
     repositoryActionMessagesBoxVisible,
     toggleRepositoryActionMessagesBoxVisible,
   ] = useState<boolean>(false)
 
-  const getLocaleList = async (readKeyListAgain = true) => {
-    setTableLoading(true)
-    if (readKeyListAgain) {
-      const result = await API.updateKeyListByLoadSourceCode()
-      if (result?.success) {
-        message.success(result?.message?.[result?.message?.length - 1] ?? '', 3)
-        setRepositoryActionMessages(() => [...(result?.message ?? '')])
-      }
-    }
-    const { success, data } = await API.getLocaleList()
-    setTableLoading(false)
-    if (success && data?.list) {
-      const { list } = data
-      setModuleList(getModuleListFromLocaleList(list))
-      setTableData(list)
-    }
-  }
+  const { data: repositoryActionMessages = [] } = useRequest<string[], never>(
+    async () => {
+      return API.updateKeyListByLoadSourceCode().then(
+        (res) => res?.message ?? [],
+      )
+    },
+    {
+      onSuccess: (msg) => {
+        message.success(msg?.[msg?.length - 1] ?? '', 3)
+      },
+    },
+  )
 
-  useMount(() => {
-    getLocaleList()
-  })
+  const { loading: getLocaleListLoading, run: getLocaleList } = useRequest<
+    Locale[],
+    never[]
+  >(
+    async () => {
+      return API.getLocaleList().then((res) => {
+        return res?.data?.list ?? []
+      })
+    },
+    {
+      onSuccess: (list) => {
+        setModuleList(getModuleListFromLocaleList(list))
+        setTableData(list)
+      },
+    },
+  )
 
   useEffect(() => {
-    setFilterTableData(
-      getFilterTableDataFromTableData(searchOptions, tableData),
-    )
+    setFilterTableData(filterTableDataFromTableData(searchOptions, tableData))
   }, [searchOptions, tableData])
 
   const handleSearchFormSubmit = async (values: SearchOptionsType) => {
@@ -194,25 +205,13 @@ const Page: FC = () => {
     const { success } = await API.deleteLocale(key)
     if (success) {
       message.success('删除成功')
-      getLocaleList(false)
+      getLocaleList()
     }
   }
 
   const updateLocale = async (record: any) => {
-    setLocaleModalConfig(() => {
-      return { open: true, type: 'modify', data: record }
-    })
+    setLocaleModalConfig(() => ({ open: true, type: 'modify', data: record }))
   }
-
-  const localeColumns = localeDictWithLabel
-    .filter((i) => i.value !== 'zh-CN')
-    .map((i) => {
-      return {
-        title: i.label,
-        dataIndex: i.value,
-        width: 200,
-      }
-    })
 
   const columns: ColumnsType<TableListItem> = [
     {
@@ -220,13 +219,11 @@ const Page: FC = () => {
       dataIndex: 'zh-CN',
       width: 250,
       fixed: 'left',
-      render: (text) => {
-        return (
-          <Typography.Text copyable={true} ellipsis={{ tooltip: text }}>
-            {text}
-          </Typography.Text>
-        )
-      },
+      render: (text) => (
+        <Typography.Text copyable={true} ellipsis={{ tooltip: text }}>
+          {text}
+        </Typography.Text>
+      ),
     },
     ...localeColumns,
     {
@@ -255,11 +252,6 @@ const Page: FC = () => {
       render: (text: any, record: any) => (
         <Space size="middle">
           <Button
-            loading={
-              localeModalConfig.type === 'modify' &&
-              localeModalConfig?.data?.['zh-CN'] === record?.['zh-CN'] &&
-              localeModalConfig.open
-            }
             size="middle"
             type="primary"
             onClick={() => updateLocale(record)}
@@ -267,7 +259,7 @@ const Page: FC = () => {
             {t('更新')}
           </Button>
           <Popconfirm
-            title={t('确定要删除该条翻译么?')}
+            title={t('确定要删除这条文案吗?')}
             onConfirm={() => deleteLocale(record['zh-CN'])}
           >
             <Button size="middle" type="primary" danger>
@@ -297,47 +289,46 @@ const Page: FC = () => {
   return (
     <>
       <div className="page-container">
-        <Spin spinning={!dictAlready}>
-          <Igroup title={t('筛选栏')}>
+        <Spin spinning={getDictLoading}>
+          <MangoCard title={t('筛选栏')}>
             <SearchForm
               localeDictWithLabel={localeDictWithLabel}
               moduleList={moduleList}
               onSubmit={handleSearchFormSubmit}
             >
-              <Button
-                icon={<UnorderedListOutlined />}
-                loading={analysisModalConfig.open}
-                type="primary"
-                onClick={() => {
-                  setAnalysisModalConfig(() => ({ open: true }))
-                }}
-              >
-                {t('查看筛选的语言包数据统计')}
-              </Button>
+              <Form.Item>
+                <Button
+                  icon={<UnorderedListOutlined />}
+                  type="primary"
+                  onClick={() => {
+                    setAnalysisModalConfig(() => ({ open: true }))
+                  }}
+                >
+                  {t('查看筛选的语言包数据统计')}
+                </Button>
+              </Form.Item>
 
-              <Button
-                icon={<DownloadOutlined />}
-                loading={batchExportModalConfig.open}
-                type="primary"
-                onClick={() => {
-                  setBatchExportModalConfig(() => ({ open: true }))
-                }}
-              >
-                {t('导出筛选的{{length}}条数据到Excel', {
-                  length: filterTableData.length,
-                })}
-              </Button>
+              <Form.Item>
+                <Button
+                  icon={<DownloadOutlined />}
+                  type="primary"
+                  onClick={() => {
+                    setBatchExportModalConfig(() => ({ open: true }))
+                  }}
+                >
+                  {t('导出筛选的 {{length}} 条文案到Excel', {
+                    length: filterTableData.length,
+                  })}
+                </Button>
+              </Form.Item>
             </SearchForm>
-          </Igroup>
+          </MangoCard>
         </Spin>
 
-        <Igroup title={t('工具栏')}>
-          <Space style={{ margin: '0 0 20px 0' }}>
+        <MangoCard title={t('工具栏')}>
+          <Space className="mb-6" size="middle">
             <Button
               icon={<FileAddOutlined />}
-              loading={
-                localeModalConfig.type === 'add' && localeModalConfig.open
-              }
               type="primary"
               onClick={() =>
                 setLocaleModalConfig(() => ({
@@ -347,12 +338,11 @@ const Page: FC = () => {
                 }))
               }
             >
-              {t('添加翻译')}
+              {t('添加文案')}
             </Button>
 
             <Button
               icon={<CloudUploadOutlined />}
-              loading={batchImportModalConfig.open}
               type="primary"
               onClick={() => {
                 setBatchImportModalConfig(() => ({ open: true }))
@@ -363,7 +353,6 @@ const Page: FC = () => {
 
             <Button
               icon={<CloudDownloadOutlined />}
-              loading={downloadLocaleModalConfig.open}
               type="primary"
               onClick={() => {
                 setDownloadLocaleModalConfig((v) => ({ ...v, open: true }))
@@ -387,25 +376,25 @@ const Page: FC = () => {
           {repositoryActionMessagesBoxVisible ? (
             <Card style={{ marginBottom: '20px' }} title={t('解析器操作日志')}>
               <Timeline
-                items={repositoryActionMessages.map((i) => ({ children: i }))}
+                items={repositoryActionMessages?.map((i) => ({ children: i }))}
                 mode="left"
               />
             </Card>
           ) : null}
-        </Igroup>
+        </MangoCard>
 
-        <div className="w-full flex-auto rounded-md bg-white p-4">
+        <MangoCard border={false} className="flex-auto">
           <Table
             className="w-full"
             columns={columns}
             dataSource={filterTableData}
-            loading={tableLoading}
+            loading={getLocaleListLoading}
             pagination={{ ...paginationConfig }}
-            rowKey={(record: any) => record['zh-CN']}
+            rowKey={(record) => record['zh-CN']}
             scroll={{ x: '100%', scrollToFirstRowOnChange: true }}
             bordered
           />
-        </div>
+        </MangoCard>
       </div>
 
       <LocaleModal
@@ -419,9 +408,7 @@ const Page: FC = () => {
             data: null,
           }))
         }}
-        onResetTableList={() => {
-          getLocaleList(false)
-        }}
+        onResetTableList={getLocaleList}
       />
 
       <AnalysisModal
@@ -440,9 +427,7 @@ const Page: FC = () => {
         onClose={() => {
           setBatchImportModalConfig(() => ({ open: false }))
         }}
-        onResetTableList={() => {
-          getLocaleList(false)
-        }}
+        onResetTableList={getLocaleList}
       />
 
       <BatchExportModal

@@ -4,40 +4,36 @@ import { Form, Modal, Input } from 'antd'
 
 import { exportExcel } from '@/utils/exportExcel'
 
-export type BatchExportModalProps = PropsWithChildren<{
-  localeDictWithLabel: any[]
+const BatchExportModal: FC<{
+  localeDictWithLabel: { label: string; value: string }[]
   open: boolean
   filterTableData: any[]
   onClose: () => void
-}>
-
-const BatchExportModal: FC<BatchExportModalProps> = ({
-  localeDictWithLabel,
-  open,
-  filterTableData,
-  onClose,
-}) => {
+}> = ({ localeDictWithLabel, open, filterTableData, onClose }) => {
   const [form] = Form.useForm()
   const { t } = useTranslation()
 
   const [submitLoading, setSubmitLoading] = useState<boolean>(false)
 
-  const handleFormSubmit = () => {
-    form.validateFields().then((values) => {
+  const handleFormSubmit = async () => {
+    try {
+      const values = await form.validateFields()
       setSubmitLoading(true)
-      const exportFileName = values.exportFileName.trim()
       exportExcel(
         filterTableData,
-        exportFileName,
+        values.exportFileName.trim(),
         localeDictWithLabel.map((i) => i.value),
       )
       setSubmitLoading(false)
-    })
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
     <Modal
       confirmLoading={submitLoading}
+      maskClosable={false}
       okText={t('下载')}
       open={open}
       title={t('导出语言包')}
@@ -46,11 +42,9 @@ const BatchExportModal: FC<BatchExportModalProps> = ({
         form.resetFields()
         onClose()
       }}
-      onOk={() => {
-        handleFormSubmit()
-      }}
+      onOk={handleFormSubmit}
     >
-      <Form autoComplete="off" form={form} layout="vertical">
+      <Form autoComplete="off" form={form} layout="horizontal">
         <Form.Item
           initialValue={t('翻译文案')}
           label={t('导出文件名')}

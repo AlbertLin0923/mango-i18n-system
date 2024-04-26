@@ -5,6 +5,6 @@ export const operateTypeMap = [
 ]
 
 export const operateWayMap = [
-  { label: '单独', value: 'single', color: '#FA8C16' },
+  { label: '单个', value: 'single', color: '#FA8C16' },
   { label: '批量', value: 'batch', color: '#2492FF' },
 ]

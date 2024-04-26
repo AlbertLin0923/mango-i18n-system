@@ -1,14 +1,5 @@
 import request from '@/utils/request'
 
-export type LoginParamsType = {
-  username: string
-  password: string
-}
-
-export type RefreshTokenParamsType = {
-  refreshToken: string
-}
-
 export type AddLocaleParamsType = {
   'zh-CN': string
   [key: string]: string
@@ -21,13 +12,23 @@ export type UpdateLocaleParamsType = {
   modules: string
 }
 
+export type Locale = {
+  create_time: number
+  update_time: number
+  version: number
+  modules: string
+  [key: string]: any
+}
+
 export async function getDict() {
   return request('/locale/get_dict', {
     method: 'get',
   })
 }
 
-export async function getLocaleList() {
+export async function getLocaleList(): ReturnResponse<{
+  list: Locale[]
+}> {
   return request('/locale/get_locale_list', {
     method: 'get',
   })

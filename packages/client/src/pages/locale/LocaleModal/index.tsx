@@ -11,17 +11,15 @@ import type {
   UpdateLocaleParamsType,
 } from '@/services/locale'
 
-export type LocaleModalProps = React.PropsWithChildren<{
-  localeDictWithLabel: any[]
+const LocaleModal: React.FC<{
+  localeDictWithLabel: { label: string; value: string }[]
   moduleList: string[]
   type: 'add' | 'modify'
   open: boolean
   data: Record<string, string>
   onClose: () => void
   onResetTableList: () => void
-}>
-
-const LocaleModal: React.FC<LocaleModalProps> = ({
+}> = ({
   localeDictWithLabel,
   moduleList,
   type,
@@ -76,7 +74,6 @@ const LocaleModal: React.FC<LocaleModalProps> = ({
 
       if (type === 'add') {
         const result = await confirmSubmit(delivery)
-        console.log('result', result)
         if (result) {
           setSubmitLoading(true)
           addLocale(delivery as AddLocaleParamsType)
@@ -153,11 +150,11 @@ const LocaleModal: React.FC<LocaleModalProps> = ({
             content: (
               <div style={{ padding: '10px 0px' }}>
                 <div style={{ lineHeight: '2', height: '40px' }}>
-                  系统检测到该字段中含有{stub_arr_node}
+                  系统检测到该文案中含有{stub_arr_node}
                   等占位符，翻译时，无须翻译占位符内容，保持原样即可
                 </div>
                 <div style={{ lineHeight: '2', height: '40px' }}>
-                  例如: 中文字段:{' '}
+                  例如: 中文文案:{' '}
                   <span
                     style={{
                       padding: '5px 10px',
@@ -197,7 +194,7 @@ const LocaleModal: React.FC<LocaleModalProps> = ({
                         borderRadius: '5px',
                       }}
                     >
-                      以下字段可能翻译有误:
+                      以下文案可能翻译有误:
                     </span>
                   </p>
                   {errorLocale_arr_node()}
@@ -242,17 +239,16 @@ const LocaleModal: React.FC<LocaleModalProps> = ({
   return (
     <Modal
       confirmLoading={submitLoading}
+      maskClosable={false}
       open={open}
-      title={type === 'add' ? t('新增字段') : t('修改字段')}
-      width="50vw"
+      title={type === 'add' ? t('新增文案') : t('修改文案')}
+      width="1000px"
       forceRender
       onCancel={() => {
         onClose()
         form.resetFields()
       }}
-      onOk={() => {
-        handleFormSubmit()
-      }}
+      onOk={handleFormSubmit}
     >
       <Form autoComplete="off" form={form} layout="vertical">
         <Form.Item noStyle shouldUpdate>
@@ -284,11 +280,11 @@ const LocaleModal: React.FC<LocaleModalProps> = ({
                   message={
                     <div style={{ padding: '10px 20px' }}>
                       <div style={{ lineHeight: '2', height: '40px' }}>
-                        注意: 系统检测到该字段中含有{r}
+                        注意: 系统检测到该文案中含有{r}
                         等占位符，翻译时，无须翻译占位符内容，保持原样即可
                       </div>
                       <div style={{ lineHeight: '2', height: '40px' }}>
-                        例如: 中文字段:{' '}
+                        例如: 中文文案:{' '}
                         <span
                           style={{
                             padding: '5px 10px',
@@ -379,7 +375,7 @@ const LocaleModal: React.FC<LocaleModalProps> = ({
           </Form.Item>
         ))}
 
-        <Form.Item label={t('请选择字段所属模块名,支持多选')} name="modules">
+        <Form.Item label={t('文案所属模块名称')} name="modules">
           <Select
             filterOption={(input, option) =>
               (String(option?.children) ?? '')
@@ -389,7 +385,7 @@ const LocaleModal: React.FC<LocaleModalProps> = ({
             maxTagCount="responsive"
             mode="multiple"
             optionFilterProp="children"
-            placeholder="字段所属模块名称"
+            placeholder="请选择文案所属模块名，支持多选"
             style={{ width: '100%' }}
             allowClear
             showSearch

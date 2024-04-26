@@ -10,30 +10,30 @@ dependencies:
     version: 5.3.6(react-dom@18.2.0)(react@18.2.0)
   '@mango-kit/components':
     specifier: ^0.0.10
-    version: 0.0.10(antd@5.16.1)(react-dom@18.2.0)(react-router-dom@6.22.3)(react@18.2.0)
+    version: 0.0.10(antd@5.16.2)(react-dom@18.2.0)(react-router-dom@6.22.3)(react@18.2.0)
   '@mango-kit/utils':
     specifier: ^0.0.2
     version: 0.0.2
   ahooks:
-    specifier: ^3.7.7
+    specifier: ^3.7.11
     version: 3.7.11(react@18.2.0)
   antd:
-    specifier: ^5.12.6
-    version: 5.16.1(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^5.16.2
+    version: 5.16.2(react-dom@18.2.0)(react@18.2.0)
   axios:
-    specifier: ^1.6.3
+    specifier: ^1.6.8
     version: 1.6.8
   classnames:
     specifier: ^2.5.1
     version: 2.5.1
   country-flag-icons:
-    specifier: ^1.5.9
+    specifier: ^1.5.11
     version: 1.5.11
   dayjs:
-    specifier: ^1.11.7
+    specifier: ^1.11.10
     version: 1.11.10
   exceljs:
-    specifier: ^4.3.0
+    specifier: ^4.4.0
     version: 4.4.0
   file-saver:
     specifier: ^2.0.5
@@ -2457,7 +2457,7 @@ packages:
       call-bind: 1.0.7
     dev: true
 
-  /@mango-kit/components@0.0.10(antd@5.16.1)(react-dom@18.2.0)(react-router-dom@6.22.3)(react@18.2.0):
+  /@mango-kit/components@0.0.10(antd@5.16.2)(react-dom@18.2.0)(react-router-dom@6.22.3)(react@18.2.0):
     resolution: {integrity: sha512-anxD5u+zJnOVE+XSiAfxkW61a4MUVboSEZziEKQA2XtgHYhE2BZ7GHI1/PYP851xtXuWppzN3esOPxrm+xcTfg==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
@@ -2468,7 +2468,7 @@ packages:
     dependencies:
       '@ant-design/icons': 5.3.6(react-dom@18.2.0)(react@18.2.0)
       '@mango-kit/utils': 0.0.1
-      antd: 5.16.1(react-dom@18.2.0)(react@18.2.0)
+      antd: 5.16.2(react-dom@18.2.0)(react@18.2.0)
       classnames: 2.5.1
       dayjs: 1.11.10
       lodash-es: 4.17.21
@@ -4244,8 +4244,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /antd@5.16.1(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-XAlLRrgYV+nj9FHnkXEPS6HNcKcluEa8v44e7Cixjlp8aOXRhUI6IfZaKpc2MPGjQ+06rp62/dsxOUNJW9kfLA==}
+  /antd@5.16.2(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-46BC1IaCRzkdcTAs1TuIZ1D56JrIRP5yWGrlfV+kGjro1c2dVaQP7yGXA2/m29uF41TqptxOYl36opY5ydN++A==}
     peerDependencies:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'

@@ -1,44 +1,34 @@
 import { Modal, Table, Progress } from 'antd'
 import { useTranslation } from 'react-i18next'
 
-export type AnalysisModalProps = PropsWithChildren<{
-  localeDictWithLabel: any[]
+const AnalysisModal: FC<{
+  localeDictWithLabel: { label: string; value: string }[]
   filterTableData: any[]
   open: boolean
   onClose: () => void
-}>
-
-const AnalysisModal: FC<AnalysisModalProps> = ({
-  localeDictWithLabel,
-  filterTableData,
-  open,
-  onClose,
-}) => {
+}> = ({ localeDictWithLabel, filterTableData, open, onClose }) => {
   const { t } = useTranslation()
 
-  const data = localeDictWithLabel.map((item) => {
-    const name = item['value']
-    const locale = item['label']
-    const all = filterTableData.length
-    const finished = filterTableData.filter((i) => {
-      return i[name] !== '' && i[name] !== undefined
-    }).length
+  const data =
+    localeDictWithLabel?.map(({ label, value }) => {
+      const all = filterTableData.length
+      const finished = filterTableData?.filter(
+        (i) => i[value] !== '' && i[value] !== undefined,
+      )?.length
 
-    const finishedPercent = Math.floor((finished / all) * 100)
+      console.log('finished', finished, filterTableData, value)
 
-    const unfinished = filterTableData.filter((i) => {
-      return i[name] === '' || i[name] === undefined
-    }).length
-
-    return {
-      key: locale,
-      locale,
-      all,
-      finished,
-      unfinished,
-      finishedPercent,
-    }
-  })
+      return {
+        key: label,
+        locale: label,
+        all,
+        finished,
+        unfinished: filterTableData.filter(
+          (i) => i[value] === '' || i[value] === undefined,
+        ).length,
+        finishedPercent: Math.floor((finished / all) * 100),
+      }
+    }) ?? []
 
   return (
     <Modal
@@ -47,39 +37,35 @@ const AnalysisModal: FC<AnalysisModalProps> = ({
       open={open}
       title={t('数据统计')}
       width="50vw"
-      onCancel={() => {
-        onClose()
-      }}
+      onCancel={onClose}
     >
       <Table
         columns={[
           {
-            title: '语言包',
+            title: t('语言包'),
             dataIndex: 'locale',
             key: 'locale',
           },
           {
-            title: '总数目',
+            title: t('总数目'),
             dataIndex: 'all',
             key: 'all',
           },
           {
-            title: '已翻译',
+            title: t('已翻译'),
             dataIndex: 'finished',
             key: 'finished',
           },
           {
-            title: '未翻译',
+            title: t('未翻译'),
             dataIndex: 'unfinished',
             key: 'unfinished',
           },
           {
-            title: '翻译进度',
+            title: t('翻译进度'),
             dataIndex: 'finishedPercent',
             key: 'finishedPercent',
-            render: (text: number) => {
-              return <Progress percent={text} />
-            },
+            render: (text: number) => <Progress percent={text} />,
           },
         ]}
         dataSource={data}

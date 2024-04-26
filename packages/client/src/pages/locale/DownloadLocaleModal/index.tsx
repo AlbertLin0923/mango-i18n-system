@@ -1,52 +1,44 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Form, Modal, Select } from 'antd'
+import { useRequest } from 'ahooks'
 
+import { commonSelectProps } from '@/utils'
 import * as API from '@/services/locale'
 
-export type DownloadLocaleModalProps = React.PropsWithChildren<{
-  localeDictWithLabel: any[]
+const DownloadLocaleModal: FC<{
+  localeDictWithLabel: { label: string; value: string }[]
   open: boolean
   onClose: () => void
-}>
-
-const { Option } = Select
-
-const DownloadLocaleModal: FC<DownloadLocaleModalProps> = ({
-  localeDictWithLabel,
-  open,
-  onClose,
-}) => {
+}> = ({ localeDictWithLabel, open, onClose }) => {
   const [form] = Form.useForm()
   const { t } = useTranslation()
 
-  const [submitLoading, setSubmitLoading] = useState<boolean>(false)
-
-  const handleFormSubmit = async () => {
-    const values = await form.validateFields()
-    const { downloadLocaleFileNameArr } = values
-    setSubmitLoading(true)
-
-    const { data } = await API.getLocaleMap()
-    const { map } = data
-    if (map) {
-      downloadLocaleFileNameArr.forEach((val: string) => {
-        const item = JSON.stringify(map[val], null, 2)
-        const element = document.createElement('a')
-        element.setAttribute(
-          'href',
-          'data:text/json;charset=utf-8,' + encodeURIComponent(item),
-        )
-        element.download = `${val}.json`
-        element.click()
-      })
-    }
-    setSubmitLoading(false)
-  }
+  const { loading, run } = useRequest<any, any>(
+    async () => await API.getLocaleMap().then((res) => res?.data?.map),
+    {
+      manual: true,
+      onSuccess: async (map, params) => {
+        const downloadLocaleFileNameArr = params?.[0]?.downloadLocaleFileNameArr
+        if (map) {
+          downloadLocaleFileNameArr.forEach((val: string) => {
+            const item = JSON.stringify(map[val], null, 2)
+            const element = document.createElement('a')
+            element.setAttribute(
+              'href',
+              'data:text/json;charset=utf-8,' + encodeURIComponent(item),
+            )
+            element.download = `${val}.json`
+            element.click()
+          })
+        }
+      },
+    },
+  )
 
   return (
     <Modal
-      confirmLoading={submitLoading}
+      confirmLoading={loading}
+      maskClosable={false}
       okText={t('下载')}
       open={open}
       title={t('下载语言包')}
@@ -55,11 +47,12 @@ const DownloadLocaleModal: FC<DownloadLocaleModalProps> = ({
         form.resetFields()
         onClose()
       }}
-      onOk={() => {
-        handleFormSubmit()
+      onOk={async () => {
+        const values = await form.validateFields()
+        run(values)
       }}
     >
-      <Form autoComplete="off" form={form} layout="vertical">
+      <Form autoComplete="off" form={form} layout="horizontal">
         <Form.Item
           initialValue={localeDictWithLabel.map((i) => i.value)}
           label={t('导出语言包')}
@@ -72,22 +65,13 @@ const DownloadLocaleModal: FC<DownloadLocaleModalProps> = ({
           ]}
         >
           <Select
-            filterOption={(input, option) =>
-              (String(option?.children) ?? '')
-                .toLowerCase()
-                .indexOf(input.toLowerCase()) >= 0
-            }
+            {...commonSelectProps}
             mode="multiple"
-            optionFilterProp="children"
-            allowClear
-            showSearch
-          >
-            {localeDictWithLabel.map((i) => (
-              <Option key={i.value} value={i.value}>
-                {`${i.value}.json`}
-              </Option>
-            ))}
-          </Select>
+            options={localeDictWithLabel?.map(({ label, value }) => ({
+              label: `${value}.json`,
+              value,
+            }))}
+          />
         </Form.Item>
       </Form>
     </Modal>

@@ -13,3 +13,4 @@ export { transformImageUrl } from './file'
 export { getRedirect } from './url'
 export { useQuery, useStepNav } from './hooks'
 export { MangoRegExp }
+export { commonSelectProps } from './config'
