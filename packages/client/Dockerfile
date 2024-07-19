@@ -1,10 +1,10 @@
-FROM node:20.10.0 as builder
+FROM node:20.15.0 as builder
 
 WORKDIR /home/app/client
 
 COPY package.json pnpm-lock.yaml ./
 
-RUN npm install -g pnpm@8.12.1 && pnpm -v && pnpm install --frozen-lockfile
+RUN npm install -g pnpm@9.4.0 && pnpm -v && pnpm install --frozen-lockfile
 
 COPY . .
 
