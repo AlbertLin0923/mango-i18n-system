@@ -2,7 +2,7 @@ FROM node:20.16.0 as builder
 
 WORKDIR /home/app/client
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml .npmrc ./
 
 RUN npm install -g pnpm@9.6.0 && pnpm -v && pnpm install --frozen-lockfile
 
