@@ -1,4 +1,6 @@
-FROM node:20.16.0
+FROM node:20.16.0-slim
+
+RUN apt-get update && apt-get install -y git
 
 WORKDIR /home/app/server
 

@@ -1,5 +1,20 @@
 # dependencies
-**/node_modules
+/node_modules
+
+# contentHash
+/contentHash
+
+# dist
+/dist
+
+# log
+/logs
+
+# database
+/database
+
+# sourceCode
+/sourceCode
 
 # misc
 .DS_Store

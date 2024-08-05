@@ -1,28 +1,31 @@
-version: '3.8'
 services:
   server:
     build: ./packages/server/
-    container_name: 'mango-i18n-system-server'
     environment:
       TZ: Asia/Shanghai
+      INVITATION_CODE: mango-i18n-system-invitation-code
+      PASSWORD_SALT: mango-i18n-system-password-salt
+      JWT_ACCESS_SECRET: mango-i18n-system-jwt-access-secret
+      JWT_REFRESH_SECRET: mango-i18n-system-jwt-refresh-secret
+      JWT_EXPIRES_IN: 31d
+      JWT_REFRESH_IN: 62d
     volumes:
       - ./packages/server/database:/home/app/server/database
+      - ./packages/server/database:/home/app/server/database
+      - ./packages/server/contentHash:/home/app/server/contentHash
+      - ./packages/server/logs:/home/app/server/logs
+      - ./packages/server/sourceCode:/home/app/server/sourceCode
     ports:
-      - '5006:8080'
-    expose:
-      - '8080'
-    restart: always
+      - '8080:8080'
     networks:
       - backend
 
   client:
     build: ./packages/client/
-    container_name: 'mango-i18n-system-client'
     depends_on:
       - server
     ports:
-      - '5005:80'
-    restart: always
+      - '80:3000'
     networks:
       - backend
 

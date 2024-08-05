@@ -96,7 +96,7 @@ const Page: FC = () => {
           {
             title: t('序号'),
             dataIndex: 'index',
-            width: 80,
+            width: 100,
             render: (text, record, index) => index + 1,
           },
           {

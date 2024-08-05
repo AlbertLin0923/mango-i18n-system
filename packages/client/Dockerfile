@@ -1,4 +1,4 @@
-FROM node:20.16.0 as builder
+FROM node:20.16.0-slim as builder
 
 WORKDIR /home/app/client
 
@@ -20,6 +20,6 @@ COPY ./nginx/ /etc/nginx/
 
 COPY --from=builder /home/app/client/dist  /usr/share/nginx/html/
 
-EXPOSE 80
+EXPOSE 3000
 
 CMD ["nginx", "-g", "daemon off;"]

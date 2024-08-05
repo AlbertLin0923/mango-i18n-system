@@ -35,7 +35,7 @@ const Page: FC = () => {
           {
             title: t('操作类型'),
             dataIndex: 'operate_type',
-            width: 80,
+            width: 100,
             ellipsis: true,
             valueType: 'status',
             valueEnum: operateTypeMap,
@@ -43,7 +43,7 @@ const Page: FC = () => {
           {
             title: t('操作方式'),
             dataIndex: 'operate_way',
-            width: 80,
+            width: 100,
             ellipsis: true,
             valueType: 'map',
             valueEnum: operateWayMap,
