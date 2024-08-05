@@ -8,7 +8,10 @@ services:
     volumes:
       - ./packages/server/database:/home/app/server/database
     ports:
-      - '5006:5006'
+      - '5006:8080'
+    expose:
+      - '8080'
+    restart: always
     networks:
       - backend
 
@@ -18,7 +21,8 @@ services:
     depends_on:
       - server
     ports:
-      - '5005:5005'
+      - '5005:80'
+    restart: always
     networks:
       - backend
 

@@ -20,6 +20,6 @@ COPY ./nginx/ /etc/nginx/
 
 COPY --from=builder /home/app/client/dist  /usr/share/nginx/html/
 
-EXPOSE 5005
+EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]

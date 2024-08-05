@@ -10,6 +10,6 @@ COPY . .
 
 RUN pnpm prebuild && pnpm build
 
-EXPOSE 5006
+EXPOSE 8080
 
 CMD [ "pnpm", "start" ]
