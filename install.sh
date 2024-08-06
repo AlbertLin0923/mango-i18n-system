@@ -46,7 +46,8 @@ check_port() {
 # 获取用户输入的端口，默认值为80
 get_client_port() {
     while true; do
-        read -p "请输入客户端端口（默认: 80）: " client_port
+        printf "请输入客户端端口（默认: 80）: "
+        read client_port
         client_port=${client_port:-80}
         if check_port $client_port; then
             break
@@ -57,7 +58,8 @@ get_client_port() {
 # 获取用户输入的端口，默认值为8080
 get_server_port() {
     while true; do
-        read -p "请输入服务端端口（默认: 8080）: " server_port
+        printf "请输入服务端端口（默认: 8080）: "
+        read server_port
         server_port=${server_port:-8080}
         if check_port $server_port; then
             break
