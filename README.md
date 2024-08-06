@@ -81,7 +81,7 @@
 - 支持`配置文案模块标识`，`配置无需提取的文案`等功能
 - 支持文案的 `excel`、`json` 等格式的上传以及下载
 - 系统使用文件 hash 进行`缓存`，未修改过的业务代码文件不作解析，提高解析速度
-- 部署方便，使用 docker 一键部署
+- 部署方便快捷，提供 docker 镜像，可使用部署脚本一键部署
 
 ## 系统技术栈
 
@@ -93,31 +93,42 @@
 - 数据库方案采用轻量级数据库 splite3
 - 项目部署基于 docker，使用 docker-compose 一键部署
 
-## 系统使用
+## 系统部署和使用
 
-**只需要简单几步即可部署好系统**
+**只需要简单两步即可部署好系统**
 
 ### 部署
 
-1. 准备一台公司内部空闲的服务器，下载`docker`以及`docker-compose`，以及谷歌 zx 插件 [zx](https://github.com/google/zx)
+#### 第一步
 
-2. 在服务器上找一个空目录，例如：`/home/app/i18n/` ，进入该目录，克隆该`项目源码`到目录里面
+准备一台公司内部空闲的服务器，下载`docker`以及`docker-compose`（如已安装可忽略该步骤）
+
+> docker 和 docker-compose 可参考 菜鸟教程 进行安装：
+
+> 1. docker 安装：https://www.runoob.com/docker/ubuntu-docker-install.html
+> 2. docker-compose 安装：https://www.runoob.com/docker/docker-compose.html
+
+#### 第二步
+
+在服务器上随便找一个空目录，例如：`/home/app/i18n/` ，进入该目录执行以下安装命令
 
 ```bash
-git clone https://github.com/AlbertLin0923/mango-i18n-system.git
+## 进入目录
+cd /home/app/i18n/
+
+## 使用 bash 执行安装脚本
+bash -c "$(curl https://raw.githubusercontent.com/AlbertLin0923/mango-i18n-system/main/install.sh)"
 ```
 
-3. 切换到该`项目根目录`上
+根据提示，输入：
 
-```bash
-cd /home/app/i18n/mango-i18n-system/
-```
+1. 系统客户端部署的端口（默认：80）
+2. 系统服务端部署的端口（默认：8080）
+3. 用于管理员注册的邀请码（也就是注册密钥）（默认：mango-i18n-system-invitation-code）
 
-4. 在`项目根目录`执行`zx ./scripts/adapt.mjs`，该命令会帮助你修改项目配置文件，以适配你的 **系统部署端口**
+即可一键完成docker镜像的下载和启动安装
 
-5. 执行 `docker-compose up -d` 进行 docker-compose 一键部署
-
-这时候打开服务器对应的项目端口，例如：http://host:port/user/login （ host 为该内网服务器 IP 地址，port 为我们刚才设置的端口） 就可以看到项目已经启动
+这时候打开服务器对应的项目端口，例如：http://host:port/user/login （ host 为该内网服务器 IP 地址，port 为我们刚才设置的客户端的端口） 就可以看到项目已经启动
 
 ### 配置
 
@@ -125,7 +136,7 @@ cd /home/app/i18n/mango-i18n-system/
 
 1. 登录 http://host:port/user/login 进行账户的注册或者登录
 
-   > 系统注册默认邀请码：`mango-i18n-system-invitation-code` ,可用于管理员账户的注册，可在项目部署前，手动修改该环境变量来变更（文件地址：mango- i18n-system/packages/server/.env）
+   > 系统注册默认邀请码（注册密钥）：`mango-i18n-system-invitation-code` ,可用于管理员账户的注册，可在项目部署时候进行更改
 
 2. 登录后 进入 `系统配置-人员配置` `系统配置-界面配置` `系统配置-解析配置` 进行项目配置
 
@@ -210,6 +221,25 @@ const getFilterStatusMap = (statusMap, type) => {
   }
 }
 ```
+
+## 项目二次开发
+
+### 本地启动与开发调试
+
+1. clone 项目代码到本地
+2. cd 到 项目根目录，执行 pnpm i，安装依赖包
+3. cd 到 packages/server ，执行pnpm dev ，启动服务端
+4. cd 到 packages/client，执行pnpm dev，启动客户端
+5. 根据命令行的提示，这时候打开 http://localhost 即可看到项目已经启动了😄
+
+### 使用源码进行本地部署
+
+项目二次开发后，可托管到自己的代码仓库，然后在服务器上通过源码部署：
+
+1. 准备一台公司内部空闲的服务器，下载 docker 以及 docker-compose
+2. 在服务器上找一个空目录，例如：/home/app/i18n/ ，进入该目录，克隆该项目源码到目录里面
+3. 执行 docker-compose up -d 进行 docker-compose 一键部署
+4. 其他配置同上
 
 ## 源码
 
