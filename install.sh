@@ -17,33 +17,39 @@ print_error_and_exit() {
 # 捕捉错误并执行自定义错误处理
 trap 'print_error_and_exit "发生错误，脚本退出。"' ERR
 
-clientPort=80
-serverPort=8080
+client_port=80
+server_port=8080
 invitation_code="mango-i18n-system-invitation-code"
 current_dir=$(pwd)
-baseDir="${current_dir}/mango-i18n-system-${clientPort}-${serverPort}"
+base_dir=""
 
 # 打印当前目录
 echo "当前目录是: $current_dir"
 
 # 检查端口是否被占用的函数
 check_port() {
+    # Check if the port is valid
+    if ! [[ $1 =~ ^[0-9]+$ ]] || [ $1 -lt 1 ] || [ $1 -gt 65535 ]; then
+        echo "输入的端口格式错误，请输入 1 到 65535 之间的数字"
+        return 1
+    fi
     if lsof -i:$1 > /dev/null; then
+        echo "端口 $1 已被占用，请重新选择。"
         return 1
     else
         return 0
     fi
 }
 
+
+
 # 获取用户输入的端口，默认值为80
 get_client_port() {
     while true; do
-        read -p "请输入客户端端口（默认: 80）: " clientPort
-        clientPort=${clientPort:-80}
-        if check_port $clientPort; then
+        read -p "请输入客户端端口（默认: 80）: " client_port
+        client_port=${client_port:-80}
+        if check_port $client_port; then
             break
-        else
-            echo "端口 $clientPort 已被占用，请重新选择。"
         fi
     done
 }
@@ -51,19 +57,17 @@ get_client_port() {
 # 获取用户输入的端口，默认值为8080
 get_server_port() {
     while true; do
-        read -p "请输入服务端端口（默认: 8080）: " serverPort
-        serverPort=${serverPort:-8080}
-        if check_port $serverPort; then
+        read -p "请输入服务端端口（默认: 8080）: " server_port
+        server_port=${server_port:-8080}
+        if check_port $server_port; then
             break
-        else
-            echo "端口 $serverPort 已被占用，请重新选择。"
         fi
     done
 }
 
 # 获取用户输入的端口，默认值为8080
 get_invitation_code() {
-    read -p "请输入服务端邀请码<用于管理员账号注册，请记住>（默认: ${invitation_code}): " invitation_code
+    read -p "请输入服务端邀请码<用于管理员账号注册的密钥，请牢记>（默认: ${invitation_code}): " invitation_code
     invitation_code=${invitation_code:-"mango-i18n-system-invitation-code"}
 
 }
@@ -71,29 +75,29 @@ get_invitation_code() {
 # 创建文件夹结构的函数
 create_directories() {
     echo "创建服务端数据库、缓存、日志等宿主机映射目录。。。"
-    echo "${baseDir}"
-    if ! mkdir -p "$baseDir/server/database"; then
-        print_error_and_exit "无法创建目录: $baseDir/server/database"
+    base_dir="${current_dir}/mango-i18n-system-${client_port}-${server_port}"
+    if ! mkdir -p "$base_dir/server/database"; then
+        print_error_and_exit "无法创建目录: $base_dir/server/database"
     fi
-    if ! mkdir -p "$baseDir/server/contentHash"; then
-        print_error_and_exit "无法创建目录: $baseDir/server/contentHash"
+    if ! mkdir -p "$base_dir/server/contentHash"; then
+        print_error_and_exit "无法创建目录: $base_dir/server/contentHash"
     fi
-    if ! mkdir -p "$baseDir/server/logs"; then
-        print_error_and_exit "无法创建目录: $baseDir/server/logs"
+    if ! mkdir -p "$base_dir/server/logs"; then
+        print_error_and_exit "无法创建目录: $base_dir/server/logs"
     fi
-    if ! mkdir -p "$baseDir/server/sourceCode"; then
-        print_error_and_exit "无法创建目录: $baseDir/server/sourceCode"
+    if ! mkdir -p "$base_dir/server/sourceCode"; then
+        print_error_and_exit "无法创建目录: $base_dir/server/sourceCode"
     fi
-    echo "创建目录成功"
+    echo "创建目录成功： $base_dir"
 }
 
 # 生成 docker-compose.yml 文件的函数
 create_docker_compose() {
     echo "创建 docker-compose.yml 文件。。。"
-    cat <<EOL > "$baseDir/docker-compose.yml"
+    cat <<EOL > "$base_dir/docker-compose.yml"
 services:
   server:
-    image: mango-i18n-system-server:latest
+    image: albertlin0923/mango-i18n-system-server:latest
     environment:
       TZ: Asia/Shanghai
       INVITATION_CODE: ${invitation_code}
@@ -103,22 +107,22 @@ services:
       JWT_EXPIRES_IN: 31d
       JWT_REFRESH_IN: 62d
     volumes:
-      - ${baseDir}/server/database:/home/app/server/database
-      - ${baseDir}/server/contentHash:/home/app/server/contentHash
-      - ${baseDir}/server/logs:/home/app/server/logs
-      - ${baseDir}/server/sourceCode:/home/app/server/sourceCode
+      - ${base_dir}/server/database:/home/app/server/database
+      - ${base_dir}/server/contentHash:/home/app/server/contentHash
+      - ${base_dir}/server/logs:/home/app/server/logs
+      - ${base_dir}/server/sourceCode:/home/app/server/sourceCode
     ports:
-      - '${serverPort}:8080'
+      - '${server_port}:8080'
     restart: always
     networks:
       - backend
 
   client:
-    image: mango-i18n-system-client:latest
+    image: albertlin0923/mango-i18n-system-client:latest
     depends_on:
       - server
     ports:
-      - '${clientPort}:3000'
+      - '${client_port}:3000'
     restart: always
     networks:
       - backend
@@ -155,7 +159,7 @@ create_directories
 create_docker_compose
 make_sure_docker_and_docker_compose
 
-# 进入 baseDir 目录并执行 docker-compose up -d
+# 进入 base_dir 目录并执行 docker-compose up -d
 echo "进入目录并启动 Docker 服务。。。"
-cd $baseDir || print_error_and_exit "无法进入目录: $baseDir"
+cd $base_dir || print_error_and_exit "无法进入目录: $base_dir"
 docker-compose up -d
