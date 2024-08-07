@@ -22,15 +22,15 @@
 
 1. 翻译人员打开 自动国际化文案配置系统 前端页面
 2. 每当前端页面进行`刷新`，页面会调用接口,通知系统后台进行`业务项目源代码`的拉取和更新
-3. 对应地，系统后台执行更新业务项目源代码，并使用`文案解析器`对源代码进行解析，自动化读取和收集业务代码的中文文案 key，再经过系统整理、去重后，同步进数据库
-4. 系统后台将收集到的中文文案 key 回传到系统前端页面
+3. 对应地，系统后台执行更新业务项目源代码，并使用`文案解析器`对源代码进行解析，自动读取和收集业务代码的中文文案 key，再经过系统整理、去重后，同步进数据库
+4. 系统后台将收集到的`中文文案 key`回传到系统前端页面
 5. 翻译人员进行文案的翻译、修改、更新、删除等操作
 6. 翻译人员完成翻译工作后，通知到前端开发人员
-7. 前端开发人员手动下载已经翻译好的文案json，导入到业务代码里；或者可使用辅助插件 [@mango-scripts/i18n-scripts](https://github.com/AlbertLin0923/mango-scripts/tree/main/packages/i18n-scripts) 进行一键下载导入
+7. 前端开发人员手动下载已经翻译好的文案json，导入到业务代码里；或者可接入辅助插件 [@mango-scripts/i18n-scripts](https://github.com/AlbertLin0923/mango-scripts/tree/main/packages/i18n-scripts) 进行一键下载导入
 
 可以看到，这个过程，`作为前端开发，无需参与其中文案的提取工作，从繁杂无聊的文案 key 的提取中解放出来，而最后的文案录入工作，也有辅助插件一键完成`
 
-那么，作为前端开发，只需要在业务项目的初期，部署接入该自动国际化文案配置系统，然后，在需求代码编写中，`就像国内的中文项目一样`，文案 key 使用`中文`，每次业务代码完成时，通知翻译人员进行文案翻译，待翻译工作结束后，执行项目辅助脚本，`一键更新`到`本地项目`里面
+那么，作为前端开发，只需要在业务项目的初期，部署接入该自动国际化文案配置系统，然后，在需求代码编写中，`就像国内的中文项目一样`，文案 key 使用`中文`，每次业务代码完成时，通知翻译人员进行文案翻译，待翻译工作结束后，执行项目辅助脚本，`一键更新`翻译文案到`本地项目`里面
 
 ## 系统预览
 
@@ -42,7 +42,7 @@
 
 管理员账号注册页面
 
-> 系统注册默认邀请码：`mango-i18n-system-invitation-code` ,可用于管理员账户的注册，可在项目部署前，手动修改该环境变量来变更（文件地址：mango- i18n-system/packages/server/.env）
+> 系统注册默认邀请码：`mango-i18n-system-invitation-code`，可用于管理员账户的注册，可在项目部署前修改
 
 ![image.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d4c96fa0b1c342cc95f56607d1651a23~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=3252&h=1822&s=120923&e=png&b=f9fafd)
 
@@ -80,8 +80,8 @@
 - 支持`vue、js、jsx、mjs、ts、tsx、mts、svelte`等多种格式文件
 - 支持`配置文案模块标识`，`配置无需提取的文案`等功能
 - 支持文案的 `excel`、`json` 等格式的上传以及下载
-- 系统使用文件 hash 进行`缓存`，未修改过的业务代码文件不作解析，提高解析速度
-- 部署方便快捷，提供 docker 镜像，可使用部署脚本一键部署
+- 系统使用文件 `hash` 进行`缓存`，未修改过的业务代码文件不作解析，提高解析速度
+- 部署方便快捷，提供 `docker 镜像`，可使用部署脚本一键部署
 
 ## 系统技术栈
 
@@ -124,11 +124,11 @@ bash -c "$(curl https://raw.githubusercontent.com/AlbertLin0923/mango-i18n-syste
 
 1. 系统客户端部署的端口（默认：80）
 2. 系统服务端部署的端口（默认：8080）
-3. 用于管理员注册的邀请码（也就是注册密钥）（默认：mango-i18n-system-invitation-code）
+3. 用于管理员注册的邀请码（也就是注册密钥，建议输入自定义的密钥并保存好密钥）（默认：mango-i18n-system-invitation-code）
 
-即可一键完成docker镜像的下载和启动安装
+接着脚本会远程拉取`docker`镜像并启动安装
 
-这时候打开服务器对应的项目端口，例如：http://host:port/user/login （ host 为该内网服务器 IP 地址，port 为我们刚才设置的客户端的端口） 就可以看到项目已经启动
+脚本执行完毕后，这时候打开服务器对应的项目端口，例如：<http://host:port/user/login> （ host 为该内网服务器 IP 地址，port 为我们刚才设置的客户端的端口） 就可以看到项目已经启动✅
 
 ### 配置
 
@@ -142,19 +142,25 @@ bash -c "$(curl https://raw.githubusercontent.com/AlbertLin0923/mango-i18n-syste
 
 ### 业务系统接入（可选）
 
-1. 如上文提到，编码过程需要以 `中文` 作为文案，具体使用可参考 `该项目mango-i18n-system/packages/client` 代码
-2. 业务项目 下载脚本插件  `pnpm add @mango-scripts/i18n-scripts -D`，
-3. 业务项目`package.json`里添加更新指令：
+1.  如上文提到，编码过程需要以 `中文` 作为文案，具体使用可参考 `该项目mango-i18n-system/packages/client` 代码
+2.  业务项目 下载脚本插件  `pnpm add @mango-scripts/i18n-scripts -D`，
+3.  业务项目`package.json`里添加更新指令：
 
-```json
+```js
 "scripts": {
-  "updateLocale": "i18n-scripts updateLocale --address http://xxx:5003/api/locale/get_locale_map --output ./src/locales/common/ --localeList zh-CN en-US id-ID"
+  "updateLocale": "i18n-scripts updateLocale -f http://xxx/api/locale/get_locale_map -o ./src/locales/common/ -l zh-CN en-US id-ID"
 }
+
+其中
+
+-o 参数为 在业务项目里存储语言包的目录地址，例如：./src/locales/common/
+-f 参数为 部署的服务器的地址和端口，例如：http://xxx/api/locale/get_locale_map
+-l 参数为 需要下载的语言包列表，例如：zh-CN en-US id-ID
 ```
 
 ```
 其中
---address     部署的服务器的地址和端口，例如：http://xxx:5003/api/locale/get_locale_map
+--address     部署的服务器的地址和端口，例如：http://xxx/api/locale/get_locale_map
 --output      在业务项目里存储语言包的目录地址，例如：./src/locales/common/
 --localeList  需要下载的语言包列表，例如：zh-CN en-US id-ID
 ```
@@ -183,7 +189,7 @@ bash -c "$(curl https://raw.githubusercontent.com/AlbertLin0923/mango-i18n-syste
 
 #### 配置无需提取的文案
 
-系统会默认忽视业务代码里面的注释。但有些时候，我们一些**未被注释**的特殊的中文文案 key 并不想被自动文案配置系统提取，这时候，我们可以在 `AST 解析模式`下，使用类似`eslint-disable`的注释效果，以注释不需要提取的中文文案 key
+系统会`默认不提取业务代码的注释的中文`。但有些时候，我们一些**未被注释**的特殊的中文文案 key 也不想被自动文案配置系统提取，这时候，我们可以在 `AST 解析模式`下，使用类似`eslint-disable`的注释效果，以注释不需要提取的中文文案 key
 
 ```js
 
@@ -226,7 +232,7 @@ const getFilterStatusMap = (statusMap, type) => {
 
 ### 本地启动与开发调试
 
-1. clone 项目代码到本地
+1. clone 系统代码到本地
 2. cd 到 项目根目录，执行 pnpm i，安装依赖包
 3. cd 到 packages/server ，执行pnpm dev ，启动服务端
 4. cd 到 packages/client，执行pnpm dev，启动客户端
@@ -236,9 +242,9 @@ const getFilterStatusMap = (statusMap, type) => {
 
 项目二次开发后，可托管到自己的代码仓库，然后在服务器上通过源码部署：
 
-1. 准备一台公司内部空闲的服务器，下载 docker 以及 docker-compose
-2. 在服务器上找一个空目录，例如：/home/app/i18n/ ，进入该目录，克隆该项目源码到目录里面
-3. 执行 docker-compose up -d 进行 docker-compose 一键部署
+1. 准备一台公司内部空闲的服务器，下载 `docker` 以及 `docker-compose`
+2. 在服务器上找一个空目录，例如：`/home/app/i18n/` ，进入该目录，克隆该项目源码到目录里面
+3. 执行 `docker-compose up -d` 进行一键部署
 4. 其他配置同上
 
 ## 源码
@@ -249,8 +255,7 @@ const getFilterStatusMap = (statusMap, type) => {
 
 ## TODO List
 
-- 改善部署体验
-- 文案解析器支持小程序等更多格式的文件
+- 文案解析器支持更多格式的文件
 
 ## 参考资料
 
