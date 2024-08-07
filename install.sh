@@ -26,6 +26,24 @@ base_dir=""
 # 打印当前目录
 echo "当前目录是: $current_dir"
 
+# 判断是否安装了 docker 和 docker-compose
+make_sure_docker_and_docker_compose() {
+    echo '检查 docker 和 docker-compose 安装情况。。。'
+    # 判断是否安装了 docker
+    if ! type docker >/dev/null 2>&1; then
+        print_error_and_exit 'docker 未安装，请先安装 docker'
+    else
+        echo 'docker 已安装'
+    fi
+
+    # 判断是否安装了 docker-compose
+    if ! type docker-compose >/dev/null 2>&1; then
+        print_error_and_exit 'docker-compose 未安装，请先安装 docker-compose'
+    else
+        echo 'docker-compose 已安装'
+    fi
+}
+
 # 检查端口是否被占用的函数
 check_port() {
     # Check if the port is valid
@@ -40,7 +58,6 @@ check_port() {
         return 0
     fi
 }
-
 
 
 # 获取用户输入的端口，默认值为80
@@ -69,7 +86,7 @@ get_server_port() {
 
 # 获取用户输入的端口，默认值为8080
 get_invitation_code() {
-    read -p "请输入服务端邀请码<用于管理员账号注册的密钥，请牢记>（默认: ${invitation_code}): " invitation_code
+    read -p "用于管理员注册的邀请码（也就是注册密钥，建议输入自定义的密钥并保存好密钥）（默认: ${invitation_code}): " invitation_code
     invitation_code=${invitation_code:-"mango-i18n-system-invitation-code"}
 
 }
@@ -136,30 +153,16 @@ EOL
     echo "创建 docker-compose.yml 文件成功"
 }
 
-# 判断是否安装了 docker 和 docker-compose
-make_sure_docker_and_docker_compose() {
-    # 判断是否安装了 docker
-    if ! type docker >/dev/null 2>&1; then
-        print_error_and_exit 'docker 未安装，请先安装 docker'
-    else
-        echo 'docker 已安装'
-    fi
 
-    # 判断是否安装了 docker-compose
-    if ! type docker-compose >/dev/null 2>&1; then
-        print_error_and_exit 'docker-compose 未安装，请先安装 docker-compose'
-    else
-        echo 'docker-compose 已安装'
-    fi
-}
 
 # 主程序
+make_sure_docker_and_docker_compose
 get_client_port
 get_server_port
 get_invitation_code
 create_directories
 create_docker_compose
-make_sure_docker_and_docker_compose
+
 
 # 进入 base_dir 目录并执行 docker-compose up -d
 echo "进入目录并启动 Docker 服务。。。"
